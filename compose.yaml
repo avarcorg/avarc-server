@@ -1,9 +1,21 @@
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+#  postgres:
+#    image: 'postgres:latest'
+#    environment:
+#      - 'POSTGRES_DB=mydatabase'
+#      - 'POSTGRES_PASSWORD=secret'
+#      - 'POSTGRES_USER=myuser'
+#    ports:
+#      - '5432'
+  h2:
+    # alpine points to the latest 2.x
+    image: oscarfonts/h2:alpine
     ports:
-      - '5432'
+      - "8082:8082"
+      - "9092:9092"
+    volumes:
+      - h2-data:/opt/h2-data
+    command: ["-baseDir", "/opt/h2-data", "-tcp", "-tcpAllowOthers", "-web", "-webAllowOthers"]
+
+volumes:
+  h2-data:
