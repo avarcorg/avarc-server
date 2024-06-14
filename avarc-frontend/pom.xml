@@ -24,7 +24,7 @@
 						</goals>
 						<configuration>
 							<nodeVersion>v20.14.0</nodeVersion>
-							<npmVersion>10.18.1</npmVersion>
+							<npmVersion>10.8.1</npmVersion>
 						</configuration>
 					</execution>
 					<execution>
