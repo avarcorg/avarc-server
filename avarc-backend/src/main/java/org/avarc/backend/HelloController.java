@@ -1,4 +1,4 @@
-package org.example.avarc.backend;
+package org.avarc.backend;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

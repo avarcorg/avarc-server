@@ -1,4 +1,4 @@
-package org.example.avarc.backend;
+package org.avarc.backend;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
