@@ -9,6 +9,7 @@ services:
       - 5432:5432
     volumes:
       - postgis-data:/var/lib/postgresql/data
+      - postgis-init:/docker-entrypoint-initdb.d
 
   h2:
     image: oscarfonts/h2:latest
@@ -30,3 +31,9 @@ services:
 volumes:
   h2-data: {}
   postgis-data: {}
+  postgis-init:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: avarc-db/postgis-init
