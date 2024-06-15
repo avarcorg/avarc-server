@@ -18,6 +18,7 @@
     <description>avarc-server</description>
 
     <modules>
+        <module>avarc-db</module>
         <module>avarc-backend</module>
         <module>avarc-frontend</module>
     </modules>
