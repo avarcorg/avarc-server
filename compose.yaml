@@ -18,8 +18,15 @@ services:
     volumes:
       - h2-data:/opt/h2-data
 
+  adminer:
+    image: adminer:latest
+    hostname: adminer
+    ports:
+      - 8380:8080
+    depends_on:
+      - postgis
+      - h2
+
 volumes:
-  h2-data:
-  # more options if needed
-  postgis-data:
-  # more options if needed
+  h2-data: {}
+  postgis-data: {}
