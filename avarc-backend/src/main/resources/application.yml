@@ -4,3 +4,20 @@ server:
 spring:
   application:
     name: avarc-backend
+  datasource:
+    url: jdbc:postgresql://postgis:5432/avarc
+    username: inject-real-username-here
+    password: inject-real-password-here
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+        default_schema: public
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+  flyway:
+    enabled: false
+    schemas: public
+    default-schema: public
+    locations: classpath:db/migration
