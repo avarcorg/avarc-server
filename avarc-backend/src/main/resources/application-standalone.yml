@@ -14,7 +14,7 @@ spring:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
         default_schema: public
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
   flyway:
     enabled: false
