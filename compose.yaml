@@ -11,14 +11,6 @@ services:
       - postgis-data:/var/lib/postgresql/data
       - postgis-init:/docker-entrypoint-initdb.d
 
-  h2:
-    image: oscarfonts/h2:latest
-    hostname: h2
-    ports:
-      - "8881:81"
-    volumes:
-      - h2-data:/opt/h2-data
-
   adminer:
     image: adminer:latest
     hostname: adminer
@@ -26,10 +18,8 @@ services:
       - 8380:8080
     depends_on:
       - postgis
-      - h2
 
 volumes:
-  h2-data: {}
   postgis-data: {}
   postgis-init:
     driver: local
