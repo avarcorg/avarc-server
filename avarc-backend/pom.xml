@@ -111,35 +111,6 @@
 
     <build>
         <plugins>
-            <!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>dependency-list</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>list</goal>
-                        </goals>
-                        <configuration>
-                            <sort>true</sort>
-                            <outputFile>${project.build.directory}/dependencies-list.txt</outputFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>dependency-tree</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>tree</goal>
-                        </goals>
-                        <configuration>
-                            <outputFile>${project.build.directory}/dependencies-tree.txt</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -152,6 +123,34 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>package</phase> <!-- Specify the phase you want this to run in -->
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/unpacked</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
