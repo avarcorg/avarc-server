@@ -19,6 +19,22 @@ services:
     depends_on:
       - postgis
 
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    # volumes:
+    #   - redis-data:/data
+
+  redis-commander:
+    image: "rediscommander/redis-commander:latest"
+    environment:
+      - 'REDIS_HOSTS=local:redis:6379'
+    ports:
+      - "8381:8081"
+    depends_on:
+      - redis
+
 volumes:
   postgis-data: {}
   postgis-init:
@@ -27,3 +43,4 @@ volumes:
       o: bind
       type: none
       device: avarc-db/postgis-init
+  # redis-data:
