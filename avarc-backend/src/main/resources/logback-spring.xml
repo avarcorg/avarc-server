@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+    <property name="LOG_PATH" value="logs"/>
+
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <logger name="org.avarc" level="DEBUG"/>
+    <logger name="org.avarc" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
 
 </configuration>
