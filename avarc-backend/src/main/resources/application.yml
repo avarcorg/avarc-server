@@ -18,3 +18,5 @@ spring:
     schemas: public
     default-schema: public
     locations: classpath:db/migration
+  session:
+    store-type: redis
