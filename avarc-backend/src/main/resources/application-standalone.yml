@@ -6,3 +6,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/avarc
     username: avarc
     password: this-is-known-for-standalone-installations
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
