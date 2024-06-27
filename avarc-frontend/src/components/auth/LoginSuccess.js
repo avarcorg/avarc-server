@@ -1,7 +1,7 @@
-import logo from '../../logo.svg';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import config from "../../config/config";
+import LoginHeader from "./LoginHeader";
 
 axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
@@ -37,9 +37,10 @@ function LoginSuccess() {
 
   return (<div className="App">
     <header className="App-header">
+      <LoginHeader/>
       <h1>Welcome, {user.username}!</h1>
     </header>
-    </div>);
+  </div>);
 }
 
 export default LoginSuccess;

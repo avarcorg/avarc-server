@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import config from '../../config/config';
 import axios from 'axios';
-import {useNavigate, useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
+import LoginHeader from "./LoginHeader";
 
 axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
@@ -56,31 +57,32 @@ const LoginWithPassword = () => {
   };
 
   return (<div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>);
+    <LoginHeader/>
+    <h2>Login</h2>
+    <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={handleEmailChange}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={handlePasswordChange}
+          required
+        />
+      </div>
+      <button type="submit">Login</button>
+    </form>
+  </div>);
 }
 
 export default LoginWithPassword;
