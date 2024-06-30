@@ -1,12 +1,12 @@
-  server:
-    servlet:
-      session:
-        cookie:
-          http-only: true
-          secure: false # Set to true if using HTTPS
-          max-age: 1800 # Session timeout in seconds
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: false # Set to true if using HTTPS
+        max-age: 1800 # Session timeout in seconds
 
-  spring:
+spring:
   application:
     name: avarc-backend
   datasource:
