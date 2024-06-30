@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import config from "../../config/config";
-import LoginHeader from "./LoginHeader";
+import DashboardHeader from "./DashboardHeader";
 
 axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
-function LoginSuccess() {
+function Dashboard() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -37,12 +37,12 @@ function LoginSuccess() {
 
   return (<div className="App">
     <header className="App-header">
-      <LoginHeader/>
+      <DashboardHeader/>
       <h1>Welcome, {user.username}!</h1>
       <p/>
-      This is the Login Success page. Should not be shown too often.
+      This is the dashboad, to do whatever we might like.
     </header>
   </div>);
 }
 
-export default LoginSuccess;
+export default Dashboard;

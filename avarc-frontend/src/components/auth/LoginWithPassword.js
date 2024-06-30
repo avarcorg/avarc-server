@@ -33,12 +33,7 @@ const LoginWithPassword = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-
-      console.log(email);
-      console.log(password);
-
       const data = {email, password};
-      console.log('Sending data:', data);  // Log the data being sent
 
       const response = await axios.post(config.apiUrl + '/auth/login', data, {
         headers: {
@@ -48,7 +43,7 @@ const LoginWithPassword = () => {
       console.log('Response:', response);  // Log the response
 
       if (response.status === 200) {
-        navigate('/login/success');
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Error during login request:', error);  // Log any error

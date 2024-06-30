@@ -6,6 +6,7 @@ import './components/auth/Login.css';
 import LoginWithPassword from "./components/auth/LoginWithPassword";
 import LoginEnterEmail from "./components/auth/LoginEnterEmail";
 import LoginSuccess from './components/auth/LoginSuccess';
+import Dashboard from './components/dashboard/Dashboard';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/login/enter-email" element={<LoginEnterEmail/>}/>
             <Route path="/login/with-password" element={<LoginWithPassword/>}/>
             <Route path="/login/success" element={<LoginSuccess/>}/>
+            <Route path="/dashboard" element={<Dashboard/>}/>
           </Routes>
         </header>
       </div>
