@@ -30,4 +30,4 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build with Maven
-        run: mvn --no-transfer-progress -DskipTests clean package
+        run: mvn --no-transfer-progress -DskipTests -Pwith-docker clean package
