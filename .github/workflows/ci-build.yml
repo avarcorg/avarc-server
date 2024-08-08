@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  GHCR_ORG: avarcorg
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +34,9 @@ jobs:
 
       - name: Extract Maven project version
         id: version
-        run: echo "::set-output name=VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn --no-transfer-progress -DskipTests -Pwith-docker clean package
@@ -42,6 +47,7 @@ jobs:
       - name: Push Docker image(s)
         run: |
           docker images
-          docker tag avarc-backend:${{ steps.version.outputs.VERSION }} ghcr.io/avarc-backend:${{ steps.version.outputs.VERSION }}
+          docker tag avarc-backend:${{ env.VERSION }} ghcr.io/${{ secrets.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
+          echo
           docker images
-          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/avarc-backend:${{ steps.version.outputs.VERSION }}
+          docker push ghcr.io/${{ secrets.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
