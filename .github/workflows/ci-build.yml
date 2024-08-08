@@ -42,4 +42,6 @@ jobs:
       - name: Push Docker image(s)
         run: |
           docker images
+          docker tag avarc-backend:${{ steps.version.outputs.VERSION }} ghcr.io/avarc-backend:${{ steps.version.outputs.VERSION }}
+          docker images
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/avarc-backend:${{ steps.version.outputs.VERSION }}
