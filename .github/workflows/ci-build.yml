@@ -31,3 +31,10 @@ jobs:
 
       - name: Build with Maven
         run: mvn --no-transfer-progress -DskipTests -Pwith-docker clean package
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+
+      - name: Push Docker image(s)
+        run: |
+          docker images
