@@ -20,7 +20,7 @@
     <modules>
         <module>avarc-db</module>
         <module>avarc-backend</module>
-        <module>avarc-frontend</module>
+        <!-- <module>avarc-frontend</module> -->
         <module>avarc-nginx</module>
     </modules>
 
