@@ -43,7 +43,7 @@ jobs:
             # Get the list of untagged image versions from the GitHub Container Registry
             VERSION_IDS=$(gh api --paginate \
                 -H "Accept: application/vnd.github.v3+json" \
-                /user/packages/container/${{ github.repository }}/$IMAGE/versions | jq -r '.[] | select(.metadata.container.tags == null) | .id')
+                /orgs/${{ github.repository_owner }}/packages/container/$IMAGE/versions | jq -r '.[] | select(.metadata.container.tags == null) | .id')
 
             # Delete each untagged image version
             for VERSION_ID in $VERSION_IDS; do
@@ -51,6 +51,6 @@ jobs:
               gh api \
                 --method DELETE \
                 -H "Accept: application/vnd.github.v3+json" \
-                /user/packages/container/${{ github.repository }}/$IMAGE/versions/$VERSION_ID
+                /orgs/${{ github.repository_owner }}/packages/container/$IMAGE/versions/$VERSION_ID
             done
           done
