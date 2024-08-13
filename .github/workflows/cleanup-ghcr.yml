@@ -1,6 +1,9 @@
-name: Cleanup Untagged GHCR Images
+name: Clean Up Untagged GHCR Images
 
 on:
+  push:
+    paths:
+      - .github/workflows/cleanup-ghcr.yml
   schedule:
     # Run every Monday at 6:00 AM UTC
     - cron: "0 6 * * 1"
