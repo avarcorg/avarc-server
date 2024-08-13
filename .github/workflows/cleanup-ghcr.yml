@@ -1,0 +1,48 @@
+name: Cleanup Untagged GHCR Images
+
+on:
+  schedule:
+    # Run every Monday at 6:00 AM UTC
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+  # Allows manual triggering of the workflow
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Randomize start time
+        run: |
+          # Introduce a random delay between 0 and 59 minutes
+          RANDOM_DELAY=$((RANDOM % 3600))
+          echo "Waiting for $RANDOM_DELAY seconds before starting the cleanup"
+          # sleep $RANDOM_DELAY
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Clean up untagged GHCR images
+        run: |
+          # List of image names to clean up
+          IMAGE_NAMES=("avarc-backend" "avarc-frontend")
+
+          for IMAGE in "${IMAGE_NAMES[@]}"; do
+            echo "Cleaning up untagged images for $IMAGE"
+
+            # Get the list of untagged image versions from the GitHub Container Registry
+            VERSION_IDS=$(gh api --paginate \
+                -H "Accept: application/vnd.github.v3+json" \
+                /user/packages/container/${{ github.repository }}/$IMAGE/versions | jq -r '.[] | select(.metadata.container.tags == null) | .id')
+
+            # Delete each untagged image version
+            for VERSION_ID in $VERSION_IDS; do
+              echo "Deleting untagged image with version ID $VERSION_ID"
+              gh api \
+                --method DELETE \
+                -H "Accept: application/vnd.github.v3+json" \
+                /user/packages/container/${{ github.repository }}/$IMAGE/versions/$VERSION_ID
+            done
+          done
