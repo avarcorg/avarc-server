@@ -21,10 +21,18 @@ jobs:
           echo "Waiting for $RANDOM_DELAY seconds before starting the cleanup"
           # sleep $RANDOM_DELAY
 
+      - name: Set up GitHub CLI with GHCR_TOKEN
+        env:
+          GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
+        run: |
+          echo "GitHub CLI is set up with GH_TOKEN"
+
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Clean up untagged GHCR images
+        env:
+          GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
         run: |
           # List of image names to clean up
           IMAGE_NAMES=("avarc-backend" "avarc-frontend")
