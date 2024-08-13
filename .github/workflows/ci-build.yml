@@ -60,8 +60,11 @@ jobs:
       - name: Push Docker image(s)
         run: |
           docker tag avarc-backend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
+          docker tag avarc-backend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:latest
           docker tag avarc-frontend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }}
           echo
           docker images
           docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
+          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:latest
           docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }}
+          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:latest
