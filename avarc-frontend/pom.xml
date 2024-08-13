@@ -40,7 +40,6 @@
                             <arguments>install</arguments>
                         </configuration>
                     </execution>
-					<!--
                     <execution>
                         <id>npm run build</id>
                         <goals>
@@ -50,7 +49,6 @@
                             <arguments>run build</arguments>
                         </configuration>
                     </execution>
-					-->
                 </executions>
             </plugin>
         </plugins>

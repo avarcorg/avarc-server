@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import config from './config/config';
 import './App.css';
 import './components/auth/Login.css';
 import LoginWithPassword from "./components/auth/LoginWithPassword";
