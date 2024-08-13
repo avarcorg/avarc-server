@@ -36,7 +36,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
         run: |
-          for IMAGE in "${IMAGE_NAMES[@]}"; do
+          for IMAGE in $IMAGE_NAMES; do
           echo "Listing all versions for $IMAGE"
 
           gh api --paginate \
@@ -48,7 +48,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
         run: |
-          for IMAGE in "${IMAGE_NAMES[@]}"; do
+          for IMAGE in $IMAGE_NAMES; do
             echo "Cleaning up untagged images for $IMAGE"
 
             # Get the list of untagged image versions from the GitHub Container Registry
