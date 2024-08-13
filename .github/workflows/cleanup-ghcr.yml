@@ -35,18 +35,6 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: List All Image Versions (Debugging)
-        env:
-          GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
-        run: |
-          for IMAGE in $IMAGE_NAMES; do
-          echo "Listing all versions for $IMAGE"
-
-          gh api --paginate \
-           -H "Accept: application/vnd.github.v3+json" \
-           /orgs/${{ github.repository_owner }}/packages/container/$IMAGE/versions | jq '.'
-          done
-
       - name: Clean up untagged GHCR images
         env:
           GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
