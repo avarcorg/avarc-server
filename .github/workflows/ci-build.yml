@@ -78,16 +78,14 @@ jobs:
         if: success()
         uses: mattermost/action-mattermost-notify@master
         with:
-          url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-          token: ${{ secrets.MATTERMOST_BOT_TOKEN }}
-          channel: ${{ secrets.MATTERMOST_CHANNEL }}
-          message: "Build successful! :rocket:"
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          MATTERMOST_CHANNEL: ${{ secrets.MATTERMOST_CHANNEL }}
+          TEXT: "Build successful! :rocket:"
 
       - name: Notify Mattermost - Failure
         if: failure()
         uses: mattermost/action-mattermost-notify@master
         with:
-          url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-          token: ${{ secrets.MATTERMOST_BOT_TOKEN }}
-          channel: ${{ secrets.MATTERMOST_CHANNEL }}
-          message: "Build failed! :x:"
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          MATTERMOST_CHANNEL: ${{ secrets.MATTERMOST_CHANNEL }}
+          TEXT: "Build failed! :x:"
