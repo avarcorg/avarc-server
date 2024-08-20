@@ -80,7 +80,12 @@ jobs:
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: ${{ secrets.MATTERMOST_CHANNEL }}
-          TEXT: "Build successful! :rocket:"
+          TEXT: |
+            Build successful! :rocket:
+            [View build details](${{
+              github.server_url }}/${{
+              github.repository }}/actions/runs/${{
+              github.run_id }})
 
       - name: Notify Mattermost - Failure
         if: failure()
@@ -88,4 +93,9 @@ jobs:
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: ${{ secrets.MATTERMOST_CHANNEL }}
-          TEXT: "Build failed! :x:"
+          TEXT: |
+            Build failed! :x:
+            [View build details](${{
+              github.server_url }}/${{
+              github.repository }}/actions/runs/${{
+              github.run_id }})
