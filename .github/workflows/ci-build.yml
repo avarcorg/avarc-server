@@ -73,3 +73,21 @@ jobs:
           docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:latest
           docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }}
           docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:latest
+
+      - name: Notify Mattermost - Success
+        if: success()
+        uses: mattermost/action-mattermost-notify@v2.0.0
+        with:
+          url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          token: ${{ secrets.MATTERMOST_BOT_TOKEN }}
+          channel: ${{ secrets.MATTERMOST_CHANNEL }}
+          message: "Build successful! :rocket:"
+
+      - name: Notify Mattermost - Failure
+        if: failure()
+        uses: mattermost/action-mattermost-notify@v2.0.0
+        with:
+          url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          token: ${{ secrets.MATTERMOST_BOT_TOKEN }}
+          channel: ${{ secrets.MATTERMOST_CHANNEL }}
+          message: "Build failed! :x:"
