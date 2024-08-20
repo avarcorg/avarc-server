@@ -8,6 +8,7 @@ on:
 
 env:
   GHCR_ORG: avarcorg
+  MATTERMOST_BOT_USERNAME: avarc-chatopt-bot
 
 jobs:
   build:
@@ -80,6 +81,7 @@ jobs:
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: ${{ secrets.MATTERMOST_CHANNEL }}
+          MATTERMOST_USERNAME: ${{ env.MATTERMOST_BOT_USERNAME }}
           TEXT: |
             Build successful! :rocket:
             [View build details](${{
@@ -93,6 +95,7 @@ jobs:
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: ${{ secrets.MATTERMOST_CHANNEL }}
+          MATTERMOST_USERNAME: ${{ env.MATTERMOST_BOT_USERNAME }}
           TEXT: |
             Build failed! :x:
             [View build details](${{
