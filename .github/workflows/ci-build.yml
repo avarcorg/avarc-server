@@ -76,7 +76,7 @@ jobs:
 
       - name: Notify Mattermost - Success
         if: success()
-        uses: mattermost/action-mattermost-notify@v2.0.0
+        uses: mattermost/action-mattermost-notify@master
         with:
           url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
           token: ${{ secrets.MATTERMOST_BOT_TOKEN }}
@@ -85,7 +85,7 @@ jobs:
 
       - name: Notify Mattermost - Failure
         if: failure()
-        uses: mattermost/action-mattermost-notify@v2.0.0
+        uses: mattermost/action-mattermost-notify@master
         with:
           url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
           token: ${{ secrets.MATTERMOST_BOT_TOKEN }}
