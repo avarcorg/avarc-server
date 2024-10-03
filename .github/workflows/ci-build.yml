@@ -83,7 +83,7 @@ jobs:
           MATTERMOST_CHANNEL: ${{ secrets.MATTERMOST_CHANNEL }}
           MATTERMOST_USERNAME: ${{ env.MATTERMOST_BOT_USERNAME }}
           TEXT: |
-            Build successful! :rocket:
+            AvArc Server - Build successful! :rocket:
             [View build details](${{
               github.server_url }}/${{
               github.repository }}/actions/runs/${{
@@ -97,7 +97,7 @@ jobs:
           MATTERMOST_CHANNEL: ${{ secrets.MATTERMOST_CHANNEL }}
           MATTERMOST_USERNAME: ${{ env.MATTERMOST_BOT_USERNAME }}
           TEXT: |
-            Build failed! :x:
+            AvArc Server - Build failed! :x:
             [View build details](${{
               github.server_url }}/${{
               github.repository }}/actions/runs/${{
