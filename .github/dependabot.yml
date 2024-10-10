@@ -6,20 +6,20 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/"
+    directories:
+      - "*"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "npm"
     directories:
-      - "/avarc-frontend"
+      - "*"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
     directories:
-      - "/avarc-nginx"
-      - "/avarc-frontend"
+      - "*"
     schedule:
       interval: "daily"
 
