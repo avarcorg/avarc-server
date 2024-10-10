@@ -16,7 +16,9 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "/"
+    directories:
+      - "/avarc-nginx"
+      - "/avarc-frontend"
     schedule:
       interval: "daily"
 
