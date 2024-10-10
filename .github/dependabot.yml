@@ -11,7 +11,8 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "npm"
-    directory: "/"
+    directories:
+      - "/avarc-frontend"
     schedule:
       interval: "daily"
 
