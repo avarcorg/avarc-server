@@ -29,6 +29,10 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      # required for all workflows
+      security-events: write
+      # only required for workflows in private repositories
+      actions: read      
     steps:
       # Git Checkout
       - name: Checkout Code
@@ -54,7 +58,7 @@ jobs:
 
       - name: Upload MegaLinter scan results to GitHub Security tab
         if: success() || failure()
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'megalinter-reports/megalinter-report.sarif'
 
