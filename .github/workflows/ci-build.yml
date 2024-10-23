@@ -24,9 +24,15 @@ jobs:
           version: 'latest' # Use latest version of Pack CLI
 
       - name: Display Pack CLI
-        run: |
-          pack --version
-          pack --help
+        run: pack --version
+
+      - name: Set up Pack Tools
+        uses: buildpacks/github-actions/setup-tools@v5.7.4
+        with:
+          version: 'latest' # Use latest version of Pack CLI
+
+      - name: Display Pack Tools
+        run: yj --version
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
