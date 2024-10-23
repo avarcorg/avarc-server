@@ -26,10 +26,17 @@
 
     <properties>
         <org-postgresql.version>42.7.4</org-postgresql.version>
+        <com-h2database.version>2.2.224</com-h2database.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${com-h2database.version}</version>
+                <scope>runtime</scope>
+            </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
