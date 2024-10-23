@@ -20,13 +20,12 @@ jobs:
 
       - name: Set up Pack CLI
         uses: buildpacks/github-actions/setup-pack@v5.7.4
-        with:
-          pack-version: 'latest'
+
+      - name: Display Pack CLI
+        run: pack --version
 
       - name: Set up Pack Tools
         uses: buildpacks/github-actions/setup-tools@v5.7.4
-        with:
-          jq-version: 'latest'
 
       - name: Display Pack Tools
         run: yj -v
