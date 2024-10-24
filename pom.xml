@@ -26,7 +26,7 @@
 
     <properties>
         <org-postgresql.version>42.7.4</org-postgresql.version>
-        <com-h2database.version>2.2.224</com-h2database.version>
+        <com-h2database.version>2.3.232</com-h2database.version>
     </properties>
 
     <dependencyManagement>
