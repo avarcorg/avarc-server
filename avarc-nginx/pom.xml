@@ -38,6 +38,18 @@
                                         <argument>--trust-builder</argument>
                                         <argument>--buildpack</argument>
                                         <argument>paketo-buildpacks/nginx</argument>
+                                        <argument>--buildpack</argument>
+                                        <argument>paketo-buildpacks/image-labels@4.7.3</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_OCI_TITLE=${project.name}</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_OCI_DESCRIPTION=${project.description}</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_OCI_VERSION=${project.version}</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_OCI_VENDOR=${project.parent.organization.name}</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_OCI_LICENSES=${project.license.name}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>

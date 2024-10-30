@@ -17,6 +17,17 @@
     <name>avarc-server</name>
     <description>avarc-server</description>
 
+    <organization>
+        <name>AvArc</name>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>${project.license.name}</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
     <modules>
         <module>avarc-db</module>
         <module>avarc-backend</module>
@@ -27,6 +38,7 @@
     <properties>
         <org-postgresql.version>42.7.4</org-postgresql.version>
         <com-h2database.version>2.2.224</com-h2database.version>
+        <project.license.name>Apache License, Version 2.0</project.license.name>
     </properties>
 
     <dependencyManagement>
