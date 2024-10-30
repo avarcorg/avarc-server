@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>avarc-nginx</artifactId>
+    <packaging>pom</packaging>
     <name>avarc-nginx</name>
     <description>avarc-nginx</description>
 
