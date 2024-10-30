@@ -87,6 +87,14 @@ jobs:
           docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }}
           docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:latest
 
+      - name: Show Docker image label(s)
+        run: |
+          docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }} | jq "."
+          echo
+          docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }} | jq "."
+          echo
+          docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }} | jq "."
+
       - name: Notify Mattermost - Success
         if: success()
         uses: mattermost/action-mattermost-notify@master
