@@ -7,3 +7,7 @@ DISABLE_LINTERS:
   - SPELL_CSPELL
 
 SARIF_REPORTER: true
+
+JAVA_CHECKSTYLE_ARGUMENTS:
+  - "-s"
+  - "checkstyle.xml"
