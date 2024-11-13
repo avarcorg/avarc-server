@@ -8,6 +8,9 @@ on:
   # push: # Comment this line to trigger action only on pull-requests (not recommended if you don't pay for GH Actions)
   # pull_request:
     # branches: [master, main]
+  schedule:
+    # Run every Monday at 4:00 AM UTC
+    - cron: "0 4 * * 1"
   workflow_dispatch:
 
 env: # Comment env block if you don't want to apply fixes
