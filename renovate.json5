@@ -3,5 +3,6 @@
   "extends": [
     "config:recommended"
   ],
+  "labels": ["renovate"],
   "rebaseWhen": "behind-base-branch",
 }
