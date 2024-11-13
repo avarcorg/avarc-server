@@ -2,8 +2,6 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
   workflow_dispatch:
 
 env:
@@ -71,6 +69,7 @@ jobs:
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
       - name: Push Docker image(s)
+        if: github.ref == 'refs/heads/main'  # Only push if the branch is main
         run: |
           docker tag avarc-backend:${{ env.VERSION }}  ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
           docker tag avarc-backend:${{ env.VERSION }}  ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:latest
