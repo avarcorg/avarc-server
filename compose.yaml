@@ -1,6 +1,6 @@
 services:
   postgis:
-    image: postgis/postgis:16-3.4
+    image: postgis/postgis:17-3.4
     hostname: postgis
     environment:
       - 'POSTGRES_HOST_AUTH_METHOD=trust'
