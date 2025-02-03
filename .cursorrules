@@ -1,0 +1,54 @@
+project_stack:
+  - spring-boot
+  - java
+  - react.js
+  - postgis
+  - nginx
+  - docker
+  - redis
+
+rules:
+  spring-boot-java:
+    - Follow SOLID principles for object-oriented programming.
+    - Use Spring Boot's built-in features for dependency management and configuration.
+    - Implement RESTful services using Spring's MVC framework.
+    - Use JPA/Hibernate for database interactions; prefer Criteria API over raw SQL queries.
+    - Configure transactions properly and use rollback for error handling.
+    - Implement logging using SLF4J or Logback.
+
+  react.js:
+    - Use functional components with hooks.
+    - Employ state management tools such as Redux or Context API.
+    - Apply TypeScript for type safety.
+    - Optimize component rendering with React.memo and useCallback.
+    - Implement proper error boundaries for handling UI errors.
+    - Use Jest and React Testing Library for testing components.
+
+  postgis-database:
+    - Use spatial data efficiently utilizing PostGIS functions.
+    - Apply proper indexing for spatial queries to optimize performance.
+    - Use connection pooling for managing database connections.
+    - Regularly back up spatial data to prevent data loss.
+
+  nginx:
+    - Configure NGINX as a reverse proxy for load balancing and caching.
+    - Implement secure HTTP headers and SSL/TLS for security.
+    - Optimize configurations for performance, including timeout and worker settings.
+    - Set up logging to monitor access and error logs.
+
+  docker:
+    - Use multi-stage builds to optimize Docker images.
+    - Implement health checks and diagnostics.
+    - Ensure containerization of all services with proper networking configuration.
+    - Use Docker Compose for development and defining multi-container applications.
+
+  redis:
+    - Use Redis for managing state persistence across multiple backend instances.
+    - Implement Redis for caching and reducing load from the primary data store.
+    - Use Redis Pub/Sub for message broadcasting between backend services.
+    - Monitor Redis performance and perform regular maintenance.
+
+recommendations:
+  - Review dependencies regularly for updates and vulnerabilities.
+  - Employ CI/CD tools for automated deployments.
+  - Implement monitoring and logging across all services to maintain system health.
