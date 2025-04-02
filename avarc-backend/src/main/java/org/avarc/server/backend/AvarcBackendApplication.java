@@ -12,7 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @PropertySources({
     @PropertySource(value = "application.yml"),
-    @PropertySource(value = "application-secret.yml", ignoreResourceNotFound = true)
+    @PropertySource(value = "application-secret.yml", ignoreResourceNotFound = true),
+    @PropertySource(value = "git.properties"),
 }
 )
 @EntityScan(basePackageClasses = User.class)
