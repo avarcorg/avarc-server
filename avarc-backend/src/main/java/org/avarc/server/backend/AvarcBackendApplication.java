@@ -9,8 +9,10 @@ import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 
-@PropertySources(
+@PropertySources({
+    @PropertySource(value = "application.yml"),
     @PropertySource(value = "application-secret.yml", ignoreResourceNotFound = true)
+}
 )
 public class AvarcBackendApplication {
     public static void main(String[] args) {
