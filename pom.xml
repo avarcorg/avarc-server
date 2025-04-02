@@ -26,6 +26,8 @@
         <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
         <node.version>v20.14.0</node.version>
         <npm.version>10.8.1</npm.version>
+
+        <git-commit-id-maven-plugin.version>9.0.1</git-commit-id-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -91,6 +93,27 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>${git-commit-id-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <commitIdGenerationMode>full</commitIdGenerationMode>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>
