@@ -15,7 +15,8 @@ rules:
     - Use JPA/Hibernate for database interactions; prefer Criteria API over raw SQL queries.
     - Configure transactions properly and use rollback for error handling.
     - Implement logging using SLF4J or Logback.
-    - Use jwt for authentication
+    - Use JWT for authentication.
+    - Use Spring Modulith for event-driven architecture.
 
   react.js:
     - Use functional components with hooks.
