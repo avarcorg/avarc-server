@@ -66,3 +66,5 @@ jobs:
       - name: Build with Maven
         run: mvn --no-transfer-progress -DskipTests -Pwith-docker clean package
 
+      - name: Show images
+        run: docker images | sort
