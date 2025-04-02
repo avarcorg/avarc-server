@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+env:
+  GHCR_ORG: avarcorg
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up Pack CLI
+        uses: buildpacks/github-actions/setup-pack@v5.8.1
+
+      - name: Display Pack CLI
+        run: pack --version
+
+      - name: Set up Pack Tools
+        uses: buildpacks/github-actions/setup-tools@v5.8.1
+
+      - name: Display Pack Tools
+        run: yj -v
+
+      - name: Set up Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: '20.14.0'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          # Use OpenJDK
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Extract Maven project version
+        id: version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build with Maven
+        run: mvn --no-transfer-progress -DskipTests -Pwith-docker clean package
+
