@@ -71,7 +71,7 @@
                                     <executable>pack</executable>
                                     <arguments>
                                         <argument>build</argument>
-                                        <argument>avarc-frontend</argument>
+                                        <argument>avarc-frontend:${project.version}</argument>
                                         <argument>--path</argument>
                                         <argument>${project.basedir}</argument>
                                         <argument>--builder</argument>
