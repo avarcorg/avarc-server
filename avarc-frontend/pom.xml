@@ -78,6 +78,7 @@
                                         <argument>paketobuildpacks/builder:base</argument>
                                         <argument>--buildpack</argument>
                                         <argument>paketo-buildpacks/nodejs</argument>
+                                        <argument>--trust-builder</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
