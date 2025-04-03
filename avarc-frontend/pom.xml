@@ -24,7 +24,7 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>${node.version}</nodeVersion>
+                            <nodeVersion>v${node.version}</nodeVersion>
                             <npmVersion>${npm.version}</npmVersion>
                         </configuration>
                     </execution>
@@ -43,7 +43,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run build</arguments>
+                            <arguments>run workarounded-build</arguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -75,10 +75,14 @@
                                         <argument>--path</argument>
                                         <argument>${project.basedir}</argument>
                                         <argument>--builder</argument>
-                                        <argument>paketobuildpacks/builder:base</argument>
+                                        <argument>paketobuildpacks/builder-jammy-base</argument>
                                         <argument>--buildpack</argument>
                                         <argument>paketo-buildpacks/nodejs</argument>
                                         <argument>--trust-builder</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_NODE_VERSION=${node.version}</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_LAUNCH_COMMAND=:</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
