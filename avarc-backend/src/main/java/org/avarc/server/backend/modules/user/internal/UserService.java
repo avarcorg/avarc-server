@@ -1,11 +1,10 @@
 package org.avarc.server.backend.modules.user.internal;
 
+import java.util.Optional;
 import org.avarc.server.backend.modules.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -23,11 +22,15 @@ public class UserService {
 
     public Optional<String> authenticate(String username, String rawPassword) {
         return userRepository.findByUsername(username)
-                .filter(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
-                .map(User::getUsername); // return username if valid
+            .filter(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
+            .map(User::getUsername); // return username if valid
     }
 
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> getUserByUUID(java.util.UUID uuid) {
+        return userRepository.findByUuid(uuid);
     }
 }

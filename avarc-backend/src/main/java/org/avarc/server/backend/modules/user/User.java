@@ -1,9 +1,12 @@
 package org.avarc.server.backend.modules.user;
 
+import java.util.UUID;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -18,6 +21,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false, updatable = false)
+    private UUID uuid;
+
     private String username;
 
     private String password;
@@ -28,5 +34,10 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        uuid = UUID.randomUUID();
     }
 }
