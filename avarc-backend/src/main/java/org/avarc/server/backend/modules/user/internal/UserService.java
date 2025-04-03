@@ -26,4 +26,8 @@ public class UserService {
                 .filter(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
                 .map(User::getUsername); // return username if valid
     }
+
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 }
