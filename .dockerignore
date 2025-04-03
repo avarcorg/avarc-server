@@ -8,5 +8,6 @@
 # Build directories
 #
 **/target
+**/.next
 **/node
 **/node_modules
