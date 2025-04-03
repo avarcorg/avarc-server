@@ -33,7 +33,9 @@ https://nodejs.org/en
 
 ## 🧪 Local Development
 
-### 🚀 Run Docker Container with Runtime API Host
+### Frontend
+
+#### 🚀 Run Docker Container with Runtime API Host
 
 To override the API backend host at runtime:
 
@@ -43,11 +45,25 @@ docker run -e NEXT_PUBLIC_API_HOST=https://api.example.com -p 3000:3000 avarc-fr
 
 This will ensure your frontend points to the correct backend API on launch.
 
+### Backend
+
+#### 🚀 Run Docker Container with Runtime API Host
+
+To override the API backend host at runtime:
+
+```bash
+docker run -e APP.CORS.ALLOWED-ORIGINS="http://localhost:3000,https://*.example.com" -p 8080:8080 avarc-backend
+```
+
+This will ensure your backend will accept requests from the correct frontend on launch.
+
+
 ## 📁 Environment Variables
 
-| Name                  | Description                             | Example                   |
-|-----------------------|-----------------------------------------|---------------------------|
-| `NEXT_PUBLIC_API_HOST`| Host URL for backend API communication  | `http://localhost:8080`   |
+| Name                      | Description                               | Example                   |
+|---------------------------|-------------------------------------------|---------------------------|
+| `NEXT_PUBLIC_API_HOST`    | Host URL for backend API communication    | `http://localhost:8080`   |
+| `APP.CORS.ALLOWED-ORIGINS`| Sources the backend accepts requests from | `http://localhost:3000`   |
 
 
 ## How to develop via an Integrated Development Environment (IDE)
