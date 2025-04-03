@@ -31,7 +31,26 @@ https://nodejs.org/en
 ### Integration Tests
 
 
-### How to develop via an Integrated Development Environment (IDE)
+## 🧪 Local Development
+
+### 🚀 Run Docker Container with Runtime API Host
+
+To override the API backend host at runtime:
+
+```bash
+docker run -e NEXT_PUBLIC_API_HOST=https://api.example.com -p 3000:3000 avarc-frontend
+```
+
+This will ensure your frontend points to the correct backend API on launch.
+
+## 📁 Environment Variables
+
+| Name                  | Description                             | Example                   |
+|-----------------------|-----------------------------------------|---------------------------|
+| `NEXT_PUBLIC_API_HOST`| Host URL for backend API communication  | `http://localhost:8080`   |
+
+
+## How to develop via an Integrated Development Environment (IDE)
 
 We will assemble some step-by-step guides for different IDEs on our developer documentation website:
 
