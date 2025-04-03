@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/rest/v0.1.0/auth")
 @CrossOrigin
-@Tag(name = "Authentication", description = "Endpoints for user login and registration")
+@Tag(name = "Authentication (v0.1.0)", description = "Versioned authentication endpoints")
 public class AuthController {
 
     @Autowired
@@ -34,6 +34,7 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(
         summary = "Register a new user",
+        tags = { "Authentication (v0.1.0)" },
         responses = {
             @ApiResponse(responseCode = "200", description = "User registered",
                          content = @Content(schema = @Schema(implementation = AuthResponse.class))),
@@ -58,6 +59,7 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(
         summary = "Login user and return JWT token",
+        tags = { "Authentication (v0.1.0)" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Login successful",
                          content = @Content(schema = @Schema(implementation = AuthResponse.class))),

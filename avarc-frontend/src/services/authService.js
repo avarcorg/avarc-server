@@ -1,19 +1,21 @@
-const API_BASE = 'http://localhost:8080/auth';
+const API_BASE = 'http://localhost:8080/rest/v0.1.0';
 
-export async function loginUser(username, password) {
-  const res = await fetch(`${API_BASE}/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
-  return res.json();
-}
+export const AuthService = {
+  async loginUser(username, password) {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    return res.json();
+  },
 
-export async function registerUser(username, password) {
-  const res = await fetch(`${API_BASE}/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
-  return res.json();
-}
+  async registerUser(username, password) {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    return res.json();
+  }
+};

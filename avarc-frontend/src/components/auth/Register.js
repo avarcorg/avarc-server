@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../services/authService';
+import { AuthService } from '../../services/authService';
 
 function Register({ setUser, setToken }) {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -9,20 +9,15 @@ function Register({ setUser, setToken }) {
 
   const handleRegister = async () => {
     console.log("Attempting registration with:", form);
-    const res = await registerUser(form.username, form.password);
+    const res = await AuthService.registerUser(form.username, form.password);
     console.log("Register response:", res);
     if (res.token && res.user) {
       localStorage.setItem('jwt', res.token);
       localStorage.setItem('username', res.user.username);
-      if (setUser) {
-        console.log("Setting user in state:", res.user.username);
-        setUser(res.user.username);
-      }
-      if (setToken) {
-        console.log("Setting token in state");
-        setToken(res.token);
-      }
-      console.log("Navigating to /dashboard...");
+      console.log("Storing token and username");
+      if (setUser) setUser(res.user.username);
+      if (setToken) setToken(res.token);
+      console.log("Navigating to /dashboard");
       navigate('/dashboard');
     } else {
       console.log("Registration failed:", res.errorMessage);

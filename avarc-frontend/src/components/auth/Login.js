@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/authService';
+import { AuthService } from '../../services/authService';
 
 function Login({ setUser, setToken }) {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -9,20 +9,15 @@ function Login({ setUser, setToken }) {
 
   const handleLogin = async () => {
     console.log("Attempting login with:", form);
-    const res = await loginUser(form.username, form.password);
+    const res = await AuthService.loginUser(form.username, form.password);
     console.log("Login response:", res);
     if (res.token && res.user) {
       localStorage.setItem('jwt', res.token);
       localStorage.setItem('username', res.user.username);
-      if (setUser) {
-        console.log("Setting user in state:", res.user.username);
-        setUser(res.user.username);
-      }
-      if (setToken) {
-        console.log("Setting token in state");
-        setToken(res.token);
-      }
-      console.log("Navigating to /dashboard...");
+      console.log("Setting user in state:", res.user.username);
+      if (setUser) setUser(res.user.username);
+      if (setToken) setToken(res.token);
+      console.log("Navigating to /dashboard");
       navigate('/dashboard');
     } else {
       console.log("Login failed:", res.errorMessage);
