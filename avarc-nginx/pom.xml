@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.avarc</groupId>
+        <artifactId>avarc-server</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>avarc-nginx</artifactId>
+
+    <profiles>
+        <profile>
+            <id>with-docker</id>
+            <build>
+                <plugins>
+                    <!-- Use exec plugin to run pack CLI -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>pack-react-image</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>pack</executable>
+                                    <arguments>
+                                        <argument>build</argument>
+                                        <argument>avarc-nginx:${project.version}</argument>
+                                        <argument>--path</argument>
+                                        <argument>${project.basedir}</argument>
+                                        <argument>--builder</argument>
+                                        <argument>paketobuildpacks/builder:base</argument>
+                                        <argument>--buildpack</argument>
+                                        <argument>gcr.io/paketo-buildpacks/nginx</argument>
+                                        <argument>--trust-builder</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_NGINX_CONF_PATH=nginx.conf</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
