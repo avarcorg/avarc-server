@@ -1,8 +1,8 @@
-const API_BASE = 'http://localhost:8080/rest/v0.1.0';
+import { AUTH_API } from '../constants.js';
 
 export const AuthService = {
   async loginUser(username, password) {
-    const res = await fetch(`${API_BASE}/auth/login`, {
+    const res = await fetch(`${AUTH_API}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
@@ -11,7 +11,7 @@ export const AuthService = {
   },
 
   async registerUser(username, password) {
-    const res = await fetch(`${API_BASE}/auth/register`, {
+    const res = await fetch(`${AUTH_API}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })

@@ -1,11 +1,14 @@
 package org.avarc.server.backend.modules.authentication;
 
+import java.util.Map;
+import java.util.Optional;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.avarc.server.backend.modules.authentication.internal.JwtService;
+import org.avarc.server.backend.modules.shared.ApiConstants;
 import org.avarc.server.backend.modules.user.User;
 import org.avarc.server.backend.modules.user.internal.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/rest/v0.1.0/auth")
+@RequestMapping(ApiConstants.REST_PREFIX + "/auth")
 @CrossOrigin
-@Tag(name = "Authentication (v0.1.0)", description = "Versioned authentication endpoints")
+@Tag(name = "Authentication (" + ApiConstants.API_VERSION + ")", description = "Versioned authentication endpoints")
 public class AuthController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(
         summary = "Register a new user",
-        tags = { "Authentication (v0.1.0)" },
+        tags = {"Authentication (" + ApiConstants.API_VERSION + ")"},
         responses = {
             @ApiResponse(responseCode = "200", description = "User registered",
                          content = @Content(schema = @Schema(implementation = AuthResponse.class))),
@@ -59,7 +59,7 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(
         summary = "Login user and return JWT token",
-        tags = { "Authentication (v0.1.0)" },
+        tags = {"Authentication (" + ApiConstants.API_VERSION + ")"},
         responses = {
             @ApiResponse(responseCode = "200", description = "Login successful",
                          content = @Content(schema = @Schema(implementation = AuthResponse.class))),
