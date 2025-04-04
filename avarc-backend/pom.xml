@@ -123,6 +123,34 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.github.davidmoten</groupId>
+                <artifactId>plantuml-maven-plugin</artifactId>
+                <version>${plantuml-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-diagrams</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+
+                    <sources>
+                        <directory>${project.build.directory}/spring-modulith-docs</directory>
+                        <includes>
+                            <include>**/*.puml</include>
+                        </includes>
+                    </sources>
+                    <formats>
+                        <format>png</format>
+                        <format>svg</format>
+                    </formats>
+                    <preserveDirectoryStructure>false</preserveDirectoryStructure>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
