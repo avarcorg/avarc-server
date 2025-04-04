@@ -25,11 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authentication (" + ApiConstants.API_VERSION + ")", description = "Versioned authentication endpoints")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
+
+    public AuthController(UserService userService, JwtService jwtService) {
+        this.userService = userService;
+        this.jwtService = jwtService;
+    }
 
     @PostMapping("/register")
     @Operation(
