@@ -2,6 +2,7 @@ package org.avarc.server.backend.modules.user.internal;
 
 import lombok.RequiredArgsConstructor;
 import org.avarc.server.backend.modules.user.api.UserAccess;
+import org.avarc.server.backend.modules.user.api.UserApi;
 import org.avarc.server.backend.modules.user.api.UserDto;
 import org.avarc.server.backend.modules.user.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserAccess {
+public class UserService implements UserAccess, UserApi {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -23,7 +24,7 @@ public class UserService implements UserAccess {
 
     @Deprecated(forRemoval = true)
     public UserDto createSampleUser() {
-        return createUser(new UserDto("sample-from-api", ""));
+        return new UserDto("sample-from-api", "");
     }
 
     public UserDto login(UserDto requestDto) {
