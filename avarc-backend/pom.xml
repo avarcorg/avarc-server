@@ -123,6 +123,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>com.github.davidmoten</groupId>
                 <artifactId>plantuml-maven-plugin</artifactId>
@@ -137,7 +138,6 @@
                     </execution>
                 </executions>
                 <configuration>
-
                     <sources>
                         <directory>${project.build.directory}/spring-modulith-docs</directory>
                         <includes>
@@ -151,6 +151,27 @@
                     <preserveDirectoryStructure>false</preserveDirectoryStructure>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>${project.name}.zip</finalName>
+                    <descriptors>
+                        <descriptor>src/assembly/module-zip.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-archive-for-backend</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
