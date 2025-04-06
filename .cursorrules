@@ -1,3 +1,37 @@
+monorepo: true
+
+packages:
+  - path: avarc-backend
+    language: java
+    name: avarc-backend
+    type: backend
+    entry: src/main/java/org/avarc/server/backend/AvarcBackendApplication.java
+    testPath: src/test/java
+    packageManager: maven
+
+  - path: avarc-frontend
+    language: javascript
+    name: avarc-frontend
+    type: frontend
+    entry: pages/index.js
+    testPath: __tests__
+    packageManager: npm
+
+  - path: avarc-nginx
+    language: nginx
+    name: avarc-nginx
+    type: infrastructure
+    entry: nginx.conf
+
+ignore:
+  - "**/node_modules/**"
+  - "**/build/**"
+  - "**/.next/**"
+  - "**/.idea/**"
+  - "**/target/**"
+  - "**/.git/**"
+  - "**/*.bak"
+
 project_stack:
   - spring-boot
   - java
