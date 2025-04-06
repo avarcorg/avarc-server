@@ -129,7 +129,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>${project.name}.zip</finalName>
+                    <finalName>${project.name}</finalName>
                     <descriptors>
                         <descriptor>src/assembly/module-zip.xml</descriptor>
                     </descriptors>
