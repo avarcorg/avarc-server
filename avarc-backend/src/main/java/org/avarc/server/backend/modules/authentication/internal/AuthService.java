@@ -1,7 +1,6 @@
 package org.avarc.server.backend.modules.authentication.internal;
 
 import org.avarc.server.backend.modules.authentication.api.AuthRequest;
-import org.avarc.server.backend.modules.authentication.api.AuthResponse;
 import org.avarc.server.backend.modules.user.api.UserAccess;
 import org.avarc.server.backend.modules.user.api.UserDto;
 import org.springframework.stereotype.Service;
@@ -15,15 +14,15 @@ public class AuthService {
         this.userAccess = userAccess;
     }
 
-    public AuthResponse register(AuthRequest request) {
+    public UserDto register(AuthRequest request) {
         UserDto userDto = userAccess.register(request.getUsername(), request.getPassword());
-        return new AuthResponse("dummy-token", userDto);
+        return userDto;
     }
 
-    public AuthResponse authenticate(AuthRequest request) {
+    public UserDto authenticate(AuthRequest request) {
         UserDto userDto = userAccess.findByUsername(request.getUsername());
         if (userDto != null && request.getPassword().equals("known-pass")) { // dummy password check placeholder
-            return new AuthResponse("dummy-token", userDto);
+            return userDto;
         }
         return null;
     }
