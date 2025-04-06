@@ -15,6 +15,6 @@ public class UserAccessConfiguration {
 
     @Bean
     public UserAccess userAccess() {
-        return userService;
+        return (UserAccess) userService;
     }
 }

@@ -2,9 +2,32 @@ package org.avarc.server.backend.modules.user.internal;
 
 import org.avarc.server.backend.modules.user.api.UserDto;
 import org.avarc.server.backend.modules.user.model.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper {
-    public static UserDto toDto(User user) {
-        return new UserDto(user.getUsername());
+
+    // TODO convert to mapstruct later
+
+    public UserDto toDto(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        UserDto dto = new UserDto();
+        dto.setUsername(user.getUsername());
+        dto.setPassword(user.getPassword()); // Be cautious exposing passwords
+        return dto;
+    }
+
+    public User fromDto(UserDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        return user;
     }
 }

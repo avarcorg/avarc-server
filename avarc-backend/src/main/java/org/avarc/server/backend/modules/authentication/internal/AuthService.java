@@ -15,11 +15,12 @@ public class AuthService {
     }
 
     public UserDto register(AuthRequest request) {
-        UserDto userDto = userAccess.register(request.getUsername(), request.getPassword());
+        UserDto userDto = userAccess.register(new UserDto(request.getUsername(), request.getPassword()));
         return userDto;
     }
 
     public UserDto authenticate(AuthRequest request) {
+        // TODO convert to login() method or somesuch in the service
         UserDto userDto = userAccess.findByUsername(request.getUsername());
         if (userDto != null && request.getPassword().equals("known-pass")) { // dummy password check placeholder
             return userDto;

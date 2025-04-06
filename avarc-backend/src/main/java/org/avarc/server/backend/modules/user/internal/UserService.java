@@ -1,39 +1,54 @@
 package org.avarc.server.backend.modules.user.internal;
 
+import lombok.RequiredArgsConstructor;
 import org.avarc.server.backend.modules.user.api.UserAccess;
-import org.avarc.server.backend.modules.user.api.UserApi;
 import org.avarc.server.backend.modules.user.api.UserDto;
 import org.avarc.server.backend.modules.user.model.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements UserAccess, UserApi {
+@RequiredArgsConstructor
+public class UserService implements UserAccess {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserDto createUser(UserDto dto) {
+        User user = userMapper.fromDto(dto);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        return userMapper.toDto(userRepository.save(user));
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    public UserDto findByUsername(String username) {
-        return UserMapper.toDto(userRepository.findByUsername(username));
-    }
-
-    @Override
-    public UserDto register(String username, String password) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        return UserMapper.toDto(userRepository.save(user));
-    }
-
-    @Override
+    @Deprecated(forRemoval = true)
     public UserDto createSampleUser() {
-        return new UserDto("sample-from-api");
+        return createUser(new UserDto("sample-from-api", ""));
+    }
+
+    public UserDto login(UserDto requestDto) {
+        return userRepository.findByUsername(requestDto.getUsername())
+            .filter(user -> passwordEncoder.matches(requestDto.getPassword(), user.getPassword()))
+            .map(userMapper::toDto)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+    }
+
+    public UserDto findByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .map(userMapper::toDto)
+            .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+    }
+
+    @Override
+    public UserDto register(UserDto requestDto) {
+        userRepository.findByUsername(requestDto.getUsername())
+            .ifPresent(result -> {
+                throw new IllegalStateException("User already exists: " + requestDto.getUsername());
+            });
+
+        User user = userMapper.fromDto(requestDto);
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+
+        return userMapper.toDto(userRepository.save(user));
     }
 }
