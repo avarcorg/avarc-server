@@ -1,36 +1,39 @@
 package org.avarc.server.backend.modules.user.internal;
 
-import java.util.Optional;
-import org.avarc.server.backend.modules.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.avarc.server.backend.modules.user.api.UserAccess;
+import org.avarc.server.backend.modules.user.api.UserApi;
+import org.avarc.server.backend.modules.user.api.UserDto;
+import org.avarc.server.backend.modules.user.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserAccess, UserApi {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public void register(String username, String rawPassword) {
-        String encoded = passwordEncoder.encode(rawPassword);
-        userRepository.save(new User(username, encoded));
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public Optional<String> authenticate(String username, String rawPassword) {
-        return userRepository.findByUsername(username)
-            .filter(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
-            .map(User::getUsername); // return username if valid
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    @Override
+    public UserDto findByUsername(String username) {
+        return UserMapper.toDto(userRepository.findByUsername(username));
     }
 
-    public Optional<User> getUserByUUID(java.util.UUID uuid) {
-        return userRepository.findByUuid(uuid);
+    @Override
+    public UserDto register(String username, String password) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        return UserMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDto createSampleUser() {
+        return new UserDto("sample-from-api");
     }
 }

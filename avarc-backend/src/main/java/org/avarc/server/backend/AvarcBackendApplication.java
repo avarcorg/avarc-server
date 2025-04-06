@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.modulith.Modulithic;
 
 @SpringBootApplication
 @PropertySources({
@@ -16,6 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 )
 @EntityScan(basePackageClasses = AvarcBackendApplication.class)
 @EnableJpaRepositories(basePackageClasses = AvarcBackendApplication.class)
+@Modulithic
 public class AvarcBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(AvarcBackendApplication.class, args);
