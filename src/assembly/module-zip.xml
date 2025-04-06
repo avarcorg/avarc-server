@@ -23,6 +23,12 @@
                 <exclude>target/**</exclude>
                 <exclude>.idea/**</exclude>
                 <exclude>*.iml</exclude>
+
+                <!-- Exclude pre-existing archives -->
+                <exclude>*.zip</exclude>
+
+                <!-- Exclude the complete git history -->
+                <exclude>.git/**</exclude>
             </excludes>
         </fileSet>
     </fileSets>
