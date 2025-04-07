@@ -31,7 +31,13 @@ public class SecurityConfig {
                     "/swagger-ui.html",
                     "/internal/openapi.json"
                 ).permitAll()
+                // H2 database
+                .requestMatchers("/h2-console/**", "/h2-database/**").permitAll() // .hasRole("ADMIN")
+                // Everything else
                 .anyRequest().authenticated()
+            )
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())  // Allow H2 console in iframe
             )
             .cors(Customizer.withDefaults());
 
