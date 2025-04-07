@@ -1,6 +1,7 @@
 package org.avarc.server.backend.modules.user.internal;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.avarc.server.backend.modules.user.api.UserAccess;
 import org.avarc.server.backend.modules.user.api.UserApi;
 import org.avarc.server.backend.modules.user.api.UserDto;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService implements UserAccess, UserApi {
 
     private final UserRepository userRepository;
@@ -28,6 +30,7 @@ public class UserService implements UserAccess, UserApi {
     }
 
     public UserDto login(UserDto requestDto) {
+        log.debug("→ Entering login()");
         return userRepository.findByUsername(requestDto.getUsername())
             .filter(user -> passwordEncoder.matches(requestDto.getPassword(), user.getPassword()))
             .map(userMapper::toDto)
@@ -35,6 +38,7 @@ public class UserService implements UserAccess, UserApi {
     }
 
     public UserDto findByUsername(String username) {
+        log.debug("→ Entering findByUsername()");
         return userRepository.findByUsername(username)
             .map(userMapper::toDto)
             .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
@@ -42,6 +46,7 @@ public class UserService implements UserAccess, UserApi {
 
     @Override
     public UserDto register(UserDto requestDto) {
+        log.debug("→ Entering register()");
         userRepository.findByUsername(requestDto.getUsername())
             .ifPresent(result -> {
                 throw new IllegalStateException("User already exists: " + requestDto.getUsername());
