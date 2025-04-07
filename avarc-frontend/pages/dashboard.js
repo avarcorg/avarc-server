@@ -1,27 +1,56 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { apiClient } from '../services/apiClient';
 import Layout from '../components/Layout';
+import { withAuth } from '../components/withAuth';
 
-export default function Dashboard() {
-  const router = useRouter();
-  const [token, setToken] = useState('');
-  const [username, setUsername] = useState('');
+function Dashboard({ user }) {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    const user = localStorage.getItem('username');
-    if (!jwt) {
-      router.push('/auth/login');
-    } else {
-      setToken(jwt);
-      setUsername(user);
-    }
+    const fetchDashboardData = async () => {
+      try {
+        const result = await apiClient('/api/dashboard');
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
   }, []);
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="text-red-600">Error: {error}</div>
+      </Layout>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Layout>
+        <div>Loading dashboard data...</div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
-      <h2>Dashboard</h2>
-      <p>Welcome, {username}</p>
+      <div>
+        <h1>Welcome, {user.username}!</h1>
+        {data && (
+          <div>
+            {/* Render your dashboard data here */}
+          </div>
+        )}
+      </div>
     </Layout>
   );
 }
+
+export default withAuth(Dashboard);
