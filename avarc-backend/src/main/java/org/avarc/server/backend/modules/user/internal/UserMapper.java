@@ -17,6 +17,8 @@ public class UserMapper {
         UserDto dto = new UserDto();
         dto.setUsername(user.getUsername());
         dto.setPassword(user.getPassword()); // Be cautious exposing passwords
+        dto.setRoles(user.getRoles());
+
         return dto;
     }
 
@@ -28,6 +30,8 @@ public class UserMapper {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
+        user.setRoles(dto.getRoles());
+
         return user;
     }
 }

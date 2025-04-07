@@ -21,7 +21,9 @@ public class UserService implements UserAccess, UserApi {
     public UserDto createUser(UserDto dto) {
         User user = userMapper.fromDto(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        return userMapper.toDto(userRepository.save(user));
+        user = userRepository.save(user);
+        log.debug("  Created user: {}", user);
+        return userMapper.toDto(user);
     }
 
     @Deprecated(forRemoval = true)
