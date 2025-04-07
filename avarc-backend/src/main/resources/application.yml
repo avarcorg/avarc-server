@@ -12,6 +12,7 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
+
   h2:
     console:
       enabled: true
@@ -21,6 +22,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 app:
