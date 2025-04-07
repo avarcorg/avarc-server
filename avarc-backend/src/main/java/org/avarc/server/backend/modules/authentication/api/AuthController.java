@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.avarc.server.backend.modules.authentication.internal.AuthService;
+import org.avarc.server.backend.modules.security.JwtService;
 import org.avarc.server.backend.modules.user.api.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     @Operation(
@@ -43,7 +46,7 @@ public class AuthController {
                 description = "Successful registration",
                 content = @Content(examples = @ExampleObject(
                     name = "Success",
-                    value = "{ \"user\": { \"username\": \"newuser\", \"password\": \"<encrypted>\" }, \"errorCode\": null, \"errorMessage\": null }"
+                    value = "{\"token\":\"eyJhbGciOiJIUzI1NiIs...\",\"user\":{\"username\":\"new.user\"},\"errorCode\":null,\"errorMessage\":null}"
                 ))
             ),
             @ApiResponse(
@@ -60,9 +63,10 @@ public class AuthController {
         log.debug("→ Entering register()");
         try {
             UserDto user = authService.register(request);
-            return ResponseEntity.ok(new AuthResponse(user, null, null));
+            String token = jwtService.generateToken(user.getUsername());
+            return ResponseEntity.ok(new AuthResponse(user, token));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new AuthResponse(null, "REGISTER_ERROR", e.getMessage()));
+            return ResponseEntity.badRequest().body(new AuthResponse("LOGIN_ERROR", e.getMessage()));
         }
     }
 
@@ -83,7 +87,7 @@ public class AuthController {
                 responseCode = "200",
                 description = "Successful login",
                 content = @Content(examples = @ExampleObject(
-                    value = "{ \"user\": { \"username\": \"admin\", \"password\": \"<encrypted>\" }, \"errorCode\": null, \"errorMessage\": null }"
+                    value = "{\"token\":\"eyJhbGciOiJIUzI1NiIs...\",\"user\":{\"username\":\"jane.doe\"},\"errorCode\":null,\"errorMessage\":null}"
                 ))
             ),
             @ApiResponse(
@@ -99,9 +103,10 @@ public class AuthController {
         log.debug("→ Entering login()");
         try {
             UserDto user = authService.authenticate(request);
-            return ResponseEntity.ok(new AuthResponse(user, null, null));
+            String token = jwtService.generateToken(user.getUsername());
+            return ResponseEntity.ok(new AuthResponse(user, token));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new AuthResponse(null, "LOGIN_ERROR", e.getMessage()));
+            return ResponseEntity.badRequest().body(new AuthResponse("LOGIN_ERROR", e.getMessage()));
         }
     }
 }
