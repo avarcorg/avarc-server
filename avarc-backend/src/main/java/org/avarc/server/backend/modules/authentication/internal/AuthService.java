@@ -25,12 +25,7 @@ public class AuthService {
 
     public UserDto authenticate(AuthRequest request) {
         log.debug("→ Entering authenticate()");
-        log.debug("  TODO convert to login() method or somesuch in the service");
-        UserDto userDto = userAccess.findByUsername(request.getUsername());
-        log.debug("  obtained UserDto: {}", userDto);
-        if (userDto != null && request.getPassword().equals("known-pass")) { // dummy password check placeholder
-            return userDto;
-        }
-        return null;
+        UserDto userDto = userAccess.login(new UserDto(request.getUsername(), request.getPassword()));
+        return userDto;
     }
 }
