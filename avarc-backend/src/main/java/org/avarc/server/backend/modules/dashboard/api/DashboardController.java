@@ -9,18 +9,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.avarc.server.backend.modules.authentication.api.AuthRequest;
-import org.avarc.server.backend.modules.authentication.api.AuthResponse;
-import org.avarc.server.backend.modules.authentication.internal.AuthService;
 import org.avarc.server.backend.modules.security.JwtService;
 import org.avarc.server.backend.modules.user.api.Role;
 import org.avarc.server.backend.modules.user.api.UserDto;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,6 +34,14 @@ public class DashboardController {
         summary = "Get current authenticated user",
         description = "Returns the current user if authenticated and token is valid.",
         security = @SecurityRequirement(name = "bearerAuth"),
+        parameters = {
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = HttpHeaders.AUTHORIZATION,
+                description = "Bearer token",
+                required = true,
+                example = "Bearer eyJhbGciOi..."
+            )
+        },
         responses = {
             @ApiResponse(
                 responseCode = "200",
@@ -54,7 +59,7 @@ public class DashboardController {
         }
     )
     @GetMapping("/me")
-    public ResponseEntity<UserDto> me(Authentication authentication) {
+    public ResponseEntity<UserDto> me(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, Authentication authentication) {
         log.debug("→ Entering me()");
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -62,15 +67,21 @@ public class DashboardController {
         }
 
         try {
+            String token = authHeader != null && authHeader.startsWith("Bearer ")
+                ? authHeader.substring(7)
+                : null;
+
+            if (token == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
             String username = authentication.getName();
-            log.debug("  current username: {}", username);
-            List<Role> roles = authentication.getAuthorities().stream()
-                .map(granted -> Role.valueOf(granted.getAuthority().replace("ROLE_", "")))
-                .toList();
+            UserDto dto = new UserDto(username, null);
 
+            List<Role> roles = jwtService.extractRoles(token);
             log.debug("  current roles: {}", roles);
+            dto.setRoles(roles);
 
-            UserDto dto = new UserDto(username, null, roles);
             log.debug("  current user: {}", dto);
             return ResponseEntity.ok(dto);
         } catch (Exception e) {
