@@ -58,6 +58,23 @@ const getCurrentUser = async () => {
   }
 };
 
+const authenticateWithToken = async (token) => {
+  // apiClient likely already uses the token from localStorage.
+  // If not, you might need to pass the token explicitly to apiClient here.
+  // For now, we assume apiClient handles the token automatically.
+  // We might pass the token argument for future flexibility or if apiClient needs it.
+  try {
+    // Re-use getCurrentUser logic as it fetches user data based on the token
+    const user = await getCurrentUser();
+    // Optionally, you could verify if the returned user data is valid
+    // or if the token needs refreshing based on the API response
+    return user;
+  } catch (error) {
+    // If getCurrentUser fails (e.g., token invalid/expired), reject the promise
+    return Promise.reject(error);
+  }
+};
+
 const logout = async () => {
   try {
     await apiClient(ENDPOINTS.AUTH.LOGOUT, {
@@ -70,10 +87,11 @@ const logout = async () => {
 };
 
 export const AuthService = {
-  loginUser,
   registerUser,
   getCurrentUser,
-  logout
+  loginUser,
+  logout,
+  authenticateWithToken,
 };
 
 export default AuthService;

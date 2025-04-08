@@ -13,19 +13,30 @@ export function withAuth(WrappedComponent) {
 
     useEffect(() => {
       const verifyAuth = async () => {
-        try {
-          const user = await AuthService.getCurrentUser();
-          setState({
-            verified: true,
-            loading: false,
-            error: null,
-            user
-          });
-        } catch (err) {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+          try {
+            const user = await AuthService.authenticateWithToken(token);
+            setState({
+              verified: true,
+              loading: false,
+              error: null,
+              user
+            });
+          } catch (err) {
+            setState({
+              verified: false,
+              loading: false,
+              error: err.message
+            });
+            localStorage.removeItem('jwt');
+            router.replace('/auth/login');
+          }
+        } else {
           setState({
             verified: false,
             loading: false,
-            error: err.message
+            error: 'No token found'
           });
           router.replace('/auth/login');
         }
