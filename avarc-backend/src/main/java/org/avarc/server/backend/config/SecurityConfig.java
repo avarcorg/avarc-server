@@ -32,7 +32,8 @@ public class SecurityConfig {
                     "/internal/openapi.json"
                 ).permitAll()
                 // H2 database
-                .requestMatchers("/h2-console/**", "/h2-database/**").permitAll() // .hasRole("ADMIN")
+                // .requestMatchers("/h2-console/**", "/h2-database/**").hasRole("ADMIN")
+                .requestMatchers("/h2-console/**", "/h2-database/**").permitAll()
                 // Everything else
                 .anyRequest().authenticated()
             )
