@@ -16,7 +16,7 @@ class AuthModuleTest {
     @Test
     void verifyUserDtoExposedViaApi() {
         UserRepository repo = mock(UserRepository.class);
-        UserMapper mapper = new UserMapper(); // plain Java version — safe to use directly
+        UserMapper mapper = UserMapper.INSTANCE;
         PasswordEncoder encoder = mock(PasswordEncoder.class);
 
         UserApi api = new UserService(repo, mapper, encoder);

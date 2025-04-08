@@ -19,7 +19,7 @@ public class UserService implements UserAccess, UserApi {
     private final PasswordEncoder passwordEncoder;
 
     public UserDto createUser(UserDto dto) {
-        User user = userMapper.fromDto(dto);
+        User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user = userRepository.save(user);
         log.debug("  Created user: {}", user);
@@ -54,7 +54,7 @@ public class UserService implements UserAccess, UserApi {
                 throw new IllegalStateException("User already exists: " + requestDto.getUsername());
             });
 
-        User user = userMapper.fromDto(requestDto);
+        User user = userMapper.toEntity(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 
         return userMapper.toDto(userRepository.save(user));
