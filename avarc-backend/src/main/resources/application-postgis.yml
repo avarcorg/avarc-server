@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:avarc}
+    username: ${POSTGRES_USER:avarc}
+    password: ${POSTGRES_PASSWORD:avarc123}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # Or org.hibernate.dialect.PostGISDialect if needed and available
+    hibernate:
+      ddl-auto: update # Or validate, none, create, create-drop depending on your needs
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true # Often needed for spatial types
