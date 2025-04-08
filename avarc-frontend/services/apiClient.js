@@ -1,4 +1,4 @@
-const API_HOST = process.env.NEXT_PUBLIC_API_HOST || 'http://localhost:8080';
+import { API_CONFIG } from '../config/config';
 
 export class ApiError extends Error {
   constructor(message, status, data = {}) {
@@ -25,7 +25,7 @@ export const apiClient = async (endpoint, options = {}) => {
     },
   };
 
-  const response = await fetch(`${API_HOST}${endpoint}`, config);
+  const response = await fetch(`${API_CONFIG.HOST}${endpoint}`, config);
   const responseData = response.status !== 204 ?
     await response.json().catch(() => ({})) : {};
 

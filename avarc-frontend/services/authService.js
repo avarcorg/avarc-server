@@ -1,10 +1,9 @@
 import { apiClient, ApiError } from './apiClient';
-
-const AUTH_ENDPOINT = '/rest/v0.1.0/auth';
+import { ENDPOINTS } from '../config/endpoints';
 
 const loginUser = async (username, password) => {
   try {
-    const data = await apiClient(`${AUTH_ENDPOINT}/login`, {
+    const data = await apiClient(ENDPOINTS.AUTH.LOGIN, {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     });
@@ -24,7 +23,7 @@ const loginUser = async (username, password) => {
 
 const registerUser = async (username, password) => {
   try {
-    const data = await apiClient(`${AUTH_ENDPOINT}/register`, {
+    const data = await apiClient(ENDPOINTS.AUTH.REGISTER, {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     });
@@ -50,7 +49,7 @@ const registerUser = async (username, password) => {
 
 const getCurrentUser = async () => {
   try {
-    return await apiClient(`${AUTH_ENDPOINT}/me`, {
+    return await apiClient(ENDPOINTS.DASHBOARD.ME, {
       method: 'GET'
     });
   } catch (error) {
@@ -61,7 +60,7 @@ const getCurrentUser = async () => {
 
 const logout = async () => {
   try {
-    await apiClient(`${AUTH_ENDPOINT}/logout`, {
+    await apiClient(ENDPOINTS.AUTH.LOGOUT, {
       method: 'POST'
     });
   } finally {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { apiClient } from '../services/apiClient';
 import Layout from '../components/Layout';
 import { withAuth } from '../components/withAuth';
+import { ENDPOINTS } from '../config/endpoints';
 
 function Dashboard({ user }) {
   const [data, setData] = useState(null);
@@ -11,7 +12,7 @@ function Dashboard({ user }) {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const result = await apiClient('/api/dashboard');
+        const result = await apiClient(ENDPOINTS.DASHBOARD.ME);
         setData(result);
       } catch (err) {
         setError(err.message);
