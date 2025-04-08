@@ -1,5 +1,6 @@
 import { apiClient, ApiError } from './apiClient';
 import { ENDPOINTS } from '../config/endpoints';
+import { jwtDecode } from 'jwt-decode';
 
 const loginUser = async (username, password) => {
   try {
@@ -8,9 +9,36 @@ const loginUser = async (username, password) => {
       body: JSON.stringify({ username, password }),
     });
 
-    localStorage.setItem('jwt', data.token);
-    localStorage.setItem('username', username);
-    return data;
+    const token = data.token;
+    localStorage.setItem('jwt', token);
+
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        // Adjust keys ('sub', 'roles') based on your actual JWT payload structure
+        const storedUsername = decodedToken.sub || username; // Fallback to provided username if 'sub' is missing
+        const roles = decodedToken.roles || []; // Default to empty array if 'roles' is missing
+
+        localStorage.setItem('username', storedUsername);
+        localStorage.setItem('roles', JSON.stringify(roles)); // Store roles as a JSON string
+
+        // Optionally return decoded info along with the original data
+        return { ...data, user: { username: storedUsername, roles } };
+      } catch (decodeError) {
+        console.error('Failed to decode JWT:', decodeError);
+        // If decoding fails, still store the token and username, but clear roles
+        localStorage.setItem('username', username);
+        localStorage.removeItem('roles');
+        // Decide how to handle this error - maybe reject or just return original data?
+        // For now, return original data
+        return data;
+      }
+    } else {
+      // Handle cases where token might be missing in the response
+      localStorage.setItem('username', username); // Store provided username
+      localStorage.removeItem('roles');
+      return data;
+    }
   } catch (error) {
     if (error instanceof ApiError && error.status === 400) {
       // For login errors, we want to pass them through to the UI
@@ -83,6 +111,7 @@ const logout = async () => {
   } finally {
     localStorage.removeItem('jwt');
     localStorage.removeItem('username');
+    localStorage.removeItem('roles');
   }
 };
 
