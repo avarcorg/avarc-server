@@ -69,7 +69,7 @@ public class AuthController {
         log.debug("→ Entering register()");
         try {
             UserDto user = authService.register(request);
-            String token = jwtService.generateToken(user.getUsername());
+            String token = jwtService.generateToken(user.getUsername(), user.getRoles());
             return ResponseEntity.ok(new AuthResponse(user, token));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new AuthResponse("LOGIN_ERROR", e.getMessage()));
@@ -109,7 +109,7 @@ public class AuthController {
         log.debug("→ Entering login()");
         try {
             UserDto user = authService.authenticate(request);
-            String token = jwtService.generateToken(user.getUsername());
+            String token = jwtService.generateToken(user.getUsername(), user.getRoles());
             return ResponseEntity.ok(new AuthResponse(user, token));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new AuthResponse("LOGIN_ERROR", e.getMessage()));
@@ -153,7 +153,7 @@ public class AuthController {
 
             log.debug("  current roles: {}", roles);
 
-            UserDto dto = new UserDto(username,  null, roles);
+            UserDto dto = new UserDto(username, null, roles);
             log.debug("  current user: {}", dto);
             return ResponseEntity.ok(dto);
         } catch (Exception e) {

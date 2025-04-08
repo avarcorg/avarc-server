@@ -1,6 +1,7 @@
 package org.avarc.server.backend.modules.security;
 
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
 import io.jsonwebtoken.Claims;
@@ -10,6 +11,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.avarc.server.backend.modules.user.api.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -46,10 +48,20 @@ public class JwtService {
         }
     }
 
-    public String generateToken(String username) {
+    public List<Role> extractRoles(String token) {
+        return extractClaim(token, claims -> {
+            List<String> roles = claims.get("roles", List.class);
+            return roles != null
+                ? roles.stream().map(Role::valueOf).toList()
+                : List.of();
+        });
+    }
+
+    public String generateToken(String username, List<Role> roles) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
             .subject(username)
+            .claim("roles", roles)
             .issuedAt(new Date(now))
             .expiration(new Date(now + expirationMs))
             .signWith(getSigningKey())
