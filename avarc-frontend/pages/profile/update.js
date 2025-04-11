@@ -1,12 +1,11 @@
 import { withAuth } from '../../components/withAuth';
 import UserUpdateForm from '../../components/UserUpdateForm/UserUpdateForm';
-import Layout from '../../components/Layout';
 
 function UpdateProfile() {
     return (
-        <Layout>
+        <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-50">
             <UserUpdateForm />
-        </Layout>
+        </main>
     );
 }
 

@@ -11,6 +11,10 @@ const HomeView = ({
         <div className="w-full max-w-md mx-auto">
             <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="space-y-6">
+                    <h1 className="text-2xl font-bold text-center">
+                        Welcome to avArc
+                    </h1>
+
                     {CONFIG.OAUTH_WITH_GOOGLE && (
                         <>
                             <Button

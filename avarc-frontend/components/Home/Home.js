@@ -1,6 +1,5 @@
 import { useHome } from '../../hooks/useHome';
 import HomeView from './HomeView';
-import Layout from '../Layout';
 
 const Home = () => {
     const {
@@ -9,12 +8,10 @@ const Home = () => {
     } = useHome();
 
     return (
-        <Layout>
-            <HomeView
-                handleLogin={handleLogin}
-                handleRegister={handleRegister}
-            />
-        </Layout>
+        <HomeView
+            handleLogin={handleLogin}
+            handleRegister={handleRegister}
+        />
     );
 };
 
