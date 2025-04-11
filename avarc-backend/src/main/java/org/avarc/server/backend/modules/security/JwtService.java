@@ -2,8 +2,15 @@ package org.avarc.server.backend.modules.security;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
+
 import javax.crypto.SecretKey;
+
+import org.avarc.server.backend.modules.user.api.Role;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -11,9 +18,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
-import org.avarc.server.backend.modules.user.api.Role;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +36,10 @@ public class JwtService {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public UUID extractUuid(String token) {
+        return extractClaim(token, claims -> UUID.fromString(claims.get("uuid", String.class)));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> resolver) {
@@ -57,10 +65,11 @@ public class JwtService {
         });
     }
 
-    public String generateToken(String username, List<Role> roles) {
+    public String generateToken(String username, UUID uuid, List<Role> roles) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
             .subject(username)
+            .claim("uuid", uuid.toString())
             .claim("roles", roles)
             .issuedAt(new Date(now))
             .expiration(new Date(now + expirationMs))

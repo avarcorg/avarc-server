@@ -2,6 +2,8 @@ package org.avarc.server.backend.modules.user.api;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+    private UUID uuid;
     private String username;
     private String password;
     private List<Role> roles;

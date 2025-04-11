@@ -9,9 +9,12 @@ function Dashboard({ user }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState([]);
+  const [uuid, setUuid] = useState(null);
 
   useEffect(() => {
     const storedRoles = localStorage.getItem('roles');
+    const storedUuid = localStorage.getItem('uuid');
+
     if (storedRoles) {
       try {
         setRoles(JSON.parse(storedRoles));
@@ -21,10 +24,18 @@ function Dashboard({ user }) {
       }
     }
 
+    if (storedUuid) {
+      setUuid(storedUuid);
+    }
+
     const fetchDashboardData = async () => {
       try {
         const result = await apiClient(ENDPOINTS.DASHBOARD.ME);
         setData(result);
+        if (result.uuid) {
+          setUuid(result.uuid);
+          localStorage.setItem('uuid', result.uuid);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -55,6 +66,13 @@ function Dashboard({ user }) {
     <Layout>
       <div>
         <h1>Welcome, {user.username}!</h1>
+
+        {uuid && (
+          <div className="mt-2">
+            <h2 className="text-lg font-semibold">Your UUID:</h2>
+            <p className="ml-4 font-mono">{uuid}</p>
+          </div>
+        )}
 
         {roles.length > 0 && (
           <div className="mt-2">

@@ -8,6 +8,7 @@ import org.avarc.server.backend.modules.user.api.UserDto;
 import org.avarc.server.backend.modules.user.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +47,13 @@ public class UserService implements UserAccess, UserApi {
             .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
     }
 
+    public UserDto findByUuid(UUID uuid) {
+        log.debug("→ Entering findByUuid()");
+        return userRepository.findByUuid(uuid)
+            .map(userMapper::toDto)
+            .orElseThrow(() -> new IllegalArgumentException("User not found with UUID: " + uuid));
+    }
+
     @Override
     public UserDto register(UserDto requestDto) {
         log.debug("→ Entering register()");
@@ -55,6 +63,7 @@ public class UserService implements UserAccess, UserApi {
             });
 
         User user = userMapper.toEntity(requestDto);
+        user.setUuid(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 
         return userMapper.toDto(userRepository.save(user));

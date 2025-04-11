@@ -1,6 +1,7 @@
 package org.avarc.server.backend.modules.dashboard.api;
 
 import java.util.List;
+import java.util.UUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -48,7 +49,7 @@ public class DashboardController {
                 description = "Current user info",
                 content = @Content(mediaType = "application/json",
                                    examples = @ExampleObject(
-                                       value = "{\"username\": \"admin\", \"roles\": [\"ADMIN\"], \"token\": null}"
+                                       value = "{\"username\": \"admin\", \"roles\": [\"ADMIN\"], \"uuid\": \"123e4567-e89b-12d3-a456-426614174000\", \"token\": null}"
                                    )
                 )
             ),
@@ -80,7 +81,11 @@ public class DashboardController {
 
             List<Role> roles = jwtService.extractRoles(token);
             log.debug("  current roles: {}", roles);
+            UUID uuid = jwtService.extractUuid(token);
+            log.debug("  current uuid: {}", uuid);
+
             dto.setRoles(roles);
+            dto.setUuid(uuid);
 
             log.debug("  current user: {}", dto);
             return ResponseEntity.ok(dto);

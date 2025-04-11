@@ -1,12 +1,5 @@
 package org.avarc.server.backend.modules.authentication.api;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.avarc.server.backend.modules.authentication.internal.AuthService;
 import org.avarc.server.backend.modules.security.JwtService;
 import org.avarc.server.backend.modules.user.api.UserDto;
@@ -16,11 +9,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/rest/v0.1.0/auth")
+@Tag(name = "Authentication", description = "Authentication endpoints")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Authentication", description = "Endpoints for user login and registration")
 public class AuthController {
 
     private final AuthService authService;
@@ -29,15 +30,14 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(
-        summary = "Register new user",
-        description = "Creates a new user if the username is not already taken.",
+        summary = "Register a new user",
+        description = "Registers a new user and returns a JWT token.",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "User credentials for registration",
+            description = "User registration data",
             required = true,
             content = @Content(examples = @ExampleObject(
-                name = "Registration Request Example",
-                summary = "Example user registration input",
-                value = "{ \"username\": \"newuser\", \"password\": \"securepass\" }"
+                name = "Register Request Example",
+                value = "{ \"username\": \"jane.doe\", \"password\": \"password123\" }"
             ))
         ),
         responses = {
@@ -45,16 +45,14 @@ public class AuthController {
                 responseCode = "200",
                 description = "Successful registration",
                 content = @Content(examples = @ExampleObject(
-                    name = "Success",
-                    value = "{\"token\":\"eyJhbGciOiJIUzI1NiIs...\",\"user\":{\"username\":\"new.user\"},\"errorCode\":null,\"errorMessage\":null}"
+                    value = "{\"token\":\"eyJhbGciOiJIUzI1NiIs...\",\"user\":{\"username\":\"jane.doe\"},\"errorCode\":null,\"errorMessage\":null}"
                 ))
             ),
             @ApiResponse(
                 responseCode = "400",
-                description = "Registration error",
+                description = "Registration failed",
                 content = @Content(examples = @ExampleObject(
-                    name = "Username Already Exists",
-                    value = "{ \"user\": null, \"errorCode\": \"REGISTER_ERROR\", \"errorMessage\": \"User already exists: newuser\" }"
+                    value = "{ \"user\": null, \"errorCode\": \"REGISTER_ERROR\", \"errorMessage\": \"Username already exists\" }"
                 ))
             )
         }
@@ -63,10 +61,10 @@ public class AuthController {
         log.debug("→ Entering register()");
         try {
             UserDto user = authService.register(request);
-            String token = jwtService.generateToken(user.getUsername(), user.getRoles());
+            String token = jwtService.generateToken(user.getUsername(), user.getUuid(), user.getRoles());
             return ResponseEntity.ok(new AuthResponse(user, token));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new AuthResponse("LOGIN_ERROR", e.getMessage()));
+            return ResponseEntity.badRequest().body(new AuthResponse("REGISTER_ERROR", e.getMessage()));
         }
     }
 
@@ -103,7 +101,7 @@ public class AuthController {
         log.debug("→ Entering login()");
         try {
             UserDto user = authService.authenticate(request);
-            String token = jwtService.generateToken(user.getUsername(), user.getRoles());
+            String token = jwtService.generateToken(user.getUsername(), user.getUuid(), user.getRoles());
             return ResponseEntity.ok(new AuthResponse(user, token));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new AuthResponse("LOGIN_ERROR", e.getMessage()));

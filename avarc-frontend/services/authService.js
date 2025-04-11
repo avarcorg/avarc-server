@@ -15,27 +15,37 @@ const loginUser = async (username, password) => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        // Adjust keys ('sub', 'roles') based on your actual JWT payload structure
-        const storedUsername = decodedToken.sub || username; // Fallback to provided username if 'sub' is missing
-        const roles = decodedToken.roles || []; // Default to empty array if 'roles' is missing
+        // Extract user information from the token
+        const storedUsername = decodedToken.sub || username;
+        const uuid = decodedToken.uuid;
+        const roles = decodedToken.roles || [];
 
+        // Store user information in localStorage
         localStorage.setItem('username', storedUsername);
-        localStorage.setItem('roles', JSON.stringify(roles)); // Store roles as a JSON string
+        localStorage.setItem('uuid', uuid);
+        localStorage.setItem('roles', JSON.stringify(roles));
 
-        // Optionally return decoded info along with the original data
-        return { ...data, user: { username: storedUsername, roles } };
+        // Return the complete user information
+        return {
+          ...data,
+          user: {
+            username: storedUsername,
+            uuid,
+            roles
+          }
+        };
       } catch (decodeError) {
         console.error('Failed to decode JWT:', decodeError);
-        // If decoding fails, still store the token and username, but clear roles
+        // If decoding fails, still store the token and username, but clear other data
         localStorage.setItem('username', username);
+        localStorage.removeItem('uuid');
         localStorage.removeItem('roles');
-        // Decide how to handle this error - maybe reject or just return original data?
-        // For now, return original data
         return data;
       }
     } else {
       // Handle cases where token might be missing in the response
-      localStorage.setItem('username', username); // Store provided username
+      localStorage.setItem('username', username);
+      localStorage.removeItem('uuid');
       localStorage.removeItem('roles');
       return data;
     }
@@ -111,9 +121,12 @@ const logout = async () => {
   } finally {
     localStorage.removeItem('jwt');
     localStorage.removeItem('username');
+    localStorage.removeItem('uuid');
     localStorage.removeItem('roles');
   }
 };
+
+export { loginUser, logout };
 
 export const AuthService = {
   registerUser,
