@@ -31,8 +31,16 @@ export default function Layout({ children }) {
         {token && (
           <>
             <Link href="/dashboard">Dashboard</Link> |{' '}
-            <button onClick={logout} style={{ cursor: 'pointer' }}>Logout</button> |{' '}
-            <span>Hello, {username}!</span>
+            {username && (
+              <span className="inline-flex items-center space-x-2">
+                <button
+                  onClick={logout}
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
+                  Logout
+                </button>
+              </span>
+            )}
           </>
         )}
       </nav>

@@ -68,4 +68,26 @@ public class UserService implements UserAccess, UserApi {
 
         return userMapper.toDto(userRepository.save(user));
     }
+
+    public UserDto updateUser(UUID uuid, UserDto updateDto) {
+        log.debug("→ Entering updateUser()");
+        User existingUser = userRepository.findByUuid(uuid)
+            .orElseThrow(() -> new IllegalArgumentException("User not found with UUID: " + uuid));
+
+        // Check if new username is already taken by another user
+        if (!existingUser.getUsername().equals(updateDto.getUsername())) {
+            userRepository.findByUsername(updateDto.getUsername())
+                .ifPresent(user -> {
+                    throw new IllegalStateException("Username already taken: " + updateDto.getUsername());
+                });
+        }
+
+        existingUser.setUsername(updateDto.getUsername());
+        if (updateDto.getPassword() != null && !updateDto.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(updateDto.getPassword()));
+        }
+
+        User updatedUser = userRepository.save(existingUser);
+        return userMapper.toDto(updatedUser);
+    }
 }

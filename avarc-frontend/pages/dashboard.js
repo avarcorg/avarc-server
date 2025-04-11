@@ -3,38 +3,36 @@ import { apiClient } from '../services/apiClient';
 import Layout from '../components/Layout';
 import { withAuth } from '../components/withAuth';
 import { ENDPOINTS } from '../config/endpoints';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { AuthService } from '../services/authService';
 
-function Dashboard({ user }) {
+function Dashboard() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState([]);
   const [uuid, setUuid] = useState(null);
+  const router = useRouter();
+
+  const uuidFromStorage = typeof window !== 'undefined' ? localStorage.getItem('uuid') : null;
+  const rolesFromStorage = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('roles') || '[]') : [];
 
   useEffect(() => {
-    const storedRoles = localStorage.getItem('roles');
-    const storedUuid = localStorage.getItem('uuid');
-
-    if (storedRoles) {
+    const fetchUserData = async () => {
       try {
-        setRoles(JSON.parse(storedRoles));
-      } catch (e) {
-        console.error('Failed to parse roles from localStorage', e);
-        setRoles([]);
-      }
-    }
-
-    if (storedUuid) {
-      setUuid(storedUuid);
-    }
-
-    const fetchDashboardData = async () => {
-      try {
-        const result = await apiClient(ENDPOINTS.USERS.ME);
-        setData(result);
-        if (result.uuid) {
-          setUuid(result.uuid);
-          localStorage.setItem('uuid', result.uuid);
+        const userData = await AuthService.getCurrentUser();
+        setData(userData);
+        if (userData) {
+          localStorage.setItem('username', userData.username);
+          if (userData.uuid) {
+            setUuid(userData.uuid);
+            localStorage.setItem('uuid', userData.uuid);
+          }
+          if (userData.roles) {
+            setRoles(userData.roles);
+            localStorage.setItem('roles', JSON.stringify(userData.roles));
+          }
         }
       } catch (err) {
         setError(err.message);
@@ -43,7 +41,7 @@ function Dashboard({ user }) {
       }
     };
 
-    fetchDashboardData();
+    fetchUserData();
   }, []);
 
   if (error) {
@@ -64,32 +62,33 @@ function Dashboard({ user }) {
 
   return (
     <Layout>
-      <div>
-        <h1>Welcome, {user.username}!</h1>
-
-        {uuid && (
-          <div className="mt-2">
-            <h2 className="text-lg font-semibold">Your UUID:</h2>
-            <p className="ml-4 font-mono">{uuid}</p>
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">User Information</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-gray-600">Username:</p>
+              <p className="font-medium">{data?.username}</p>
+            </div>
+            <div>
+              <p className="text-gray-600">UUID:</p>
+              <p className="font-medium">{uuid}</p>
+            </div>
+            <div>
+              <p className="text-gray-600">Roles:</p>
+              <p className="font-medium">{roles.join(', ') || 'No roles assigned'}</p>
+            </div>
           </div>
-        )}
-
-        {roles.length > 0 && (
-          <div className="mt-2">
-            <h2 className="text-lg font-semibold">Your Roles:</h2>
-            <ul className="list-disc list-inside ml-4">
-              {roles.map((role, index) => (
-                <li key={index}>{role}</li>
-              ))}
-            </ul>
+          <div className="mt-6">
+            <Link
+              href="/profile/update"
+              className="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors"
+            >
+              Update Profile
+            </Link>
           </div>
-        )}
-
-        {data && (
-          <div>
-            {/* Render your dashboard data here */}
-          </div>
-        )}
+        </div>
       </div>
     </Layout>
   );

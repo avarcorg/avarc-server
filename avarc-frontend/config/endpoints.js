@@ -8,9 +8,9 @@ export const ENDPOINTS = {
     REGISTER: `${BASE_PATH}/auth/register`,
     LOGOUT: `${BASE_PATH}/auth/logout`,
   },
-  DASHBOARD: {
-    BASE: `${BASE_PATH}/dashboard`,
-    ME: `${BASE_PATH}/dashboard/me`,
+  USERS: {
+    BASE: `${BASE_PATH}/users`,
+    ME: `${BASE_PATH}/users/me`,
   }
 };
 

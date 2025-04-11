@@ -9,13 +9,15 @@ export default function Register() {
   const router = useRouter();
 
   const handleRegister = async () => {
-    const res = await AuthService.registerUser(form.username, form.password);
-    if (res.token && res.user) {
-      localStorage.setItem('jwt', res.token);
-      localStorage.setItem('username', res.user.username);
-      router.push('/dashboard');
-    } else {
-      setMessage(res.errorMessage || 'Registration failed.');
+    try {
+      const res = await AuthService.registerUser(form.username, form.password);
+      if (res.success) {
+        router.push('/dashboard');
+      } else {
+        setMessage('Registration failed.');
+      }
+    } catch (error) {
+      setMessage(error.message || 'Registration failed.');
     }
   };
 

@@ -14,36 +14,44 @@ export function withAuth(WrappedComponent) {
     useEffect(() => {
       const verifyAuth = async () => {
         const token = localStorage.getItem('jwt');
-        if (token) {
-          try {
-            const user = await AuthService.authenticateWithToken(token);
-            setState({
-              verified: true,
-              loading: false,
-              error: null,
-              user
-            });
-          } catch (err) {
-            setState({
-              verified: false,
-              loading: false,
-              error: err.message
-            });
-            localStorage.removeItem('jwt');
-            router.replace('/auth/login');
-          }
-        } else {
+        if (!token) {
           setState({
             verified: false,
             loading: false,
             error: 'No token found'
           });
-          router.replace('/auth/login');
+          router.push('/auth/login');
+          return;
+        }
+
+        try {
+          const user = await AuthService.authenticateWithToken(token);
+          setState({
+            verified: true,
+            loading: false,
+            error: null,
+            user
+          });
+        } catch (err) {
+          console.error('Authentication error:', err);
+          setState({
+            verified: false,
+            loading: false,
+            error: err.message
+          });
+          // Only clear auth data if it's an authentication error
+          if (err.status === 401) {
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('username');
+            localStorage.removeItem('uuid');
+            localStorage.removeItem('roles');
+          }
+          router.push('/auth/login');
         }
       };
 
       verifyAuth();
-    }, []);
+    }, [router]);
 
     if (state.loading) {
       return (
@@ -53,12 +61,8 @@ export function withAuth(WrappedComponent) {
       );
     }
 
-    if (state.error) {
-      return (
-        <div className="flex items-center justify-center min-h-screen">
-          <div>Authentication Error: {state.error}</div>
-        </div>
-      );
+    if (!state.verified) {
+      return null; // Don't render anything while redirecting
     }
 
     return <WrappedComponent {...props} user={state.user} />;

@@ -9,52 +9,46 @@ const loginUser = async (username, password) => {
       body: JSON.stringify({ username, password }),
     });
 
-    const token = data.token;
-    localStorage.setItem('jwt', token);
+    if (!data || !data.token) {
+      throw new ApiError('Invalid response from server', 500);
+    }
 
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        // Extract user information from the token
-        const storedUsername = decodedToken.sub || username;
-        const uuid = decodedToken.uuid;
-        const roles = decodedToken.roles || [];
+    // Store the token
+    localStorage.setItem('jwt', data.token);
 
-        // Store user information in localStorage
-        localStorage.setItem('username', storedUsername);
-        localStorage.setItem('uuid', uuid);
-        localStorage.setItem('roles', JSON.stringify(roles));
+    try {
+      // Decode the JWT token to extract user information
+      const decodedToken = jwtDecode(data.token);
+      const storedUsername = decodedToken.sub || username;
+      const uuid = decodedToken.uuid;
+      const roles = decodedToken.roles || [];
 
-        // Return the complete user information
-        return {
-          ...data,
-          user: {
-            username: storedUsername,
-            uuid,
-            roles
-          }
-        };
-      } catch (decodeError) {
-        console.error('Failed to decode JWT:', decodeError);
-        // If decoding fails, still store the token and username, but clear other data
-        localStorage.setItem('username', username);
-        localStorage.removeItem('uuid');
-        localStorage.removeItem('roles');
-        return data;
-      }
-    } else {
-      // Handle cases where token might be missing in the response
+      // Store user information in localStorage
+      localStorage.setItem('username', storedUsername);
+      if (uuid) localStorage.setItem('uuid', uuid);
+      if (roles.length > 0) localStorage.setItem('roles', JSON.stringify(roles));
+
+      return {
+        success: true,
+        user: {
+          username: storedUsername,
+          uuid,
+          roles
+        }
+      };
+    } catch (decodeError) {
+      console.error('Failed to decode JWT:', decodeError);
+      // If decoding fails, still store the token and username
       localStorage.setItem('username', username);
-      localStorage.removeItem('uuid');
-      localStorage.removeItem('roles');
-      return data;
+      return {
+        success: true,
+        user: { username }
+      };
     }
   } catch (error) {
-    if (error instanceof ApiError && error.status === 400) {
-      // For login errors, we want to pass them through to the UI
+    if (error instanceof ApiError) {
       return Promise.reject(error);
     }
-    // For other errors, we might want to standardize the message
     return Promise.reject(new ApiError('Login failed. Please try again.', error.status));
   }
 };
@@ -63,20 +57,51 @@ const registerUser = async (username, password) => {
   try {
     const data = await apiClient(ENDPOINTS.AUTH.REGISTER, {
       method: 'POST',
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({
+        username: username,
+        password: password
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
 
-    if (data && data.success) {
-      // Return the success data first so UI can show message
-      await new Promise(resolve => setTimeout(resolve, 10000));
-      try {
-        return await loginUser(username, password);
-      } catch (loginError) {
-        // If login fails after registration, still return success
-        return data;
-      }
+    if (!data || !data.token) {
+      throw new ApiError('Registration failed', 500);
     }
-    return data;
+
+    // Store the token from registration response
+    localStorage.setItem('jwt', data.token);
+
+    try {
+      // Decode the JWT token to extract user information
+      const decodedToken = jwtDecode(data.token);
+      const storedUsername = decodedToken.sub || username;
+      const uuid = decodedToken.uuid;
+      const roles = decodedToken.roles || [];
+
+      // Store user information in localStorage
+      localStorage.setItem('username', storedUsername);
+      if (uuid) localStorage.setItem('uuid', uuid);
+      if (roles.length > 0) localStorage.setItem('roles', JSON.stringify(roles));
+
+      return {
+        success: true,
+        user: {
+          username: storedUsername,
+          uuid,
+          roles
+        }
+      };
+    } catch (decodeError) {
+      console.error('Failed to decode JWT:', decodeError);
+      // If decoding fails, still store the token and username
+      localStorage.setItem('username', username);
+      return {
+        success: true,
+        user: { username }
+      };
+    }
   } catch (error) {
     if (error instanceof ApiError) {
       return Promise.reject(error);
@@ -87,28 +112,32 @@ const registerUser = async (username, password) => {
 
 const getCurrentUser = async () => {
   try {
-    return await apiClient(ENDPOINTS.DASHBOARD.ME, {
+    const data = await apiClient(ENDPOINTS.USERS.ME, {
       method: 'GET'
     });
+
+    if (!data) {
+      throw new ApiError('Failed to fetch user data', 500);
+    }
+
+    return data;
   } catch (error) {
-    // Simply reject the promise with the error, no redirects
     return Promise.reject(error);
   }
 };
 
 const authenticateWithToken = async (token) => {
-  // apiClient likely already uses the token from localStorage.
-  // If not, you might need to pass the token explicitly to apiClient here.
-  // For now, we assume apiClient handles the token automatically.
-  // We might pass the token argument for future flexibility or if apiClient needs it.
   try {
-    // Re-use getCurrentUser logic as it fetches user data based on the token
     const user = await getCurrentUser();
-    // Optionally, you could verify if the returned user data is valid
-    // or if the token needs refreshing based on the API response
     return user;
   } catch (error) {
-    // If getCurrentUser fails (e.g., token invalid/expired), reject the promise
+    if (error.status === 401) {
+      // Clear auth data on authentication error
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('username');
+      localStorage.removeItem('uuid');
+      localStorage.removeItem('roles');
+    }
     return Promise.reject(error);
   }
 };
