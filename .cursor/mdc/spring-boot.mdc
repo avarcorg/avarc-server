@@ -10,40 +10,6 @@ alwaysApply: true
 - Use Spring Boot's built-in features for dependency management and configuration
 - Implement RESTful services using Spring's MVC framework
 
-## Security & Authentication
-- Implement JWT for authentication
-- Use Spring Security for authorization
-- Follow secure coding practices
-
-## Event-Driven Architecture
-- Use Spring Modulith for event-driven architecture
-- Implement proper event handling and propagation
-- Use event sourcing where appropriate
-
-## Internationalization
-- Use MessageSource for message resolution
-- Implement proper locale handling
-- Store messages in properties files
-- Use proper encoding (UTF-8)
-- Implement fallback mechanisms
-- Document translation requirements
-- Use proper date/time formatting
-- Handle number formatting
-- Implement proper currency handling
-
-## API Documentation
-- Use OpenAPI/Swagger for API documentation
-- Keep API documentation up-to-date with code changes
-- Include examples for all endpoints
-- Document request/response schemas
-- Add proper API versioning
-- Include authentication requirements
-
-## Database & Persistence
-- Use JPA/Hibernate for database interactions
-- Prefer Criteria API over raw SQL queries
-- Configure transactions properly and use rollback for error handling
-
 ## Data Mapping & Transformation
 - Use MapStruct for object mapping
 - Create mapper interfaces with @Mapper annotation
@@ -69,17 +35,25 @@ alwaysApply: true
 - Implement proper null checks for collection mappings
 - Use qualifiedByName for custom collection element mapping
 
-## Caching Strategies
-- Use Spring Cache abstraction for caching
-- Implement @Cacheable for read operations
-- Use @CachePut for update operations
-- Implement @CacheEvict for delete operations
-- Configure proper cache timeouts
-- Use appropriate cache providers (Redis, Caffeine)
-- Document cache invalidation strategies
-- Monitor cache hit rates
-- Implement cache warming strategies
-- Use conditional caching with unless attribute
+## Internationalization
+- Use MessageSource for message resolution
+- Implement proper locale handling
+- Store messages in properties files
+- Use proper encoding (UTF-8)
+- Implement fallback mechanisms
+- Document translation requirements
+- Use proper date/time formatting
+- Handle number formatting
+- Implement proper currency handling
+
+## Exception Handling
+- Use @ControllerAdvice for global exception handling
+- Implement custom exception classes
+- Use proper HTTP status codes
+- Include meaningful error messages
+- Log exceptions appropriately
+- Handle validation exceptions
+- Implement proper error responses
 
 ## Dependency Injection
 - Use constructor injection for required dependencies
@@ -93,14 +67,40 @@ alwaysApply: true
 - Use @Configuration for bean definitions
 - Implement proper bean lifecycle management
 
-## Exception Handling
-- Use @ControllerAdvice for global exception handling
-- Implement custom exception classes
-- Use proper HTTP status codes
-- Include meaningful error messages
-- Log exceptions appropriately
-- Handle validation exceptions
-- Implement proper error responses
+## Caching Strategies
+- Use Spring Cache abstraction for caching
+- Implement @Cacheable for read operations
+- Use @CachePut for update operations
+- Implement @CacheEvict for delete operations
+- Configure proper cache timeouts
+- Use appropriate cache providers (Redis, Caffeine)
+- Document cache invalidation strategies
+- Monitor cache hit rates
+- Implement cache warming strategies
+- Use conditional caching with unless attribute
+
+## API Documentation
+- Use OpenAPI/Swagger for API documentation
+- Keep API documentation up-to-date with code changes
+- Include examples for all endpoints
+- Document request/response schemas
+- Add proper API versioning
+- Include authentication requirements
+
+## Database & Persistence
+- Use JPA/Hibernate for database interactions
+- Prefer Criteria API over raw SQL queries
+- Configure transactions properly and use rollback for error handling
+
+## Security & Authentication
+- Implement JWT for authentication
+- Use Spring Security for authorization
+- Follow secure coding practices
+
+## Event-Driven Architecture
+- Use Spring Modulith for event-driven architecture
+- Implement proper event handling and propagation
+- Use event sourcing where appropriate
 
 ## Logging & Monitoring
 - Implement logging using SLF4J or Logback

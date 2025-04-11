@@ -21,6 +21,8 @@
 - Implement proper code splitting
 - Use lazy loading where appropriate
 
+## Internationalization
+
 ## Error Handling
 - Implement proper error boundaries
 - Handle UI errors gracefully

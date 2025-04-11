@@ -1,0 +1,9 @@
+---
+description: Overall architecture
+globs: ["**/*.java", "**/*.js"]
+alwaysApply: true
+---
+# Communication
+  - The Frontend and the Backend identify object via UUID
+  - Set the UUID in the service classes, not in the mapper
+ 
