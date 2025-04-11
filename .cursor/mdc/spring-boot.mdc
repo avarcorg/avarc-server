@@ -1,7 +1,7 @@
 ---
-description: 
-globs: 
-alwaysApply: false
+description: Spring Boot development guidelines and best practices
+globs: ["**/*.java"]
+alwaysApply: true
 ---
 # Spring Boot Development Guidelines
 
@@ -9,6 +9,27 @@ alwaysApply: false
 - Follow SOLID principles for object-oriented programming
 - Use Spring Boot's built-in features for dependency management and configuration
 - Implement RESTful services using Spring's MVC framework
+
+## Security & Authentication
+- Implement JWT for authentication
+- Use Spring Security for authorization
+- Follow secure coding practices
+
+## Event-Driven Architecture
+- Use Spring Modulith for event-driven architecture
+- Implement proper event handling and propagation
+- Use event sourcing where appropriate
+
+## Internationalization
+- Use MessageSource for message resolution
+- Implement proper locale handling
+- Store messages in properties files
+- Use proper encoding (UTF-8)
+- Implement fallback mechanisms
+- Document translation requirements
+- Use proper date/time formatting
+- Handle number formatting
+- Implement proper currency handling
 
 ## API Documentation
 - Use OpenAPI/Swagger for API documentation
@@ -23,15 +44,63 @@ alwaysApply: false
 - Prefer Criteria API over raw SQL queries
 - Configure transactions properly and use rollback for error handling
 
-## Security & Authentication
-- Implement JWT for authentication
-- Use Spring Security for authorization
-- Follow secure coding practices
+## Data Mapping & Transformation
+- Use MapStruct for object mapping
+- Create mapper interfaces with @Mapper annotation
+- Use @Mapper(componentModel = ComponentModel.SPRING) for Spring integration
+- Use @Mapping annotations for custom field mappings
+- Keep mappers in dedicated mapper packages
+- Document complex mapping logic
+- Use @AfterMapping for post-mapping operations
+- Implement proper null checks in mapping methods
+- Use builder pattern for complex object creation
+- Maintain separate mapper interfaces for different mapping scenarios
+- Use @Mapping(target = "fieldName", source = "sourceField") for explicit field mappings
+- Implement @Mapping(target = "fieldName", ignore = true) for fields to ignore
+- Use @Mapping(target = "fieldName", expression = "java(expression)") for complex transformations
+- Create mapper interfaces as abstract classes when custom implementation is needed
+- Use @Mapping(target = "fieldName", qualifiedByName = "methodName") for custom mapping methods
+- Implement proper error handling in custom mapping methods
+- Use @InheritInverseConfiguration for bidirectional mappings
+- Document mapping strategies in the mapper interface
+- Use @BeforeMapping for pre-mapping operations
+- Implement proper validation in mapping methods
+- Use @IterableMapping for mapping collections and lists
+- Implement proper null checks for collection mappings
+- Use qualifiedByName for custom collection element mapping
 
-## Event-Driven Architecture
-- Use Spring Modulith for event-driven architecture
-- Implement proper event handling and propagation
-- Use event sourcing where appropriate
+## Caching Strategies
+- Use Spring Cache abstraction for caching
+- Implement @Cacheable for read operations
+- Use @CachePut for update operations
+- Implement @CacheEvict for delete operations
+- Configure proper cache timeouts
+- Use appropriate cache providers (Redis, Caffeine)
+- Document cache invalidation strategies
+- Monitor cache hit rates
+- Implement cache warming strategies
+- Use conditional caching with unless attribute
+
+## Dependency Injection
+- Use constructor injection for required dependencies
+- Use setter injection for optional dependencies
+- Avoid field injection
+- Use @Qualifier for multiple implementations
+- Implement proper scoping (@Scope annotations)
+- Use @Primary for default implementations
+- Document dependency requirements
+- Avoid circular dependencies
+- Use @Configuration for bean definitions
+- Implement proper bean lifecycle management
+
+## Exception Handling
+- Use @ControllerAdvice for global exception handling
+- Implement custom exception classes
+- Use proper HTTP status codes
+- Include meaningful error messages
+- Log exceptions appropriately
+- Handle validation exceptions
+- Implement proper error responses
 
 ## Logging & Monitoring
 - Implement logging using SLF4J or Logback
