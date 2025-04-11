@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 
 export default function Layout({ children }) {
   const [token, setToken] = useState(null);
@@ -20,30 +19,6 @@ export default function Layout({ children }) {
 
   return (
     <div>
-      <nav style={{ marginBottom: '1rem' }}>
-        <Link href="/">Home</Link> |{' '}
-        {!token && (
-          <>
-            <Link href="/auth/login">Login</Link> |{' '}
-            <Link href="/auth/register">Register</Link> |{' '}
-          </>
-        )}
-        {token && (
-          <>
-            <Link href="/dashboard">Dashboard</Link> |{' '}
-            {username && (
-              <span className="inline-flex items-center space-x-2">
-                <button
-                  onClick={logout}
-                  className="text-sm text-gray-600 hover:text-gray-900"
-                >
-                  Logout
-                </button>
-              </span>
-            )}
-          </>
-        )}
-      </nav>
       <main>{children}</main>
     </div>
   );

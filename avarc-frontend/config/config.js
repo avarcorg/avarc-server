@@ -18,6 +18,10 @@ export const ENDPOINTS = {
   }
 };
 
+export const CONFIG = {
+  OAUTH_WITH_GOOGLE: false, // Set to true to enable Google OAuth
+};
+
 export default {
   API_CONFIG,
   ENDPOINTS,

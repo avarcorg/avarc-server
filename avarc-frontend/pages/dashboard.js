@@ -6,6 +6,7 @@ import { ENDPOINTS } from '../config/endpoints';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AuthService } from '../services/authService';
+import { Button } from '../components/ui/button';
 
 function Dashboard() {
   const [data, setData] = useState(null);
@@ -17,6 +18,20 @@ function Dashboard() {
 
   const uuidFromStorage = typeof window !== 'undefined' ? localStorage.getItem('uuid') : null;
   const rolesFromStorage = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('roles') || '[]') : [];
+
+  const handleLogout = () => {
+    // TODO: In the future, implement a proper logout endpoint that:
+    // 1. Invalidates the JWT token on the server side
+    // 2. Clears any Redis session data
+    // 3. Returns a success response before clearing local storage
+
+    // For now, we just clear the local storage and redirect
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('username');
+    localStorage.removeItem('uuid');
+    localStorage.removeItem('roles');
+    router.push('/');
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -63,7 +78,15 @@ function Dashboard() {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <Button
+            onClick={handleLogout}
+            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          >
+            Logout
+          </Button>
+        </div>
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">User Information</h2>
           <div className="grid grid-cols-2 gap-4">
