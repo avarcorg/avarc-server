@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { AuthService } from '../services/authService';
 import { apiClient } from '../services/apiClient';
@@ -13,6 +13,23 @@ const UserUpdateForm = () => {
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    useEffect(() => {
+        const loadCurrentUser = async () => {
+            try {
+                const currentUser = await AuthService.getCurrentUser();
+                if (currentUser) {
+                    setFormData(prev => ({
+                        ...prev,
+                        username: currentUser.username
+                    }));
+                }
+            } catch (err) {
+                console.error('Failed to load current user:', err);
+            }
+        };
+        loadCurrentUser();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -40,7 +57,7 @@ const UserUpdateForm = () => {
             }
 
             const updateData = {
-                username: formData.username,
+                ...(formData.username && { username: formData.username }),
                 ...(formData.password && { password: formData.password })
             };
 
@@ -63,7 +80,7 @@ const UserUpdateForm = () => {
             }
 
             // Update local session with new username
-            localStorage.setItem('username', formData.username);
+            localStorage.setItem('username', formData.username || currentUser.username);
 
             // Refresh the current user data
             const updatedUser = await AuthService.getCurrentUser();
@@ -102,16 +119,19 @@ const UserUpdateForm = () => {
             )}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Username</label>
+                    <label className="block text-sm font-medium text-gray-700">Username (optional)</label>
                     <input
                         type="text"
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        required
+                        placeholder="Leave empty to keep current username"
                     />
                 </div>
+
+                <div className="border-t border-gray-200 my-6"></div>
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700">New Password (optional)</label>
                     <input
