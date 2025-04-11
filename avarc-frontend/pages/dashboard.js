@@ -30,7 +30,7 @@ function Dashboard({ user }) {
 
     const fetchDashboardData = async () => {
       try {
-        const result = await apiClient(ENDPOINTS.DASHBOARD.ME);
+        const result = await apiClient(ENDPOINTS.USERS.ME);
         setData(result);
         if (result.uuid) {
           setUuid(result.uuid);
