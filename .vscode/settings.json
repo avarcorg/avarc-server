@@ -1,0 +1,8 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.compile.annotationProcessing.enabled": true,
+    "java.compile.annotationProcessorPath": "${workspaceFolder}/avarc-backend/target/classes",
+    "java.compile.annotationProcessorOptions": {
+        "mapstruct.verbose": "true"
+    }
+}
