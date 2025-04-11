@@ -67,14 +67,6 @@ function Dashboard() {
     );
   }
 
-  if (loading) {
-    return (
-      <Layout>
-        <div>Loading dashboard data...</div>
-      </Layout>
-    );
-  }
-
   return (
     <Layout>
       <div className="max-w-4xl mx-auto p-6">
@@ -92,11 +84,11 @@ function Dashboard() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-gray-600">Username:</p>
-              <p className="font-medium">{data?.username}</p>
+              <p className="font-medium">{data?.username || 'Loading...'}</p>
             </div>
             <div>
               <p className="text-gray-600">UUID:</p>
-              <p className="font-medium">{uuid}</p>
+              <p className="font-medium">{uuid || 'Loading...'}</p>
             </div>
             <div>
               <p className="text-gray-600">Roles:</p>
