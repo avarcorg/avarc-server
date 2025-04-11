@@ -1,0 +1,39 @@
+# React.js Development Guidelines
+
+## Component Architecture
+- Use functional components with hooks
+- Implement proper component composition
+- Follow React best practices for component design
+
+## State Management
+- Employ state management tools (Redux/Context API)
+- Implement proper state initialization and updates
+- Use appropriate state management patterns
+
+## Type Safety
+- Apply TypeScript for type safety
+- Define proper interfaces and types
+- Use strict type checking
+
+## Performance Optimization
+- Optimize component rendering with React.memo
+- Use useCallback for memoized functions
+- Implement proper code splitting
+- Use lazy loading where appropriate
+
+## Error Handling
+- Implement proper error boundaries
+- Handle UI errors gracefully
+- Provide meaningful error messages
+
+## Testing
+- Use Jest and React Testing Library
+- Write comprehensive unit tests
+- Implement integration tests
+- Follow testing best practices
+
+## Code Quality
+- Follow ESLint rules
+- Implement proper code formatting
+- Use proper naming conventions
+- Document complex components

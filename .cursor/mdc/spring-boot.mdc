@@ -1,0 +1,44 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Spring Boot Development Guidelines
+
+## Architecture Principles
+- Follow SOLID principles for object-oriented programming
+- Use Spring Boot's built-in features for dependency management and configuration
+- Implement RESTful services using Spring's MVC framework
+
+## API Documentation
+- Use OpenAPI/Swagger for API documentation
+- Keep API documentation up-to-date with code changes
+- Include examples for all endpoints
+- Document request/response schemas
+- Add proper API versioning
+- Include authentication requirements
+
+## Database & Persistence
+- Use JPA/Hibernate for database interactions
+- Prefer Criteria API over raw SQL queries
+- Configure transactions properly and use rollback for error handling
+
+## Security & Authentication
+- Implement JWT for authentication
+- Use Spring Security for authorization
+- Follow secure coding practices
+
+## Event-Driven Architecture
+- Use Spring Modulith for event-driven architecture
+- Implement proper event handling and propagation
+- Use event sourcing where appropriate
+
+## Logging & Monitoring
+- Implement logging using SLF4J or Logback
+- Configure proper log levels and appenders
+- Set up monitoring and metrics collection
+
+## Testing
+- Write unit tests for all business logic
+- Implement integration tests for API endpoints
+- Use Spring Test for testing context
