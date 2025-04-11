@@ -5,12 +5,11 @@
   "_comment": "WARNING: Do not add 'avarc-frontend': 'file:' as a dependency - it breaks GitHub Actions",
   "scripts": {
     "dev": "next dev",
-    "workarounded-build": "next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "avarc-frontend": "file:",
     "jwt-decode": "^4.0.0",
     "next": "15.3.0",
     "prop-types": "^15.8.1",

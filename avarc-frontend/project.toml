@@ -1,0 +1,59 @@
+[[build.env]]
+name = "BP_NODE_RUN_SCRIPTS"
+value = "false"
+
+[[build.env]]
+name = "BP_NPM_REBUILD"
+value = "false"
+
+[[build.env]]
+name = "BP_NODE_ENV"
+value = "production"
+
+[[build.env]]
+name = "BP_NPM_INSTALL"
+value = "false"
+
+[[build.env]]
+name = "BP_NODE_PROJECT_PATH"
+value = "."
+
+[[build.env]]
+name = "BP_NODE_OPTIONS"
+value = "--no-warnings"
+
+[[build.env]]
+name = "BP_NPM_RUN_BUILD"
+value = "false"
+
+[[build.env]]
+name = "BP_NODE_VERBOSE"
+value = "true"
+
+[[build.env]]
+name = "BP_NPM_CONFIG_PRODUCTION"
+value = "false"
+
+[[build.env]]
+name = "BP_NPM_CONFIG_INCLUDE_DEV"
+value = "true"
+
+[[build.env]]
+name = "BP_LOG_LEVEL"
+value = "DEBUG"
+
+[[build.env]]
+name = "BP_NODE_MODULES_CACHE"
+value = "false"
+
+[[processes]]
+type = "web"
+command = "npm start"
+direct = true
+
+[build]
+exclude = ["node_modules", ".next", ".turbo"]
+
+[[io.buildpacks]]
+id = "paketo-buildpacks/nodejs"
+version = "0.35.0"

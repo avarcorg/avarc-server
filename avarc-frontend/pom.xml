@@ -71,7 +71,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install</arguments>
+                            <arguments>install --no-audit --no-fund</arguments>
                         </configuration>
                     </execution>
                     <execution>
@@ -80,7 +80,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run workarounded-build</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -88,13 +88,11 @@
         </plugins>
     </build>
 
-
     <profiles>
         <profile>
             <id>with-docker</id>
             <build>
                 <plugins>
-                    <!-- Use exec plugin to run pack CLI -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
@@ -121,7 +119,7 @@
                                         <argument>--env</argument>
                                         <argument>BP_NODE_VERSION=${node.version}</argument>
                                         <argument>--env</argument>
-                                        <argument>BP_LAUNCH_COMMAND=:</argument>
+                                        <argument>BP_LAUNCH_COMMAND=npm start</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
