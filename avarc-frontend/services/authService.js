@@ -66,27 +66,45 @@ const registerUser = async (username, password) => {
       }
     });
 
-    if (!data || !data.token) {
-      throw new ApiError('Registration failed', 500);
+    if (!data) {
+      throw new ApiError('Registration failed - no response data', 500);
     }
 
-    // Store the token from registration response
-    localStorage.setItem('jwt', data.token);
+    // Check if we have a token in the response
+    if (!data.token) {
+      console.error('Registration response:', data);
+      throw new ApiError('Registration failed - no token received', 500);
+    }
+
+    // Validate token format
+    const tokenParts = data.token.split('.');
+    if (tokenParts.length !== 3) {
+      console.error('Invalid token format:', data.token);
+      throw new ApiError('Registration failed - invalid token format', 500);
+    }
 
     try {
       // Decode the JWT token to extract user information
       const decodedToken = jwtDecode(data.token);
+
+      // Validate token claims
+      if (!decodedToken.sub) {
+        throw new ApiError('Registration failed - invalid token claims', 500);
+      }
+
       const storedUsername = decodedToken.sub || username;
       const uuid = decodedToken.uuid;
       const roles = decodedToken.roles || [];
 
-      // Store user information in localStorage
+      // Store the token and user information
+      localStorage.setItem('jwt', data.token);
       localStorage.setItem('username', storedUsername);
       if (uuid) localStorage.setItem('uuid', uuid);
       if (roles.length > 0) localStorage.setItem('roles', JSON.stringify(roles));
 
       return {
         success: true,
+        token: data.token,
         user: {
           username: storedUsername,
           uuid,
@@ -95,12 +113,7 @@ const registerUser = async (username, password) => {
       };
     } catch (decodeError) {
       console.error('Failed to decode JWT:', decodeError);
-      // If decoding fails, still store the token and username
-      localStorage.setItem('username', username);
-      return {
-        success: true,
-        user: { username }
-      };
+      throw new ApiError('Registration failed - invalid token', 500);
     }
   } catch (error) {
     if (error instanceof ApiError) {
@@ -154,8 +167,6 @@ const logout = async () => {
     localStorage.removeItem('roles');
   }
 };
-
-export { loginUser, logout };
 
 export const AuthService = {
   registerUser,

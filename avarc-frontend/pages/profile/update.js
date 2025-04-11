@@ -1,5 +1,5 @@
 import { withAuth } from '../../components/withAuth';
-import UserUpdateForm from '../../components/UserUpdateForm';
+import UserUpdateForm from '../../components/UserUpdateForm/UserUpdateForm';
 import Layout from '../../components/Layout';
 
 function UpdateProfile() {

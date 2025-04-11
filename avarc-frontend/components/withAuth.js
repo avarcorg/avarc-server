@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { AuthService } from '../services/authService';
 
-export function withAuth(WrappedComponent) {
+export function withAuth(WrappedComponent, options = { requireAuth: true }) {
   return function ProtectedRoute(props) {
     const router = useRouter();
     const [state, setState] = useState({
@@ -14,6 +14,17 @@ export function withAuth(WrappedComponent) {
     useEffect(() => {
       const verifyAuth = async () => {
         const token = localStorage.getItem('jwt');
+
+        // If auth is not required, just set verified to true
+        if (!options.requireAuth) {
+          setState({
+            verified: true,
+            loading: false,
+            error: null
+          });
+          return;
+        }
+
         if (!token) {
           setState({
             verified: false,
