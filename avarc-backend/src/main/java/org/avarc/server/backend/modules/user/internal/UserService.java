@@ -87,6 +87,8 @@ public class UserService implements UserAccess, UserApi {
             existingUser.setPassword(passwordEncoder.encode(updateDto.getPassword()));
         }
 
+        existingUser.setRoles(updateDto.getRoles());
+
         User updatedUser = userRepository.save(existingUser);
         return userMapper.toDto(updatedUser);
     }
