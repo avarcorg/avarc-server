@@ -1,0 +1,137 @@
+# Next.js Configuration
+
+## File Patterns
+
+### Included Files
+- `**/*.{js,jsx,ts,tsx}`
+- `**/*.css`
+- `**/*.scss`
+- `**/*.json`
+- `**/*.md`
+- `**/*.mdx`
+
+### Excluded Directories
+- `node_modules/**`
+- `.next/**`
+- `node/**`
+- `target/**`
+- `build/**`
+
+## Internationalization
+
+## Import Rules
+
+### Next.js Imports
+```javascript
+import { Link } from 'next/link'
+import { Image } from 'next/image'
+import { Head } from 'next/head'
+import { Script } from 'next/script'
+import { useRouter } from 'next/router'
+import { usePathname, useSearchParams } from 'next/navigation'
+```
+
+### React Imports
+```javascript
+import { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react'
+```
+
+## Naming Conventions
+
+### Components
+- File Pattern: `components/**/*.{js,jsx,ts,tsx}`, `pages/**/*.{js,jsx,ts,tsx}`
+- Component Name: PascalCase
+- File Name: PascalCase
+
+### Pages
+- File Pattern: `pages/**/*.{js,jsx,ts,tsx}`
+- File Name: kebab-case
+
+### API Routes
+- File Pattern: `pages/api/**/*.{js,ts}`
+- File Name: kebab-case
+
+### Styles
+- File Pattern: 
+  - `**/*.css`
+  - `**/*.scss`
+  - `**/*.module.css`
+  - `**/*.module.scss`
+
+## Rules
+
+```
+{
+    "name": "Next.js",
+    "include": [
+        "**/*.{js,jsx,ts,tsx}",
+        "**/*.css",
+        "**/*.scss",
+        "**/*.json",
+        "**/*.md",
+        "**/*.mdx"
+    ],
+    "exclude": [
+        "node_modules/**",
+        ".next/**",
+        "node/**",
+        "target/**",
+        "build/**"
+    ],
+    "rules": {
+        "imports": {
+            "next": {
+                "Link": "next/link",
+                "Image": "next/image",
+                "Head": "next/head",
+                "Script": "next/script",
+                "useRouter": "next/router",
+                "usePathname": "next/navigation",
+                "useSearchParams": "next/navigation"
+            },
+            "react": {
+                "useState": "react",
+                "useEffect": "react",
+                "useContext": "react",
+                "useRef": "react",
+                "useCallback": "react",
+                "useMemo": "react"
+            }
+        },
+        "components": {
+            "filePatterns": [
+                "components/**/*.{js,jsx,ts,tsx}",
+                "pages/**/*.{js,jsx,ts,tsx}"
+            ],
+            "naming": {
+                "component": "PascalCase",
+                "file": "PascalCase"
+            }
+        },
+        "pages": {
+            "filePatterns": [
+                "pages/**/*.{js,jsx,ts,tsx}"
+            ],
+            "naming": {
+                "file": "kebab-case"
+            }
+        },
+        "api": {
+            "filePatterns": [
+                "pages/api/**/*.{js,ts}"
+            ],
+            "naming": {
+                "file": "kebab-case"
+            }
+        },
+        "styles": {
+            "filePatterns": [
+                "**/*.css",
+                "**/*.scss",
+                "**/*.module.css",
+                "**/*.module.scss"
+            ]
+        }
+    }
+}
+```
