@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ABA (Postgis)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="secret,postgis" />
+    <option name="ALTERNATIVE_JRE_PATH" value="liberica-full-23" />
     <module name="avarc-backend" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="org.avarc.server.backend.AvarcBackendApplication" />
     <extension name="net.ashald.envfile">
