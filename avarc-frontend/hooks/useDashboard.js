@@ -10,18 +10,20 @@ export const useDashboard = () => {
     const [roles, setRoles] = useState([]);
     const [uuid, setUuid] = useState(null);
 
-    const handleLogout = () => {
-        // TODO: In the future, implement a proper logout endpoint that:
-        // 1. Invalidates the JWT token on the server side
-        // 2. Clears any Redis session data
-        // 3. Returns a success response before clearing local storage
-
-        // For now, we just clear the local storage and redirect
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('username');
-        localStorage.removeItem('uuid');
-        localStorage.removeItem('roles');
-        router.push('/');
+    const handleLogout = async () => {
+        try {
+            await AuthService.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Continue with logout even if the server request fails
+        } finally {
+            // Always clear local storage and redirect
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('username');
+            localStorage.removeItem('uuid');
+            localStorage.removeItem('roles');
+            router.push('/');
+        }
     };
 
     useEffect(() => {

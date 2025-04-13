@@ -107,4 +107,27 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new AuthResponse("LOGIN_ERROR", e.getMessage()));
         }
     }
+
+    @PostMapping("/logout")
+    @Operation(
+        summary = "Logout user",
+        description = "Invalidates the user's session. Note: This is a dummy endpoint - the frontend should always invalidate local storage regardless of the response.",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Logout successful",
+                content = @Content(examples = @ExampleObject(
+                    value = "{\"user\":null,\"token\":null,\"errorCode\":null,\"errorMessage\":\"Logout successful\"}"
+                ))
+            )
+        }
+    )
+    public ResponseEntity<AuthResponse> logout() {
+        log.debug("→ Entering logout()");
+        // TODO: In a production environment, this should:
+        // 1. Add the JWT to a blacklist in Redis
+        // 2. Set an expiration time for the blacklisted token
+        // 3. Implement token validation to check against the blacklist
+        return ResponseEntity.ok(new AuthResponse(null, null, null, "Logout successful"));
+    }
 }
