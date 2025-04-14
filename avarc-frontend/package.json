@@ -10,11 +10,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "avarc-frontend": "file:",
+    "i18next": "^23.8.2",
     "jwt-decode": "^4.0.0",
     "next": "15.3.0",
+    "next-i18next": "^15.2.0",
     "prop-types": "^15.8.1",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-i18next": "^14.0.5"
   },
   "devDependencies": {
     "@types/node": "22.14.1",

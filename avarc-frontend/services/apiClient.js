@@ -1,19 +1,13 @@
 import { API_CONFIG } from '../config/config';
-
-export class ApiError extends Error {
-  constructor(message, status, data = {}) {
-    super(message);
-    this.status = status;
-    this.data = data;
-    this.name = 'ApiError';
-  }
-}
+import { ApiError } from './ApiError';
 
 export const apiClient = async (endpoint, options = {}) => {
   const token = localStorage.getItem('jwt');
+  const language = localStorage.getItem('language') || 'en';
 
   const defaultHeaders = {
     'Content-Type': 'application/json',
+    'X-Language': language,
     ...(token && { 'Authorization': `Bearer ${token}` })
   };
 

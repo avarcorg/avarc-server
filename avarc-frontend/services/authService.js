@@ -1,4 +1,5 @@
-import { apiClient, ApiError } from './apiClient';
+import { apiClient } from './apiClient';
+import { ApiError } from './ApiError';
 import { ENDPOINTS } from '../config/endpoints';
 import { jwtDecode } from 'jwt-decode';
 
@@ -49,7 +50,7 @@ const loginUser = async (username, password) => {
     if (error instanceof ApiError) {
       return Promise.reject(error);
     }
-    return Promise.reject(new ApiError('Login failed. Please try again.', error.status));
+    return Promise.reject(new ApiError(error.message || 'Login failed', 500));
   }
 };
 
