@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import org.avarc.server.backend.modules.user.api.UserApi;
 import org.avarc.server.backend.modules.user.api.UserDto;
 import org.avarc.server.backend.modules.user.internal.UserMapper;
+import org.avarc.server.backend.modules.user.internal.UserMessageService;
 import org.avarc.server.backend.modules.user.internal.UserRepository;
 import org.avarc.server.backend.modules.user.internal.UserService;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,9 @@ class AuthModuleTest {
         UserRepository repo = mock(UserRepository.class);
         UserMapper mapper = UserMapper.INSTANCE;
         PasswordEncoder encoder = mock(PasswordEncoder.class);
+        UserMessageService messageService = mock(UserMessageService.class);
 
-        UserApi api = new UserService(repo, mapper, encoder);
+        UserApi api = new UserService(repo, mapper, encoder, messageService);
         UserDto dto = api.createSampleUser();
 
         assertThat(dto).isNotNull();
