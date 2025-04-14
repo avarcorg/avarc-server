@@ -126,7 +126,7 @@
                                         <argument>--path</argument>
                                         <argument>${project.basedir}</argument>
                                         <argument>--builder</argument>
-                                        <argument>paketobuildpacks/builder:tiny</argument>
+                                        <argument>paketobuildpacks/builder-jammy-base</argument>
                                         <argument>--buildpack</argument>
                                         <argument>paketo-buildpacks/nodejs@7.6.1</argument>
                                         <argument>--trust-builder</argument>
@@ -152,10 +152,6 @@
                                         <argument>BP_NPM_CACHE=false</argument>
                                         <argument>--env</argument>
                                         <argument>BP_CACHE=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NPM_CONFIG_PRODUCTION=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NPM_CONFIG_INCLUDE_DEV=true</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
