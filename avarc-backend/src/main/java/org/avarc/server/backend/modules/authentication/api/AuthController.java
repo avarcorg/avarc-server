@@ -3,6 +3,7 @@ package org.avarc.server.backend.modules.authentication.api;
 import org.avarc.server.backend.modules.authentication.internal.AuthService;
 import org.avarc.server.backend.modules.security.JwtService;
 import org.avarc.server.backend.modules.user.api.UserDto;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,13 +26,26 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 
     private final AuthService authService;
-
     private final JwtService jwtService;
 
     @PostMapping("/register")
     @Operation(
         summary = "Register a new user",
-        description = "Registers a new user and returns a JWT token.",
+        description = "Registers a new user and returns a JWT token. All error messages are internationalized based on the X-Language header.",
+        parameters = {
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = "X-Language",
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            ),
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = HttpHeaders.ACCEPT_LANGUAGE,
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            )
+        },
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "User registration data",
             required = true,
@@ -71,7 +85,21 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(
         summary = "Login existing user",
-        description = "Authenticates a user and returns user information if credentials are valid.",
+        description = "Authenticates a user and returns user information if credentials are valid. All error messages are internationalized based on the X-Language header.",
+        parameters = {
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = "X-Language",
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            ),
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = HttpHeaders.ACCEPT_LANGUAGE,
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            )
+        },
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "User login credentials",
             required = true,
@@ -111,7 +139,21 @@ public class AuthController {
     @PostMapping("/logout")
     @Operation(
         summary = "Logout user",
-        description = "Invalidates the user's session. Note: This is a dummy endpoint - the frontend should always invalidate local storage regardless of the response.",
+        description = "Invalidates the user's session. Note: This is a dummy endpoint - the frontend should always invalidate local storage regardless of the response. All error messages are internationalized based on the X-Language header.",
+        parameters = {
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = "X-Language",
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            ),
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = HttpHeaders.ACCEPT_LANGUAGE,
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            )
+        },
         responses = {
             @ApiResponse(
                 responseCode = "200",

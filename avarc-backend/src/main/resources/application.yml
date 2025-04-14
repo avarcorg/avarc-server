@@ -29,3 +29,12 @@ logging:
 app:
   cors:
     allowed-origins: "http://localhost:3000"
+
+messages:
+  basename: messages/common,messages/auth,messages/user
+  encoding: UTF-8
+  fallback-to-system-locale: true
+  cache-duration: 3600
+mvc:
+  locale: en
+  locale-resolver: accept-header

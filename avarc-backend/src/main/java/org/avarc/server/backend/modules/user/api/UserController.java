@@ -2,14 +2,7 @@ package org.avarc.server.backend.modules.user.api;
 
 import java.util.List;
 import java.util.UUID;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.avarc.server.backend.modules.security.JwtService;
 import org.avarc.server.backend.modules.user.internal.UserService;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +17,15 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/rest/v0.1.0/users")
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class UserController {
 
     @Operation(
         summary = "Get current authenticated user",
-        description = "Returns the current user if authenticated and token is valid.",
+        description = "Returns the current user if authenticated and token is valid. All error messages are internationalized based on the X-Language header.",
         security = @SecurityRequirement(name = "bearerAuth"),
         parameters = {
             @io.swagger.v3.oas.annotations.Parameter(
@@ -44,6 +46,18 @@ public class UserController {
                 description = "Bearer token",
                 required = true,
                 example = "Bearer eyJhbGciOi..."
+            ),
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = "X-Language",
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            ),
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = HttpHeaders.ACCEPT_LANGUAGE,
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
             )
         },
         responses = {
@@ -58,7 +72,10 @@ public class UserController {
             ),
             @ApiResponse(
                 responseCode = "401",
-                description = "Unauthorized - no valid JWT token"
+                description = "Unauthorized - no valid JWT token",
+                content = @Content(examples = @ExampleObject(
+                    value = "{\"errorCode\":\"UNAUTHORIZED\",\"errorMessage\":\"Authentication required\"}"
+                ))
             )
         }
     )
@@ -69,6 +86,8 @@ public class UserController {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        // TODO: the "me" endpoint should return a UserResponse object, not a UserDto
 
         try {
             String token = authHeader != null && authHeader.startsWith("Bearer ")
@@ -100,21 +119,62 @@ public class UserController {
 
     @Operation(
         summary = "Update user details",
-        description = "Updates the user details for the specified UUID",
+        description = "Updates the user details for the specified UUID. All error messages are internationalized based on the X-Language header.",
         security = @SecurityRequirement(name = "bearerAuth"),
+        parameters = {
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = "uuid",
+                description = "User UUID",
+                example = "123e4567-e89b-12d3-a456-426614174000",
+                required = true
+            ),
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = HttpHeaders.AUTHORIZATION,
+                description = "Bearer token",
+                required = true,
+                example = "Bearer eyJhbGciOi..."
+            ),
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = "X-Language",
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            ),
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = HttpHeaders.ACCEPT_LANGUAGE,
+                description = "Language preference for error messages",
+                example = "en",
+                required = false
+            )
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "User update data",
+            required = true,
+            content = @Content(examples = @ExampleObject(
+                value = "{\"username\":\"jane.doe\",\"email\":\"jane.doe@example.com\",\"firstName\":\"Jane\",\"lastName\":\"Doe\"}"
+            ))
+        ),
         responses = {
             @ApiResponse(
                 responseCode = "200",
                 description = "User updated successfully",
-                content = @Content(mediaType = "application/json")
+                content = @Content(examples = @ExampleObject(
+                    value = "{\"user\":{\"username\":\"jane.doe\",\"email\":\"jane.doe@example.com\",\"firstName\":\"Jane\",\"lastName\":\"Doe\",\"roles\":[\"USER\"]},\"token\":\"eyJhbGciOiJIUzI1NiIs...\"}"
+                ))
             ),
             @ApiResponse(
                 responseCode = "404",
-                description = "User not found"
+                description = "User not found",
+                content = @Content(examples = @ExampleObject(
+                    value = "{\"errorCode\":\"USER_NOT_FOUND\",\"errorMessage\":\"User not found\"}"
+                ))
             ),
             @ApiResponse(
                 responseCode = "400",
-                description = "Invalid request"
+                description = "Invalid request",
+                content = @Content(examples = @ExampleObject(
+                    value = "{\"errorCode\":\"UPDATE_ERROR\",\"errorMessage\":\"Invalid user data\"}"
+                ))
             )
         }
     )

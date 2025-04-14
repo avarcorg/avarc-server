@@ -18,6 +18,7 @@ public class UserService implements UserAccess, UserApi {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final UserMessageService userMessageService;
 
     public UserDto createUser(UserDto dto) {
         User user = userMapper.toEntity(dto);
@@ -37,21 +38,21 @@ public class UserService implements UserAccess, UserApi {
         return userRepository.findByUsername(requestDto.getUsername())
             .filter(user -> passwordEncoder.matches(requestDto.getPassword(), user.getPassword()))
             .map(userMapper::toDto)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+            .orElseThrow(() -> new IllegalArgumentException(userMessageService.getUsernameAlreadyExists(requestDto.getUsername())));
     }
 
     public UserDto findByUsername(String username) {
         log.debug("→ Entering findByUsername()");
         return userRepository.findByUsername(username)
             .map(userMapper::toDto)
-            .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+            .orElseThrow(() -> new IllegalArgumentException(userMessageService.getUserNotFound(username)));
     }
 
     public UserDto findByUuid(UUID uuid) {
         log.debug("→ Entering findByUuid()");
         return userRepository.findByUuid(uuid)
             .map(userMapper::toDto)
-            .orElseThrow(() -> new IllegalArgumentException("User not found with UUID: " + uuid));
+            .orElseThrow(() -> new IllegalArgumentException(userMessageService.getUserNotFoundByUuid(uuid.toString())));
     }
 
     @Override
@@ -59,7 +60,7 @@ public class UserService implements UserAccess, UserApi {
         log.debug("→ Entering register()");
         userRepository.findByUsername(requestDto.getUsername())
             .ifPresent(result -> {
-                throw new IllegalStateException("User already exists: " + requestDto.getUsername());
+                throw new IllegalStateException(userMessageService.getUsernameAlreadyExists(requestDto.getUsername()));
             });
 
         User user = userMapper.toEntity(requestDto);
@@ -72,13 +73,13 @@ public class UserService implements UserAccess, UserApi {
     public UserDto updateUser(UUID uuid, UserDto updateDto) {
         log.debug("→ Entering updateUser()");
         User existingUser = userRepository.findByUuid(uuid)
-            .orElseThrow(() -> new IllegalArgumentException("User not found with UUID: " + uuid));
+            .orElseThrow(() -> new IllegalArgumentException(userMessageService.getUserNotFoundByUuid(uuid.toString())));
 
         // Check if new username is already taken by another user
         if (!existingUser.getUsername().equals(updateDto.getUsername())) {
             userRepository.findByUsername(updateDto.getUsername())
                 .ifPresent(user -> {
-                    throw new IllegalStateException("Username already taken: " + updateDto.getUsername());
+                    throw new IllegalStateException(userMessageService.getUsernameAlreadyExists(updateDto.getUsername()));
                 });
         }
 
