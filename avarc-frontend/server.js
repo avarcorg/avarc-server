@@ -1,11 +1,20 @@
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
+const path = require('path');
 
-// Start the Next.js application
-exec('npm start', (error, stdout, stderr) => {
-  if (error) {
-    console.error(`Error: ${error}`);
-    process.exit(1);
+// Start Next.js using the standard path
+const next = spawn('node', [
+  path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next'),
+  'start',
+  '--port', '3000'
+], {
+  stdio: 'inherit',
+  env: {
+    ...process.env,
+    NODE_ENV: 'production'
   }
-  console.log(stdout);
-  console.error(stderr);
+});
+
+next.on('error', (err) => {
+  console.error('Failed to start Next.js:', err);
+  process.exit(1);
 });

@@ -110,48 +110,22 @@
                                         <argument>-f</argument>
                                         <argument>package-lock.json</argument>
                                     </arguments>
+                                    <skip>${os.name.startsWith("Windows")}</skip>
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>pack-react-image</id>
+                                <id>build-docker-image</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>pack</executable>
+                                    <executable>docker</executable>
                                     <arguments>
                                         <argument>build</argument>
+                                        <argument>-t</argument>
                                         <argument>avarc-frontend:${project.version}</argument>
-                                        <argument>--path</argument>
-                                        <argument>${project.basedir}</argument>
-                                        <argument>--builder</argument>
-                                        <argument>paketobuildpacks/builder-jammy-base</argument>
-                                        <argument>--buildpack</argument>
-                                        <argument>paketo-buildpacks/nodejs@7.6.1</argument>
-                                        <argument>--trust-builder</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NODE_VERSION=${node.version}</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_LAUNCH_COMMAND=node server.js</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NODE_USE_AT_RUNTIME=true</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NODE_RUN_SCRIPTS=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NPM_INSTALL=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NPM_CI=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NPM_RUN_BUILD=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NPM_REBUILD=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NODE_MODULES_CACHE=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_NPM_CACHE=false</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_CACHE=false</argument>
+                                        <argument>.</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
