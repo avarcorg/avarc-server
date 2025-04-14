@@ -1,18 +1,8 @@
-[[build.env]]
-name = "BP_NODE_RUN_SCRIPTS"
-value = "false"
-
-[[build.env]]
-name = "BP_NPM_REBUILD"
-value = "false"
+schema-version = "0.2"
 
 [[build.env]]
 name = "BP_NODE_ENV"
 value = "production"
-
-[[build.env]]
-name = "BP_NPM_INSTALL"
-value = "false"
 
 [[build.env]]
 name = "BP_NODE_PROJECT_PATH"
@@ -23,28 +13,48 @@ name = "BP_NODE_OPTIONS"
 value = "--no-warnings"
 
 [[build.env]]
-name = "BP_NPM_RUN_BUILD"
-value = "false"
-
-[[build.env]]
 name = "BP_NODE_VERBOSE"
 value = "true"
 
 [[build.env]]
-name = "BP_NPM_CONFIG_PRODUCTION"
-value = "false"
-
-[[build.env]]
-name = "BP_NPM_CONFIG_INCLUDE_DEV"
+name = "BP_NODE_USE_AT_RUNTIME"
 value = "true"
 
 [[build.env]]
-name = "BP_LOG_LEVEL"
-value = "DEBUG"
+name = "BP_NODE_RUN_SCRIPTS"
+value = "false"
+
+[[build.env]]
+name = "BP_NPM_INSTALL"
+value = "false"
+
+[[build.env]]
+name = "BP_NPM_CI"
+value = "false"
+
+[[build.env]]
+name = "BP_NPM_RUN_BUILD"
+value = "false"
+
+[[build.env]]
+name = "BP_NPM_REBUILD"
+value = "false"
 
 [[build.env]]
 name = "BP_NODE_MODULES_CACHE"
 value = "false"
+
+[[build.env]]
+name = "BP_NPM_CACHE"
+value = "false"
+
+[[build.env]]
+name = "BP_CACHE"
+value = "false"
+
+[[build.env]]
+name = "BP_LAUNCH_COMMAND"
+value = "npm start"
 
 [[processes]]
 type = "web"
@@ -52,8 +62,4 @@ command = "npm start"
 direct = true
 
 [build]
-exclude = ["node_modules", ".next", ".turbo"]
-
-[[io.buildpacks]]
-id = "paketo-buildpacks/nodejs"
-version = "0.35.0"
+exclude = ["node_modules", ".next", ".turbo", "package.json", "package-lock.json"]
