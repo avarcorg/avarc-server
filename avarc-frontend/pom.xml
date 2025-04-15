@@ -99,21 +99,6 @@
                         <version>${exec-maven-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>clean-package-lock</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>rm</executable>
-                                    <arguments>
-                                        <argument>-f</argument>
-                                        <argument>package-lock.json</argument>
-                                    </arguments>
-                                    <skip>${os.name.startsWith("Windows")}</skip>
-                                </configuration>
-                            </execution>
-                            <execution>
                                 <id>build-docker-image</id>
                                 <phase>package</phase>
                                 <goals>

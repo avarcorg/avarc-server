@@ -2,14 +2,20 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy all necessary files and directories
-COPY .next .next
-COPY node_modules node_modules
-COPY public public
-COPY config config
-COPY utils utils
-COPY server.js .
-COPY next.config.js .
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source files
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Create logs directory
+RUN mkdir -p logs
 
 # Expose the port the app runs on
 EXPOSE 3000
