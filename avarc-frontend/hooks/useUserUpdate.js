@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { AuthService } from '../services/authService';
 import { apiClient } from '../services/apiClient';
-import { ENDPOINTS } from '../config/endpoints';
+import { ENDPOINTS } from '../config';
 import { jwtDecode } from 'jwt-decode';
 
 export const useUserUpdate = () => {

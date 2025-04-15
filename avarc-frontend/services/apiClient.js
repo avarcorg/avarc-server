@@ -1,4 +1,4 @@
-import { API_CONFIG } from '../config/config';
+import { API_CONFIG } from '../config';
 import { ApiError } from './ApiError';
 
 export const apiClient = async (endpoint, options = {}) => {

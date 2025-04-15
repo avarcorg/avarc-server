@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import { CONFIG } from '../../config/config';
+import { CONFIG } from '../../config';
 
 const HomeView = ({
     handleLogin,

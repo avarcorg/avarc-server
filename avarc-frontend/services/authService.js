@@ -1,6 +1,6 @@
 import { apiClient } from './apiClient';
 import { ApiError } from './ApiError';
-import { ENDPOINTS } from '../config/endpoints';
+import { ENDPOINTS } from '../config';
 import { jwtDecode } from 'jwt-decode';
 
 const loginUser = async (username, password) => {

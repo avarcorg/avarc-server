@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import { CONFIG } from '../../config/config';
+import { CONFIG } from '../../config';
 
 const RegisterFormView = ({
     formData,
