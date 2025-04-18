@@ -132,6 +132,7 @@ public class AuthController {
             String token = jwtService.generateToken(user.getUsername(), user.getUuid(), user.getRoles());
             return ResponseEntity.ok(new AuthResponse(user, token));
         } catch (Exception e) {
+            // TODO find a more neutral login error message, do not expose too much internal information
             return ResponseEntity.badRequest().body(new AuthResponse("LOGIN_ERROR", e.getMessage()));
         }
     }

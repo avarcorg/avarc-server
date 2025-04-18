@@ -38,7 +38,9 @@ public class UserService implements UserAccess, UserApi {
         return userRepository.findByUsername(requestDto.getUsername())
             .filter(user -> passwordEncoder.matches(requestDto.getPassword(), user.getPassword()))
             .map(userMapper::toDto)
-            .orElseThrow(() -> new IllegalArgumentException(userMessageService.getUsernameAlreadyExists(requestDto.getUsername())));
+            .orElseThrow(() -> new IllegalArgumentException(
+                userMessageService.getUserNotFound(requestDto.getUsername())
+            ));
     }
 
     public UserDto findByUsername(String username) {
