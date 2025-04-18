@@ -10,8 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "avarc-frontend": "file:",
+    "axios": "^1.8.4",
     "i18next": "^23.8.2",
+    "i18next-browser-languagedetector": "^7.2.0",
+    "i18next-http-backend": "^2.5.0",
     "jwt-decode": "^4.0.0",
     "next": "15.3.0",
     "next-i18next": "^15.2.0",
