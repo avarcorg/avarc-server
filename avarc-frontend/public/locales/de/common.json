@@ -1,0 +1,17 @@
+{
+    "language": {
+        "english": "EN",
+        "german": "DE",
+        "changingTo": ""
+    },
+    "home": {
+        "welcome": ""
+    },
+    "common": {
+        "loading": ""
+    },
+    "auth": {
+        "noToken": "",
+        "error": ""
+    }
+}

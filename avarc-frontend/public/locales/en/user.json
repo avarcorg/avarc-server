@@ -1,0 +1,10 @@
+{
+    "profile": {
+        "updateTitle": "Update Profile",
+        "usernamePlaceholder": "Enter new username",
+        "passwordPlaceholder": "Enter new password",
+        "confirmPasswordPlaceholder": "Confirm new password",
+        "updateButton": "Update",
+        "cancelButton": "Cancel"
+    }
+}

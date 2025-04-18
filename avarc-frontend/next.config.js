@@ -1,4 +1,5 @@
 const { API_CONFIG, CONFIG } = require('./config');
+const { i18n } = require('./next-i18next.config');
 const logger = require('./utils/node-logger');
 
 // Log configuration
@@ -13,6 +14,11 @@ logger.info('-----------------------------------');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  i18n,
+  images: {
+    domains: ['localhost'],
+    unoptimized: true,
+  },
   env: {
     NEXT_PUBLIC_API_HOST: process.env.NEXT_PUBLIC_API_HOST || API_CONFIG.HOST,
     NEXT_PUBLIC_API_VERSION: API_CONFIG.VERSION,

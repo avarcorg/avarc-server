@@ -1,0 +1,27 @@
+{
+    "requestFailed": "API-Anfrage fehlgeschlagen",
+    "unauthorized": "Nicht autorisierter Zugriff",
+    "forbidden": "Zugriff verboten",
+    "notFound": "Ressource nicht gefunden",
+    "serverError": "Serverfehler",
+    "networkError": "Netzwerkfehler",
+    "timeout": "Anfragezeit überschritten",
+    "invalidResponse": "Ungültige Serverantwort",
+    "parseError": "Antwort konnte nicht verarbeitet werden",
+    "auth": {
+        "invalidCredentials": "Ungültiger Benutzername oder Passwort",
+        "accountLocked": "Konto ist gesperrt",
+        "accountDisabled": "Konto ist deaktiviert",
+        "sessionExpired": "Sitzung ist abgelaufen",
+        "invalidToken": "Ungültiges Authentifizierungstoken",
+        "loginError": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut."
+    },
+    "validation": {
+        "usernameRequired": "Benutzername ist erforderlich",
+        "passwordRequired": "Passwort ist erforderlich",
+        "usernameTooShort": "Benutzername muss mindestens 3 Zeichen lang sein",
+        "passwordTooShort": "Passwort muss mindestens 6 Zeichen lang sein",
+        "invalidUsernameFormat": "Ungültiges Benutzernamenformat",
+        "invalidPasswordFormat": "Ungültiges Passwortformat"
+    }
+}

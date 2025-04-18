@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { AuthService } from '../services/authService';
 
 export function withAuth(WrappedComponent, options = { requireAuth: true }) {
   return function ProtectedRoute(props) {
     const router = useRouter();
+    const { t } = useTranslation('common');
     const [state, setState] = useState({
       verified: false,
       loading: true,
@@ -29,7 +31,7 @@ export function withAuth(WrappedComponent, options = { requireAuth: true }) {
           setState({
             verified: false,
             loading: false,
-            error: 'No token found'
+            error: t('auth.noToken')
           });
           router.push('/auth/login');
           return;
@@ -44,7 +46,7 @@ export function withAuth(WrappedComponent, options = { requireAuth: true }) {
             user
           });
         } catch (err) {
-          console.error('Authentication error:', err);
+          console.error(t('auth.error'), err);
           setState({
             verified: false,
             loading: false,
@@ -62,12 +64,12 @@ export function withAuth(WrappedComponent, options = { requireAuth: true }) {
       };
 
       verifyAuth();
-    }, [router]);
+    }, [router, t]);
 
     if (state.loading) {
       return (
         <div className="flex items-center justify-center min-h-screen">
-          <div>Loading...</div>
+          <div>{t('common.loading')}</div>
         </div>
       );
     }

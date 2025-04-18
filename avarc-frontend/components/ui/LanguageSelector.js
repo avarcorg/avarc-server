@@ -1,12 +1,14 @@
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { Button } from './button';
 
 export default function LanguageSelector() {
   const router = useRouter();
   const { locale } = router;
+  const { t } = useTranslation('common');
 
   const changeLanguage = (lng) => {
-    console.log('Changing language to:', lng);
+    console.log(t('language.changingTo', { language: lng }));
     const { pathname, asPath, query } = router;
     router.push({ pathname, query }, asPath, { locale: lng });
     localStorage.setItem('language', lng);
@@ -19,14 +21,14 @@ export default function LanguageSelector() {
         size="sm"
         onClick={() => changeLanguage('en')}
       >
-        EN
+        {t('language.english')}
       </Button>
       <Button
         variant={locale === 'de' ? 'default' : 'outline'}
         size="sm"
         onClick={() => changeLanguage('de')}
       >
-        DE
+        {t('language.german')}
       </Button>
     </div>
   );

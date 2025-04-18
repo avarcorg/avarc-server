@@ -1,0 +1,11 @@
+{
+    "title": "Dashboard",
+    "userInfo": "User Information",
+    "username": "Username",
+    "uuid": "UUID",
+    "roles": "Roles",
+    "loading": "Loading...",
+    "noRoles": "No roles assigned",
+    "logout": "Logout",
+    "updateProfile": "Update Profile"
+}

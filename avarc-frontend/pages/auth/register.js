@@ -1,5 +1,6 @@
 import { withAuth } from '../../components/withAuth';
 import RegisterForm from '../../components/RegisterForm/RegisterForm';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const RegisterPage = () => {
     return (
@@ -8,5 +9,13 @@ const RegisterPage = () => {
         </main>
     );
 };
+
+export async function getStaticProps({ locale }) {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common', 'auth', 'api'])),
+        },
+    };
+}
 
 export default withAuth(RegisterPage, { requireAuth: false });

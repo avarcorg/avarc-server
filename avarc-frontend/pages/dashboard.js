@@ -1,5 +1,6 @@
 import { withAuth } from '../components/withAuth';
 import Dashboard from '../components/Dashboard/Dashboard';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const DashboardPage = () => {
     return (
@@ -8,5 +9,13 @@ const DashboardPage = () => {
         </main>
     );
 };
+
+export async function getStaticProps({ locale }) {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common', 'dashboard', 'api'])),
+        },
+    };
+}
 
 export default withAuth(DashboardPage);

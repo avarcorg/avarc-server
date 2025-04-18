@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { AuthService } from '../services/authService';
-import { apiClient } from '../services/apiClient';
-import { ENDPOINTS } from '../config';
-import { jwtDecode } from 'jwt-decode';
+import { useTranslation } from 'next-i18next';
 
 export const useUserUpdate = () => {
     const router = useRouter();
@@ -14,6 +12,7 @@ export const useUserUpdate = () => {
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const { t } = useTranslation(['auth', 'api']);
 
     useEffect(() => {
         const loadCurrentUser = async () => {
@@ -27,6 +26,7 @@ export const useUserUpdate = () => {
                 }
             } catch (err) {
                 console.error('Failed to load current user:', err);
+                setError('Failed to load user data');
             }
         };
         loadCurrentUser();
@@ -62,37 +62,11 @@ export const useUserUpdate = () => {
                 ...(formData.password && { password: formData.password })
             };
 
-            const response = await apiClient(`${ENDPOINTS.USERS.BASE}/${currentUser.uuid}`, {
-                method: 'PUT',
-                body: JSON.stringify(updateData),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await AuthService.updateUser(currentUser.uuid, updateData);
 
-            if (response.error) {
+            if (!response.success) {
                 setError(response.error);
                 return;
-            }
-
-            // If we got a new token, update it and decode user info
-            if (response.token) {
-                localStorage.setItem('jwt', response.token);
-                try {
-                    const decodedToken = jwtDecode(response.token);
-                    const storedUsername = decodedToken.sub || formData.username;
-                    const uuid = decodedToken.uuid;
-                    const roles = decodedToken.roles || [];
-
-                    // Update all user information in localStorage
-                    localStorage.setItem('username', storedUsername);
-                    if (uuid) localStorage.setItem('uuid', uuid);
-                    if (roles.length > 0) localStorage.setItem('roles', JSON.stringify(roles));
-                } catch (decodeError) {
-                    console.error('Failed to decode JWT:', decodeError);
-                    setError('Failed to update session information');
-                    return;
-                }
             }
 
             setSuccess('Profile updated successfully!');
@@ -100,11 +74,7 @@ export const useUserUpdate = () => {
                 router.push('/dashboard');
             }, 2000);
         } catch (err) {
-            if (err.status === 403) {
-                setError('You do not have permission to update this profile');
-            } else {
-                setError(err.response?.data?.error || err.message || 'Failed to update profile. Please try again.');
-            }
+            setError(err.message || 'Failed to update profile. Please try again.');
         }
     };
 

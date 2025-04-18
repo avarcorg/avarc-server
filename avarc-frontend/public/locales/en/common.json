@@ -1,0 +1,17 @@
+{
+    "language": {
+        "english": "EN",
+        "german": "DE",
+        "changingTo": "Changing language to: {{language}}"
+    },
+    "home": {
+        "welcome": "Welcome to avArc"
+    },
+    "common": {
+        "loading": "Loading..."
+    },
+    "auth": {
+        "noToken": "No token found",
+        "error": "Authentication error:"
+    }
+}

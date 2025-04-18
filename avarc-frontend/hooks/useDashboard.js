@@ -29,10 +29,20 @@ export const useDashboard = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
+                // First try to get data from localStorage
+                const storedUsername = localStorage.getItem('username');
+                const storedUuid = localStorage.getItem('uuid');
+                const storedRoles = JSON.parse(localStorage.getItem('roles') || '[]');
+
+                // Set initial state from localStorage
+                setData(storedUsername ? { username: storedUsername } : null);
+                setUuid(storedUuid);
+                setRoles(storedRoles);
+
+                // Then try to fetch fresh data from the server
                 const userData = await AuthService.getCurrentUser();
-                setData(userData);
                 if (userData) {
-                    localStorage.setItem('username', userData.username);
+                    setData(userData);
                     if (userData.uuid) {
                         setUuid(userData.uuid);
                         localStorage.setItem('uuid', userData.uuid);

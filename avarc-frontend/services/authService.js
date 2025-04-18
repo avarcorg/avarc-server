@@ -1,33 +1,59 @@
-import { apiClient } from './apiClient';
+import apiClient from './apiClient';
 import { ApiError } from './ApiError';
 import { ENDPOINTS } from '../config';
 import { jwtDecode } from 'jwt-decode';
+import { logMissingTranslation } from '../utils/translationUtils';
 
-const loginUser = async (username, password) => {
+export const loginUser = async (username, password) => {
+  console.log('[authService] Starting loginUser with username:', username);
   try {
-    const data = await apiClient(ENDPOINTS.AUTH.LOGIN, {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
+    const response = await apiClient.post(ENDPOINTS.AUTH.LOGIN, {
+      username,
+      password
     });
+    console.log('[authService] API Response:', response);
 
-    if (!data || !data.token) {
-      throw new ApiError('Invalid response from server', 500);
+    if (!response.data) {
+      console.log('[authService] No data in response');
+      logMissingTranslation('auth.login.error', 'auth');
+      return {
+        success: false,
+        error: 'Invalid response from server'
+      };
+    }
+
+    const { user, token } = response.data;
+    console.log('[authService] Extracted user and token:', { user, token: token ? 'present' : 'missing' });
+
+    if (!user || !token) {
+      console.log('[authService] Missing user or token in response');
+      logMissingTranslation('auth.login.error', 'auth');
+      return {
+        success: false,
+        error: 'Invalid credentials'
+      };
     }
 
     // Store the token
-    localStorage.setItem('jwt', data.token);
+    localStorage.setItem('jwt', token);
+    console.log('[authService] Stored JWT token in localStorage');
 
     try {
       // Decode the JWT token to extract user information
-      const decodedToken = jwtDecode(data.token);
-      const storedUsername = decodedToken.sub || username;
+      const decodedToken = jwtDecode(token);
+      console.log('[authService] Decoded JWT token:', decodedToken);
+
+      // Store raw values from the token
+      const storedUsername = decodedToken.sub;
       const uuid = decodedToken.uuid;
       const roles = decodedToken.roles || [];
+      console.log('[authService] Extracted token data:', { storedUsername, uuid, roles });
 
-      // Store user information in localStorage
+      // Store raw values in localStorage
       localStorage.setItem('username', storedUsername);
       if (uuid) localStorage.setItem('uuid', uuid);
       if (roles.length > 0) localStorage.setItem('roles', JSON.stringify(roles));
+      console.log('[authService] Stored user data in localStorage');
 
       return {
         success: true,
@@ -38,8 +64,9 @@ const loginUser = async (username, password) => {
         }
       };
     } catch (decodeError) {
-      console.error('Failed to decode JWT:', decodeError);
-      // If decoding fails, still store the token and username
+      console.error('[authService] Error decoding token:', decodeError);
+      logMissingTranslation('auth.login.error', 'auth');
+      // If decoding fails, still store the raw username
       localStorage.setItem('username', username);
       return {
         success: true,
@@ -47,65 +74,210 @@ const loginUser = async (username, password) => {
       };
     }
   } catch (error) {
-    if (error instanceof ApiError) {
-      return Promise.reject(error);
+    console.error('[authService] Login error:', error);
+
+    // If we have a structured error response, use it directly
+    if (error.success === false) {
+      console.log('[authService] Using structured error response:', error);
+      return error;
     }
-    return Promise.reject(new ApiError(error.message || 'Login failed', 500));
+
+    if (error.response) {
+      const { status, data } = error.response;
+      const errorCode = data?.errorCode || data?.code;
+      console.log('[authService] Error response:', { status, data, errorCode });
+
+      // If we have an error message, use it directly
+      if (data?.errorMessage) {
+        console.log('[authService] Using error message from response:', data.errorMessage);
+        return {
+          success: false,
+          error: data.errorMessage
+        };
+      }
+
+      // First check if we have a valid AuthResponse object
+      if (data?.user !== null && data?.token !== null) {
+        console.log('[authService] Found valid AuthResponse in error response');
+        // This is a valid AuthResponse, process it
+        const { user, token } = data;
+
+        // Store the token
+        localStorage.setItem('jwt', token);
+        console.log('[authService] Stored JWT token from error response');
+
+        try {
+          // Decode the JWT token to extract user information
+          const decodedToken = jwtDecode(token);
+          console.log('[authService] Decoded JWT token from error response:', decodedToken);
+
+          // Store raw values from the token
+          const storedUsername = decodedToken.sub;
+          const uuid = decodedToken.uuid;
+          const roles = decodedToken.roles || [];
+          console.log('[authService] Extracted token data from error response:', { storedUsername, uuid, roles });
+
+          // Store raw values in localStorage
+          localStorage.setItem('username', storedUsername);
+          if (uuid) localStorage.setItem('uuid', uuid);
+          if (roles.length > 0) localStorage.setItem('roles', JSON.stringify(roles));
+          console.log('[authService] Stored user data from error response in localStorage');
+
+          return {
+            success: true,
+            user: {
+              username: storedUsername,
+              uuid,
+              roles
+            }
+          };
+        } catch (decodeError) {
+          console.error('[authService] Error decoding token from error response:', decodeError);
+          logMissingTranslation('auth.login.error', 'auth');
+          // If decoding fails, still store the raw username
+          localStorage.setItem('username', username);
+          return {
+            success: true,
+            user: { username }
+          };
+        }
+      }
+      // If not a valid AuthResponse, handle as error
+      else if (errorCode) {
+        console.log('[authService] Handling error with code:', errorCode);
+        // For auth errors, use the auth namespace
+        if (errorCode.startsWith('auth.') || errorCode === 'LOGIN_ERROR') {
+          const code = errorCode === 'LOGIN_ERROR' ? 'loginError' : errorCode.split('.')[1];
+          logMissingTranslation(`auth.login.${code}`, 'auth');
+          return {
+            success: false,
+            error: data?.errorMessage || 'Login failed'
+          };
+        } else {
+          logMissingTranslation(`api.${errorCode}`, 'api');
+          return {
+            success: false,
+            error: data?.errorMessage || 'Request failed'
+          };
+        }
+      }
+      // If no specific error message, use status-based messages
+      else if (status === 401) {
+        console.log('[authService] Unauthorized (401) error');
+        logMissingTranslation('auth.login.error', 'auth');
+        return {
+          success: false,
+          error: 'Invalid username or password'
+        };
+      } else if (status === 403) {
+        console.log('[authService] Forbidden (403) error');
+        logMissingTranslation('auth.login.error', 'auth');
+        return {
+          success: false,
+          error: 'Account is locked'
+        };
+      } else {
+        console.log('[authService] Unhandled status code:', status);
+        logMissingTranslation('auth.login.error', 'auth');
+        return {
+          success: false,
+          error: 'Login failed'
+        };
+      }
+    } else if (error.request) {
+      console.log('[authService] No response received from server');
+      return {
+        success: false,
+        error: 'Unable to connect to server'
+      };
+    } else {
+      console.log('[authService] Request setup error:', error);
+      return {
+        success: false,
+        error: 'Login request failed'
+      };
+    }
   }
 };
 
-const registerUser = async (username, password) => {
+export const registerUser = async (username, password, email) => {
+  console.log('[authService] Starting registerUser with username:', username);
+
+  // Validate required fields
+  if (!password) {
+    console.log('[authService] Password is required');
+    return {
+      success: false,
+      error: 'Password is required'
+    };
+  }
+
   try {
-    const data = await apiClient(ENDPOINTS.AUTH.REGISTER, {
-      method: 'POST',
-      body: JSON.stringify({
+    const response = await apiClient.post(ENDPOINTS.AUTH.REGISTER,
+      JSON.stringify({
         username: username,
-        password: password
+        password: password,
+        email: email
       }),
-      headers: {
-        'Content-Type': 'application/json'
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
-    });
+    );
+    console.log('[authService] API Response:', response);
 
-    if (!data) {
-      throw new ApiError('Registration failed - no response data', 500);
+    if (!response.data) {
+      console.log('[authService] No data in response');
+      return {
+        success: false,
+        error: 'Invalid response from server'
+      };
     }
 
-    // Check if we have a token in the response
-    if (!data.token) {
-      console.error('Registration response:', data);
-      throw new ApiError('Registration failed - no token received', 500);
+    // Check for error response with user and token as null
+    if (response.data.user === null && response.data.token === null && response.data.errorMessage) {
+      console.log('[authService] Received error response:', response.data);
+      return {
+        success: false,
+        error: response.data.errorMessage
+      };
     }
 
-    // Validate token format
-    const tokenParts = data.token.split('.');
-    if (tokenParts.length !== 3) {
-      console.error('Invalid token format:', data.token);
-      throw new ApiError('Registration failed - invalid token format', 500);
+    const { user, token } = response.data;
+    console.log('[authService] Extracted user and token:', { user, token: token ? 'present' : 'missing' });
+
+    if (!user || !token) {
+      console.log('[authService] Missing user or token in response');
+      return {
+        success: false,
+        error: 'Invalid registration data'
+      };
     }
+
+    // Store the token
+    localStorage.setItem('jwt', token);
+    console.log('[authService] Stored JWT token in localStorage');
 
     try {
       // Decode the JWT token to extract user information
-      const decodedToken = jwtDecode(data.token);
+      const decodedToken = jwtDecode(token);
+      console.log('[authService] Decoded JWT token:', decodedToken);
 
-      // Validate token claims
-      if (!decodedToken.sub) {
-        throw new ApiError('Registration failed - invalid token claims', 500);
-      }
-
-      const storedUsername = decodedToken.sub || username;
+      // Store raw values from the token
+      const storedUsername = decodedToken.sub;
       const uuid = decodedToken.uuid;
       const roles = decodedToken.roles || [];
+      console.log('[authService] Extracted token data:', { storedUsername, uuid, roles });
 
-      // Store the token and user information
-      localStorage.setItem('jwt', data.token);
+      // Store raw values in localStorage
       localStorage.setItem('username', storedUsername);
       if (uuid) localStorage.setItem('uuid', uuid);
       if (roles.length > 0) localStorage.setItem('roles', JSON.stringify(roles));
+      console.log('[authService] Stored user data in localStorage');
 
       return {
         success: true,
-        token: data.token,
         user: {
           username: storedUsername,
           uuid,
@@ -113,14 +285,134 @@ const registerUser = async (username, password) => {
         }
       };
     } catch (decodeError) {
-      console.error('Failed to decode JWT:', decodeError);
-      throw new ApiError('Registration failed - invalid token', 500);
+      console.error('[authService] Error decoding token:', decodeError);
+      // If decoding fails, still store the raw username
+      localStorage.setItem('username', username);
+      return {
+        success: true,
+        user: { username }
+      };
     }
   } catch (error) {
-    if (error instanceof ApiError) {
-      return Promise.reject(error);
+    console.error('[authService] Register error:', error);
+
+    // If we have a structured error response, use it directly
+    if (error.success === false) {
+      console.log('[authService] Using structured error response:', error);
+      return error;
     }
-    return Promise.reject(new ApiError('Registration failed. Please try again.', 0));
+
+    if (error.response) {
+      const { status, data } = error.response;
+      const errorCode = data?.errorCode || data?.code;
+      console.log('[authService] Error response:', { status, data, errorCode });
+
+      // If we have an error message, use it directly
+      if (data?.errorMessage) {
+        console.log('[authService] Using error message from response:', data.errorMessage);
+        return {
+          success: false,
+          error: data.errorMessage
+        };
+      }
+
+      // First check if we have a valid AuthResponse object
+      if (data?.user !== null && data?.token !== null) {
+        console.log('[authService] Found valid AuthResponse in error response');
+        // This is a valid AuthResponse, process it
+        const { user, token } = data;
+
+        // Store the token
+        localStorage.setItem('jwt', token);
+        console.log('[authService] Stored JWT token from error response');
+
+        try {
+          // Decode the JWT token to extract user information
+          const decodedToken = jwtDecode(token);
+          console.log('[authService] Decoded JWT token from error response:', decodedToken);
+
+          // Store raw values from the token
+          const storedUsername = decodedToken.sub;
+          const uuid = decodedToken.uuid;
+          const roles = decodedToken.roles || [];
+          console.log('[authService] Extracted token data from error response:', { storedUsername, uuid, roles });
+
+          // Store raw values in localStorage
+          localStorage.setItem('username', storedUsername);
+          if (uuid) localStorage.setItem('uuid', uuid);
+          if (roles.length > 0) localStorage.setItem('roles', JSON.stringify(roles));
+          console.log('[authService] Stored user data from error response in localStorage');
+
+          return {
+            success: true,
+            user: {
+              username: storedUsername,
+              uuid,
+              roles
+            }
+          };
+        } catch (decodeError) {
+          console.error('[authService] Error decoding token from error response:', decodeError);
+          // If decoding fails, still store the raw username
+          localStorage.setItem('username', username);
+          return {
+            success: true,
+            user: { username }
+          };
+        }
+      }
+      // If not a valid AuthResponse, handle as error
+      else if (errorCode) {
+        console.log('[authService] Handling error with code:', errorCode);
+        // For auth errors, use the auth namespace
+        if (errorCode.startsWith('auth.') || errorCode === 'REGISTER_ERROR') {
+          const code = errorCode === 'REGISTER_ERROR' ? 'registerError' : errorCode.split('.')[1];
+          logMissingTranslation(`auth.register.${code}`, 'auth');
+          return {
+            success: false,
+            error: data?.errorMessage || 'Registration failed'
+          };
+        } else {
+          logMissingTranslation(`api.${errorCode}`, 'api');
+          return {
+            success: false,
+            error: data?.errorMessage || 'Request failed'
+          };
+        }
+      }
+      // If no specific error message, use status-based messages
+      else if (status === 400) {
+        console.log('[authService] Bad request (400) error');
+        return {
+          success: false,
+          error: data?.errorMessage || 'Invalid registration data'
+        };
+      } else if (status === 409) {
+        console.log('[authService] Conflict (409) error');
+        return {
+          success: false,
+          error: data?.errorMessage || 'Username already taken'
+        };
+      } else {
+        console.log('[authService] Unhandled status code:', status);
+        return {
+          success: false,
+          error: 'Registration failed'
+        };
+      }
+    } else if (error.request) {
+      console.log('[authService] No response received from server');
+      return {
+        success: false,
+        error: 'Unable to connect to server'
+      };
+    } else {
+      console.log('[authService] Request setup error:', error);
+      return {
+        success: false,
+        error: 'Registration request failed'
+      };
+    }
   }
 };
 
@@ -131,6 +423,7 @@ const getCurrentUser = async () => {
     });
 
     if (!data) {
+      logMissingTranslation('auth.login.error', 'auth');
       throw new ApiError('Failed to fetch user data', 500);
     }
 
@@ -178,3 +471,5 @@ export const AuthService = {
 };
 
 export default AuthService;
+
+

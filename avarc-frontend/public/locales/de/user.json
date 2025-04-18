@@ -1,0 +1,10 @@
+{
+    "profile": {
+        "updateTitle": "Profil aktualisieren",
+        "usernamePlaceholder": "Neuen Benutzernamen eingeben",
+        "passwordPlaceholder": "Neues Passwort eingeben",
+        "confirmPasswordPlaceholder": "Neues Passwort bestätigen",
+        "updateButton": "Aktualisieren",
+        "cancelButton": "Abbrechen"
+    }
+}

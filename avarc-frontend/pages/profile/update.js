@@ -1,5 +1,6 @@
 import { withAuth } from '../../components/withAuth';
 import UserUpdateForm from '../../components/UserUpdateForm/UserUpdateForm';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 function UpdateProfile() {
     return (
@@ -7,6 +8,14 @@ function UpdateProfile() {
             <UserUpdateForm />
         </main>
     );
+}
+
+export async function getStaticProps({ locale }) {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common', 'user', 'api'])),
+        },
+    };
 }
 
 export default withAuth(UpdateProfile);
