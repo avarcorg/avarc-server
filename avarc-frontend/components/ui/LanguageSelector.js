@@ -30,6 +30,13 @@ export default function LanguageSelector() {
       >
         {t('language.german')}
       </Button>
+      <Button
+        variant={locale === 'tr' ? 'default' : 'outline'}
+        size="sm"
+        onClick={() => changeLanguage('tr')}
+      >
+        {t('language.turkish')}
+      </Button>
     </div>
   );
 }

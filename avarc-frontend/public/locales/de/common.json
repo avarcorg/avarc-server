@@ -2,7 +2,8 @@
     "language": {
         "english": "EN",
         "german": "DE",
-        "changingTo": ""
+        "turkish": "TR",
+        "changingTo": "Sprache wird geändert zu: {{language}}"
     },
     "home": {
         "welcome": ""

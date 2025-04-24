@@ -1,0 +1,11 @@
+{
+    "title": "Kontrol Paneli",
+    "userInfo": "Kullanıcı Bilgileri",
+    "username": "Kullanıcı Adı",
+    "uuid": "UUID",
+    "roles": "Roller",
+    "loading": "Yükleniyor...",
+    "noRoles": "Atanmış rol yok",
+    "logout": "Çıkış Yap",
+    "updateProfile": "Profili Güncelle"
+}

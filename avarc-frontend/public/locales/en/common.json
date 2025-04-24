@@ -2,6 +2,7 @@
     "language": {
         "english": "EN",
         "german": "DE",
+        "turkish": "TR",
         "changingTo": "Changing language to: {{language}}"
     },
     "home": {

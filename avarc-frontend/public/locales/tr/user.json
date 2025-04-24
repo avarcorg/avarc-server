@@ -1,0 +1,10 @@
+{
+    "profile": {
+        "updateTitle": "Profili Güncelle",
+        "usernamePlaceholder": "Yeni kullanıcı adını girin",
+        "passwordPlaceholder": "Yeni şifreyi girin",
+        "confirmPasswordPlaceholder": "Yeni şifreyi onaylayın",
+        "updateButton": "Güncelle",
+        "cancelButton": "İptal"
+    }
+}

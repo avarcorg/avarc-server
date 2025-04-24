@@ -1,0 +1,27 @@
+{
+    "requestFailed": "API isteği başarısız oldu",
+    "unauthorized": "Yetkisiz erişim",
+    "forbidden": "Erişim engellendi",
+    "notFound": "Kaynak bulunamadı",
+    "serverError": "Sunucu hatası",
+    "networkError": "Ağ hatası",
+    "timeout": "İstek zaman aşımına uğradı",
+    "invalidResponse": "Sunucudan geçersiz yanıt",
+    "parseError": "Yanıt ayrıştırılamadı",
+    "auth": {
+        "invalidCredentials": "Geçersiz kullanıcı adı veya şifre",
+        "accountLocked": "Hesap kilitlendi",
+        "accountDisabled": "Hesap devre dışı bırakıldı",
+        "sessionExpired": "Oturum süresi doldu",
+        "invalidToken": "Geçersiz kimlik doğrulama tokeni",
+        "loginError": "Giriş başarısız. Lütfen bilgilerinizi kontrol edip tekrar deneyin."
+    },
+    "validation": {
+        "usernameRequired": "Kullanıcı adı gerekli",
+        "passwordRequired": "Şifre gerekli",
+        "usernameTooShort": "Kullanıcı adı en az 3 karakter olmalı",
+        "passwordTooShort": "Şifre en az 6 karakter olmalı",
+        "invalidUsernameFormat": "Geçersiz kullanıcı adı formatı",
+        "invalidPasswordFormat": "Geçersiz şifre formatı"
+    }
+}
