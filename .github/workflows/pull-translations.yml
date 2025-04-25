@@ -1,0 +1,49 @@
+name: Pull Translations
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Run at 02:00
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/pull-translations.yml'
+  workflow_dispatch:
+
+jobs:
+  pull-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Random sleep for scheduled runs
+        if: github.event_name == 'schedule'
+        run: |
+          sleep $((RANDOM % 900 + 900))  # Random sleep between 15 and 30 minutes
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Pull translations from Crowdin
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        run: |
+          npm install -g @crowdin/cli
+          npx crowdin download --debug
+          node scripts/move-translations.js move
+
+      - name: Show translation changes
+        run: |
+          echo "Changes in translation files:"
+          git diff --name-only public/locales/de public/locales/tr
+          echo
+          echo "Detailed changes:"
+          git diff public/locales/de public/locales/tr

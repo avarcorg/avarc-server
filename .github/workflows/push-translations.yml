@@ -1,0 +1,35 @@
+name: Push Translations
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'public/locales/**'
+      - '!public/locales/en/**'
+      - '.github/workflows/push-translations.yml'
+  workflow_dispatch:
+
+jobs:
+  push-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Push translations to Crowdin
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        run: |
+          npm install -g @crowdin/cli
+          npx crowdin upload translations --debug
