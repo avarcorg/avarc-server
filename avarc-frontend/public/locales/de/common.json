@@ -6,13 +6,13 @@
         "changingTo": "Sprache wird geändert zu: {{language}}"
     },
     "home": {
-        "welcome": ""
+        "welcome": "Welcome to avArc"
     },
     "common": {
-        "loading": ""
+        "loading": "Loading..."
     },
     "auth": {
-        "noToken": "",
-        "error": ""
+        "noToken": "No token found",
+        "error": "Authentication error:"
     }
 }
