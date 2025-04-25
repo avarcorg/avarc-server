@@ -91,6 +91,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Various helper scripts for local debugging
+translate-*.*
+
 # Backup files
 **/*.bak
 **/*~
