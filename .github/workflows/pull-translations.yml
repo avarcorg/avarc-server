@@ -1,0 +1,81 @@
+name: Pull Translations
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Run at 02:00
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/pull-translations.yml'
+  workflow_dispatch:
+
+jobs:
+  pull-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Random sleep for scheduled runs
+        if: github.event_name == 'schedule'
+        run: |
+          sleep $((RANDOM % 900 + 900))  # Random sleep between 15 and 30 minutes
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22.14.0'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Crowdin CLI requires Java 17
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          # Use OpenJDK
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install dependencies
+        working-directory: avarc-frontend
+        run: |
+          if [ ! -f package-lock.json ]; then
+            npm install
+          fi
+          npm ci
+
+      - name: Pull translations from Crowdin
+        working-directory: avarc-frontend
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        run: |
+          npm install -g @crowdin/cli
+          npx crowdin download --debug
+
+      - name: Move translations to correct location
+        working-directory: avarc-frontend
+        run: node scripts/move-translations.js move
+
+      - name: Show translation changes
+        working-directory: avarc-frontend
+        run: |
+          echo "Changes in translation files:"
+          git diff --name-only public/locales/de public/locales/tr
+          echo
+          echo "Detailed changes:"
+          git diff public/locales/de public/locales/tr

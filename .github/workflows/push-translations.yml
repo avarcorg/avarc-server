@@ -1,0 +1,80 @@
+name: Push Translations
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'public/locales/**'
+      - '!public/locales/en/**'
+      - '.github/workflows/push-translations.yml'
+  workflow_dispatch:
+
+jobs:
+  push-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22.14.0'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Crowdin CLI requires Java 17
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          # Use OpenJDK
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install dependencies
+        working-directory: avarc-frontend
+        run: |
+          if [ ! -f package-lock.json ]; then
+            npm install
+          fi
+          npm ci
+
+      - name: Prepare translations for upload
+        working-directory: avarc-frontend
+        run: node scripts/move-translations.js prepare
+
+      - name: Push source strings to Crowdin
+        working-directory: avarc-frontend
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        run: |
+          npm install -g @crowdin/cli
+          npx crowdin upload sources --debug
+
+      - name: Push translations to Crowdin
+        working-directory: avarc-frontend
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        run: |
+          npm install -g @crowdin/cli
+          npx crowdin upload translations --debug
+
+      - name: Clean up after upload
+        working-directory: avarc-frontend
+        run: node scripts/move-translations.js cleanup
