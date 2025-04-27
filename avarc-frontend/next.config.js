@@ -19,6 +19,7 @@ const nextConfig = {
     domains: ['localhost'],
     unoptimized: true,
   },
+  output: 'standalone',
   env: {
     NEXT_PUBLIC_API_HOST: process.env.NEXT_PUBLIC_API_HOST || API_CONFIG.HOST,
     NEXT_PUBLIC_API_VERSION: API_CONFIG.VERSION,
