@@ -9,9 +9,11 @@ import org.avarc.server.backend.modules.user.internal.UserMapper;
 import org.avarc.server.backend.modules.user.internal.UserMessageService;
 import org.avarc.server.backend.modules.user.internal.UserRepository;
 import org.avarc.server.backend.modules.user.internal.UserService;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Tag("modulith")
 class AuthModuleTest {
 
     @Test

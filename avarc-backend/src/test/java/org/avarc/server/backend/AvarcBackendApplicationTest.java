@@ -1,12 +1,15 @@
 package org.avarc.server.backend;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.core.Violations;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
+@Tag("modulith")
 public class AvarcBackendApplicationTest {
 
     ApplicationModules modules = ApplicationModules.of(AvarcBackendApplication.class);
