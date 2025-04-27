@@ -27,19 +27,17 @@ logger.info(`  LOGS_DIR: ${serverConfig.LOGS_DIR}`);
 logger.info(`  LOG_LEVEL: ${serverConfig.LOG_LEVEL}`);
 logger.info('-----------------------------------');
 
-// Start Next.js using the standard path
-const next = spawn('node', [
-  path.join(__dirname, '.next', 'standalone', 'node_modules', 'next', 'dist', 'bin', 'next'),
-  'start',
-  '--port', serverConfig.PORT
-], {
+// Start Next.js in development mode
+const next = spawn('npm', ['run', 'dev'], {
   stdio: 'inherit',
   env: {
     ...process.env,
     NEXT_PUBLIC_API_HOST: serverConfig.API_HOST,
     NODE_ENV: serverConfig.NODE_ENV,
     LOGS_DIR: serverConfig.LOGS_DIR,
-    LOG_LEVEL: serverConfig.LOG_LEVEL
+    LOG_LEVEL: serverConfig.LOG_LEVEL,
+    PORT: serverConfig.PORT,
+    HOST: '0.0.0.0'
   }
 });
 

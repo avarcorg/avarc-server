@@ -11,14 +11,16 @@ RUN npm ci
 # Copy source files
 COPY . .
 
-# Build the application
-RUN npm run build
-
 # Create logs directory
 RUN mkdir -p logs
 
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Start the application
-CMD ["node", ".next/standalone/server.js"]
+# Set environment variables
+ENV HOST=0.0.0.0
+ENV PORT=3000
+ENV NODE_ENV=development
+
+# Start the application in development mode
+CMD ["npm", "run", "dev"]
