@@ -16,6 +16,31 @@
             <id>with-docker</id>
             <build>
                 <plugins>
+                    <!-- Copy mime.types to workspace -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-nginx-files</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.build.outputDirectory}</directory>
+                                            <includes>
+                                                <include>mime.types</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <!-- Use exec plugin to run pack CLI -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -23,7 +48,7 @@
                         <version>${exec-maven-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>pack-react-image</id>
+                                <id>pack-nginx-image</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>exec</goal>
@@ -42,6 +67,8 @@
                                         <argument>--trust-builder</argument>
                                         <argument>--env</argument>
                                         <argument>BP_NGINX_CONF_PATH=nginx.conf</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_NGINX_STATIC_ROOT=.</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
