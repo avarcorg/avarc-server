@@ -33,7 +33,7 @@
         <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
         <git-commit-id-maven-plugin.version>9.0.1</git-commit-id-maven-plugin.version>
         <plantuml-maven-plugin.version>0.2.13</plantuml-maven-plugin.version>
-        <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
+        <springdoc-openapi-maven-plugin.version>1.5</springdoc-openapi-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
