@@ -6,16 +6,23 @@ on:
       - 'main'
   workflow_dispatch:
 
+# Add permissions configuration
+permissions:
+  contents: read
+  actions: read
+  packages: read
+  id-token: write  # Required for OAuth authentication
+
 env:
   GHCR_ORG: avarcorg
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Set up Pack CLI
         uses: buildpacks/github-actions/setup-pack@v5.8.10
@@ -30,7 +37,7 @@ jobs:
         run: yj -v
 
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22.14.0'
 
@@ -46,7 +53,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '23'
+          java-version: '21'
 
       - name: Cache Maven dependencies
         uses: actions/cache@v4
@@ -71,17 +78,15 @@ jobs:
       - name: Run Modulith Tests
         continue-on-error: true
         run: mvn test -pl avarc-backend -Pwith-modulith
-        # TODO: Add Mattermost notification for modulith test failures
-        # This will help track architectural violations over time
 
-  build:
-    needs: test
+  build-and-push-container-images:
+    needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'  # Only run on main branch
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Set up Pack CLI
         uses: buildpacks/github-actions/setup-pack@v5.8.10
@@ -115,23 +120,6 @@ jobs:
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Push Docker image(s)
-        run: |
-          docker tag avarc-backend:${{ env.VERSION }}  ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
-          docker tag avarc-backend:${{ env.VERSION }}  ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:latest
-          docker tag avarc-frontend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }}
-          docker tag avarc-frontend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:latest
-          docker tag avarc-nginx:${{ env.VERSION }}    ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }}
-          docker tag avarc-nginx:${{ env.VERSION }}    ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:latest
-          echo
-          docker images | grep -v "IMAGE ID" | sort
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:latest
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }}
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:latest
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }}
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:latest
-
       - name: Show Docker image label(s)
         run: |
           docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }} | jq "."
@@ -139,3 +127,41 @@ jobs:
           docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }} | jq "."
           echo
           docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }} | jq "."
+
+  trigger-deployment:
+    needs: build-and-push-container-images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Connect to Tailscale
+        id: tailscale
+        # Required OAuth client permissions:
+        # - auth_keys
+        # - device_invites:read
+        # - devices:core
+        # - devices:posture_attributes:read
+        # - devices:routes
+        # - dns:read
+        uses: tailscale/github-action@v2
+        continue-on-error: true
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: 'tag:deploy-avarc'
+          hostname: github-runner-${{ github.run_id }}
+
+      - name: Show tailscaled.log
+        run: |
+          echo "=== tailscaled.log contents ==="
+          cat ~/tailscaled.log || echo "No tailscaled.log found"
+          echo "=== End of tailscaled.log ==="
+
+      - name: Trigger deployment
+        if: success()
+        run: |
+          curl -X POST ${{ secrets.DEPLOYMENT_TRIGGER_URL }} \
+            -H "Content-Type: application/json" \
+            --data "{\"version\": \"${{ env.VERSION }}\"}"
