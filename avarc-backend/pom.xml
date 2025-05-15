@@ -246,6 +246,9 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <mainClass>org.avarc.server.backend.AvarcBackendApplication</mainClass>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
