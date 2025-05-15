@@ -1,0 +1,100 @@
+name: Cleanup Workflow Runs
+
+on:
+  schedule:
+    # Run every day at 6:30 AM UTC
+    - cron: "30 6 * * *"
+  workflow_dispatch:      # Allow manual triggering
+
+jobs:
+  cleanup-unsuccessful:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write      # Required to delete workflow runs
+    steps:
+      - name: Cleanup Unsuccessful Workflow Runs
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const twoDaysAgo = new Date();
+            twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+            // Get all workflows in the repository
+            const workflows = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            // Process each workflow
+            for (const workflow of workflows.data.workflows) {
+              console.log(`Processing workflow: ${workflow.name}`);
+
+              // Get failed runs for this workflow
+              const failedRuns = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflow.id,
+                status: 'failure',
+                created: `<${twoDaysAgo.toISOString()}`
+              });
+
+              // Delete old failed runs
+              for (const run of failedRuns.data.workflow_runs) {
+                console.log(`Deleting failed run ${run.id} from workflow ${workflow.name}`);
+                await github.rest.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id
+                });
+              }
+            }
+
+  cleanup-successful:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write      # Required to delete workflow runs
+    steps:
+      - name: Cleanup Successful Workflow Runs
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+            // Get all workflows in the repository
+            const workflows = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            // Process each workflow
+            for (const workflow of workflows.data.workflows) {
+              console.log(`Processing workflow: ${workflow.name}`);
+
+              // Get successful runs for this workflow
+              const successfulRuns = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflow.id,
+                status: 'success',
+                created: `<${oneWeekAgo.toISOString()}`
+              });
+
+              // Sort successful runs by creation date (newest first)
+              const sortedRuns = successfulRuns.data.workflow_runs.sort((a, b) =>
+                new Date(b.created_at) - new Date(a.created_at)
+              );
+
+              // Keep the 5 most recent runs, delete the rest
+              for (let i = 5; i < sortedRuns.length; i++) {
+                const run = sortedRuns[i];
+                console.log(`Deleting old successful run ${run.id} from workflow ${workflow.name}`);
+                await github.rest.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id
+                });
+              }
+            }
