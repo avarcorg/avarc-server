@@ -55,6 +55,12 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
+      - name: Ensure mvnw is executable
+        run: chmod +x ./mvnw
+
+      - name: Display java tools
+        run: ./mvnw --version
+
       - name: Cache Maven dependencies
         uses: actions/cache@v4
         with:
@@ -66,18 +72,18 @@ jobs:
       - name: Extract Maven project version
         id: version
         run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Build with Maven
-        run: mvn --no-transfer-progress -DskipTests -Pwith-docker clean package
+        run: ./mvnw --no-transfer-progress -DskipTests -Pwith-docker clean package
 
       - name: Run Tests
-        run: mvn test -pl avarc-backend
+        run: ./mvnw test -pl avarc-backend
 
       - name: Run Modulith Tests
         continue-on-error: true
-        run: mvn test -pl avarc-backend -Pwith-modulith
+        run: ./mvnw test -pl avarc-backend -Pwith-modulith
 
   build-and-push-container-images:
     needs: build-and-test
@@ -100,14 +106,20 @@ jobs:
       - name: Display Pack Tools
         run: yj -v
 
+      - name: Ensure mvnw is executable
+        run: chmod +x ./mvnw
+
+      - name: Display java tools
+        run: ./mvnw --version
+
       - name: Extract Maven project version
         id: version
         run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Build docker images
-        run: mvn --no-transfer-progress -DskipTests -Pwith-docker package
+        run: ./mvnw --no-transfer-progress -DskipTests -Pwith-docker package
 
       - name: Show Docker image(s)
         run: |
