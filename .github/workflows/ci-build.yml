@@ -162,15 +162,37 @@ jobs:
           echo "Searching for avarc files in the container..."
           tar tf container.tar | grep avarc
 
+          # Fail if no avarc files found
+          if ! tar tf container.tar | grep -q avarc; then
+            echo "No avarc files found in the container!"
+            exit 1
+          fi
+
           # Clean up
           docker rm $CONTAINER_ID
           rm container.tar
 
-          # Fail if no avarc files found
-          if ! find . -type f -name "*avarc*" -print -quit | grep -q .; then
-            echo "No avarc files found in the container!"
+      - name: Verify application files in nginx Docker image
+        run: |
+          # Create a temporary container from the image
+          CONTAINER_ID=$(docker create ghcr.io/${{ env.GHCR_ORG }}/avarc-nginx:${{ env.VERSION }})
+
+          # Extract the container filesystem
+          docker export $CONTAINER_ID > container.tar
+
+          # Search for nginx files
+          echo "Searching for nginx files in the container..."
+          tar tf container.tar | grep workspace
+
+          # Fail if no nginx files found
+          if ! tar tf container.tar | grep -q workspace; then
+            echo "No nginx files found in the container!"
             exit 1
           fi
+
+          # Clean up
+          docker rm $CONTAINER_ID
+          rm container.tar
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
