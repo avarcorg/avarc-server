@@ -15,7 +15,7 @@ permissions:
 
 env:
   GHCR_ORG: avarcorg
-  JAVA_VERSION: '23'
+  JAVA_VERSION: '24'
   NODE_VERSION: '22.14.0'
 
 jobs:
@@ -150,18 +150,17 @@ jobs:
           docker tag avarc-frontend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-frontend:${{ env.VERSION }}
           docker tag avarc-nginx:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-nginx:${{ env.VERSION }}
 
-      - name: Verify application files in Docker image
+      - name: Verify application files in backend Docker image
         run: |
           # Create a temporary container from the image
           CONTAINER_ID=$(docker create ghcr.io/${{ env.GHCR_ORG }}/avarc-backend:${{ env.VERSION }})
 
           # Extract the container filesystem
           docker export $CONTAINER_ID > container.tar
-          tar xf container.tar
 
           # Search for avarc files
           echo "Searching for avarc files in the container..."
-          find . -type f -name "*avarc*" -ls
+          tar tf container.tar | grep avarc
 
           # Clean up
           docker rm $CONTAINER_ID

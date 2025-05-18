@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <java.version>23</java.version>
+        <java.version>24</java.version>
 
         <spring-boot.version>3.4.5</spring-boot.version>
         <spring-modulith.version>1.4.0-RC1</spring-modulith.version>

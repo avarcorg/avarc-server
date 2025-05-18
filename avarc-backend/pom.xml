@@ -270,9 +270,7 @@
                             <image>
                                 <name>avarc-backend:${project.version}</name>
                                 <env>
-                                    <!-- TODO: Update to Java 23 once Paketo buildpack supports it -->
-                                    <!-- Current available versions: 8, 11, 17, 21, 24 -->
-                                    <BP_JVM_VERSION>21</BP_JVM_VERSION>
+                                    <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
                                     <BP_OCI_APPLICATION_PATH>${project.build.directory}/${project.build.finalName}.jar</BP_OCI_APPLICATION_PATH>
                                     <BP_OCI_APPLICATION_NAME>avarc-backend</BP_OCI_APPLICATION_NAME>
                                 </env>
