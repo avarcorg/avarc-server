@@ -134,6 +134,9 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
             </plugin>
 
@@ -240,14 +243,43 @@
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>repackage</id>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>build-info</id>
                                 <goals>
                                     <goal>build-info</goal>
-                                    <goal>build-image-no-fork</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>build-image</id>
+                                <goals>
+                                    <goal>build-image</goal>
                                 </goals>
                             </execution>
                         </executions>
                         <configuration>
                             <mainClass>org.avarc.server.backend.AvarcBackendApplication</mainClass>
+                            <layers>
+                                <enabled>true</enabled>
+                                <includeLayerTools>true</includeLayerTools>
+                            </layers>
+                            <image>
+                                <name>avarc-backend:${project.version}</name>
+                                <env>
+                                    <!-- TODO: Update to Java 23 once Paketo buildpack supports it -->
+                                    <!-- Current available versions: 8, 11, 17, 21, 24 -->
+                                    <BP_JVM_VERSION>21</BP_JVM_VERSION>
+                                    <BP_OCI_APPLICATION_PATH>${project.build.directory}/${project.build.finalName}.jar</BP_OCI_APPLICATION_PATH>
+                                    <BP_OCI_APPLICATION_NAME>avarc-backend</BP_OCI_APPLICATION_NAME>
+                                </env>
+                                <buildpacks>
+                                    <buildpack>paketobuildpacks/java</buildpack>
+                                </buildpacks>
+                            </image>
                         </configuration>
                     </plugin>
                 </plugins>
