@@ -31,7 +31,7 @@ logging:
 
 app:
   cors:
-    allowed-origins: "http://localhost:3000"
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:3000}
 
 messages:
   basename: messages/common,messages/auth,messages/user
