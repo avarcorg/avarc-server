@@ -18,6 +18,9 @@ spring:
       enabled: true
       path: /h2-console
 
+server:
+  forward-headers-strategy: FRAMEWORK
+
 # Logging
 logging:
   level:
