@@ -21,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +78,30 @@ public class SecurityConfig {
                 headers.frameOptions(frame -> frame.sameOrigin());
             })
             .cors(Customizer.withDefaults());
+
+        // Add URL rewriting filter for API docs
+        http.addFilterBefore(new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                    throws ServletException, IOException {
+                String path = request.getRequestURI();
+
+                // Handle trailing slash for API docs
+                if (path.equals("/v3/api-docs/")) {
+                    log.debug("Rewriting URL from {} to /v3/api-docs", path);
+                    HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request) {
+                        @Override
+                        public String getRequestURI() {
+                            return "/v3/api-docs";
+                        }
+                    };
+                    filterChain.doFilter(wrapper, response);
+                    return;
+                }
+
+                filterChain.doFilter(request, response);
+            }
+        }, UsernamePasswordAuthenticationFilter.class);
 
         // Add bypass filter after security configuration
         http.addFilterBefore(new OncePerRequestFilter() {
