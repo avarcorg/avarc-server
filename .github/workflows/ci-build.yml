@@ -16,7 +16,7 @@ permissions:
 env:
   GHCR_ORG: avarcorg
   JAVA_VERSION: '24'
-  NODE_VERSION: '22.14.0'
+  NODE_VERSION: '24.1.0'
 
 jobs:
   build-and-test:
