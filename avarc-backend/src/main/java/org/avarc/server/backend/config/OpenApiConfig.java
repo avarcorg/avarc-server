@@ -9,6 +9,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
 public class OpenApiConfig {
@@ -18,6 +19,9 @@ public class OpenApiConfig {
         final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
             .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+            .addServersItem(new Server()
+                .url("/")
+                .description("Current server"))
             .components(new Components()
                 .addSecuritySchemes(securitySchemeName,
                     new SecurityScheme()
