@@ -7,6 +7,55 @@ on:
   workflow_dispatch:      # Allow manual triggering
 
 jobs:
+  cleanup-cancelled:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write      # Required to delete workflow runs
+    steps:
+      - name: Cleanup Cancelled Workflow Runs
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+            // Get all workflows in the repository
+            const workflows = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            // Process each workflow
+            for (const workflow of workflows.data.workflows) {
+              console.log(`Processing workflow: ${workflow.name}`);
+
+              // Get cancelled runs for this workflow
+              const cancelledRuns = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflow.id,
+                status: 'cancelled',
+                created: `<${oneWeekAgo.toISOString()}`
+              });
+
+              // Sort cancelled runs by creation date (newest first)
+              const sortedRuns = cancelledRuns.data.workflow_runs.sort((a, b) =>
+                new Date(b.created_at) - new Date(a.created_at)
+              );
+
+              // Keep the 5 most recent runs, delete the rest
+              for (let i = 5; i < sortedRuns.length; i++) {
+                const run = sortedRuns[i];
+                console.log(`Deleting old cancelled run ${run.id} from workflow ${workflow.name}`);
+                await github.rest.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id
+                });
+              }
+            }
+
   cleanup-unsuccessful:
     runs-on: ubuntu-latest
     permissions:
