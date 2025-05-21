@@ -41,3 +41,37 @@ messages:
 mvc:
   locale: en
   locale-resolver: accept-header
+
+# === Spring Boot Actuator Configuration ===
+# TODO: These endpoints should be secured via Spring Security in production.
+# Consider implementing:
+# 1. Basic authentication for actuator endpoints
+# 2. IP-based restrictions
+# 3. Role-based access control
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Enable all endpoints
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    shutdown:
+      access: unrestricted  # Enable shutdown endpoint
+    env:
+      show-values: always  # Show all environment variables
+  health:
+    db:
+      enabled: true
+    defaults:
+      enabled: true
+  info:
+    env:
+      enabled: true  # Enable environment info
+    git:
+      enabled: true  # Enable git info
+    build:
+      enabled: true  # Enable build info
