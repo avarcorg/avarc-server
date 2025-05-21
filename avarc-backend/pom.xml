@@ -276,6 +276,7 @@
                                 <name>avarc-backend:${project.version}</name>
                                 <env>
                                     <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+                                    <BP_HEALTH_CHECKER_ENABLED>true</BP_HEALTH_CHECKER_ENABLED>
                                     <BP_OCI_APPLICATION_PATH>${project.build.directory}/${project.build.finalName}.jar</BP_OCI_APPLICATION_PATH>
                                     <BP_OCI_APPLICATION_NAME>avarc-backend</BP_OCI_APPLICATION_NAME>
                                 </env>
