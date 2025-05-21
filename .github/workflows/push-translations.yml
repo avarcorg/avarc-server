@@ -9,6 +9,11 @@ on:
       - '.github/workflows/push-translations.yml'
   workflow_dispatch:
 
+env:
+  GHCR_ORG: avarcorg
+  JAVA_VERSION: '17' # Crowdin CLI requires Java 17
+  NODE_VERSION: '24.1.0'
+
 jobs:
   push-translations:
     runs-on: ubuntu-latest
@@ -17,33 +22,19 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '22.14.0'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      # Crowdin CLI requires Java 17
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          # Use OpenJDK
           distribution: 'temurin'
-          java-version: '17'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: 'maven'
+          cache-dependency-path: '**/pom.xml'
 
       - name: Install dependencies
         working-directory: avarc-frontend
