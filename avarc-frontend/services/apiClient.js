@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { logMissingTranslation } from '../utils/translationUtils';
-import { API_CONFIG } from '../config';
 
 const apiClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || API_CONFIG.HOST,
+    // Use relative URLs that will be handled by Next.js API routes
+    baseURL: '/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -12,6 +12,17 @@ const apiClient = axios.create({
 // Add request interceptor to set dynamic headers
 apiClient.interceptors.request.use(
     (config) => {
+        // TODO: Disable detailed logging in production
+        // Log request details including the full URL that will be used
+        console.log('[apiClient] Request:', {
+            method: config.method?.toUpperCase(),
+            url: config.url,
+            baseURL: config.baseURL,
+            connectionURL: `${config.baseURL}${config.url}`, // The actual URL that will be used for the connection
+            headers: config.headers,
+            data: config.data
+        });
+
         // Only access localStorage on the client side
         if (typeof window !== 'undefined') {
             const token = localStorage.getItem('jwt');
@@ -26,12 +37,23 @@ apiClient.interceptors.request.use(
         return config;
     },
     (error) => {
+        console.error('[apiClient] Request Error:', error);
         return Promise.reject(error);
     }
 );
 
 apiClient.interceptors.response.use(
     (response) => {
+        // Log response details
+        console.log('[apiClient] Response:', {
+            status: response.status,
+            statusText: response.statusText,
+            url: response.config.url,
+            method: response.config.method?.toUpperCase(),
+            headers: response.headers,
+            data: response.data
+        });
+
         // Check for error_code in successful responses
         if (response.data?.error_code) {
             const error = new Error();
@@ -47,16 +69,21 @@ apiClient.interceptors.response.use(
         return response;
     },
     (error) => {
-        console.log('Error interceptor started:', {
-            error,
-            hasSuccess: error.success !== undefined,
-            response: error.response,
+        // Log error details
+        console.error('[apiClient] Error:', {
+            message: error.message,
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            url: error.config?.url,
+            method: error.config?.method?.toUpperCase(),
+            headers: error.config?.headers,
+            data: error.response?.data,
             config: error.config
         });
 
         // If the error already has a success property, it's already been handled by authService
         if (error.success !== undefined) {
-            console.log('Error already handled, passing through:', error);
+            console.log('[apiClient] Error already handled, passing through:', error);
             // Return the error directly without any processing
             return Promise.reject(error);
         }
@@ -74,7 +101,7 @@ apiClient.interceptors.response.use(
                 };
 
                 // Log detailed information about the API error response
-                console.log('API Error Response:', {
+                console.log('[apiClient] API Error Response:', {
                     status: error.response.status,
                     data: error.response.data,
                     headers: error.response.headers,
@@ -106,14 +133,14 @@ apiClient.interceptors.response.use(
                     error.response.status === 400 &&
                     error.response.data?.user !== null &&
                     error.response.data?.token !== null) {
-                    console.log('Valid AuthResponse detected, passing through');
+                    console.log('[apiClient] Valid AuthResponse detected, passing through');
                     return error.response;
                 }
 
                 const errorCode = error.response.data?.code || error.response.data?.error_code || error.response.data?.errorCode;
                 const errorMessage = error.response.data?.message || error.response.data?.errorMessage;
 
-                console.log('Extracted error details:', {
+                console.log('[apiClient] Extracted error details:', {
                     errorCode,
                     errorMessage,
                     url: error.config?.url
@@ -124,7 +151,7 @@ apiClient.interceptors.response.use(
 
                 // For registration errors, use the error message directly
                 if (error.config?.url?.includes('/auth/register') && error.response.status === 400) {
-                    console.log('Registration error detected, returning original message:', errorMessage);
+                    console.log('[apiClient] Registration error detected, returning original message:', errorMessage);
                     return Promise.reject({
                         success: false,
                         error: errorMessage || 'Registration failed'
@@ -133,23 +160,23 @@ apiClient.interceptors.response.use(
 
                 // Always use the error message from the API if available
                 if (errorMessage) {
-                    console.log('Using error message from API:', errorMessage);
+                    console.log('[apiClient] Using error message from API:', errorMessage);
                     apiError.error = errorMessage;
                 } else if (errorCode) {
-                    console.log('Processing error code:', errorCode);
+                    console.log('[apiClient] Processing error code:', errorCode);
                     // For auth errors, use the auth namespace
                     if (errorCode.startsWith('auth.') || errorCode === 'LOGIN_ERROR' || errorCode === 'REGISTER_ERROR') {
                         const endpoint = error.config?.url?.split('/').pop() || 'login';
                         // Only log missing translation for known error codes without spaces
                         if (!errorCode.includes(' ')) {
-                            console.log('Logging missing translation for auth error:', `auth.${endpoint}.error`);
+                            console.log('[apiClient] Logging missing translation for auth error:', `auth.${endpoint}.error`);
                             logMissingTranslation(`auth.${endpoint}.error`, 'auth');
                         }
                         apiError.error = 'Authentication failed. Please try again.';
                     } else {
                         // Only log missing translation for known error codes without spaces
                         if (!errorCode.includes(' ')) {
-                            console.log('Logging missing translation for API error:', `api.${errorCode}`);
+                            console.log('[apiClient] Logging missing translation for API error:', `api.${errorCode}`);
                             logMissingTranslation(`api.${errorCode}`, 'api');
                         }
                         apiError.error = 'Request failed';
@@ -191,20 +218,20 @@ apiClient.interceptors.response.use(
                     apiError.error = 'An unknown error occurred';
                 }
             } else if (error.request) {
-                console.log('No response received from server');
+                console.log('[apiClient] No response received from server');
                 // The request was made but no response was received
                 apiError = new Error('Unable to connect to server');
             } else {
-                console.log('Request setup error:', error);
+                console.log('[apiClient] Request setup error:', error);
                 // Something happened in setting up the request that triggered an Error
                 apiError = new Error('Request failed');
             }
         } catch (err) {
-            console.error('Error in API client interceptor:', err);
+            console.error('[apiClient] Error in API client interceptor:', err);
             apiError = new Error('An unexpected error occurred');
         }
 
-        console.log('Final error being returned:', {
+        console.log('[apiClient] Final error being returned:', {
             success: false,
             error: apiError.error
         });

@@ -10,6 +10,7 @@ export const useUserUpdate = () => {
         password: '',
         confirmPassword: ''
     });
+    const [uuid, setUuid] = useState(null);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const { t } = useTranslation(['auth', 'api']);
@@ -17,16 +18,31 @@ export const useUserUpdate = () => {
     useEffect(() => {
         const loadCurrentUser = async () => {
             try {
+                console.log('[useUserUpdate] Loading current user...');
                 const currentUser = await AuthService.getCurrentUser();
+                console.log('[useUserUpdate] Current user data:', currentUser);
+
                 if (currentUser) {
                     setFormData(prev => ({
                         ...prev,
-                        username: currentUser.username
+                        username: currentUser.username || ''
                     }));
+
+                    if (currentUser.uuid) {
+                        console.log('[useUserUpdate] Setting UUID:', currentUser.uuid);
+                        setUuid(currentUser.uuid);
+                        localStorage.setItem('uuid', currentUser.uuid);
+                    } else {
+                        console.error('[useUserUpdate] No UUID in current user data');
+                        setError('User ID not found. Please try logging in again.');
+                    }
+                } else {
+                    console.error('[useUserUpdate] No current user data received');
+                    setError('Failed to load user data');
                 }
             } catch (err) {
-                console.error('Failed to load current user:', err);
-                setError('Failed to load user data');
+                console.error('[useUserUpdate] Failed to load current user:', err);
+                setError('Failed to load user data. Please try logging in again.');
             }
         };
         loadCurrentUser();
@@ -50,19 +66,22 @@ export const useUserUpdate = () => {
             return;
         }
 
-        try {
-            const currentUser = await AuthService.getCurrentUser();
-            if (!currentUser) {
-                setError('You must be logged in to update your profile');
-                return;
-            }
+        if (!uuid) {
+            console.error('[useUserUpdate] No UUID available for update');
+            setError('User ID not found. Please try logging in again.');
+            return;
+        }
 
+        try {
+            console.log('[useUserUpdate] Updating user with UUID:', uuid);
             const updateData = {
                 ...(formData.username && { username: formData.username }),
                 ...(formData.password && { password: formData.password })
             };
+            console.log('[useUserUpdate] Update data:', updateData);
 
-            const response = await AuthService.updateUser(currentUser.uuid, updateData);
+            const response = await AuthService.updateUser(uuid, updateData);
+            console.log('[useUserUpdate] Update response:', response);
 
             if (!response.success) {
                 setError(response.error);
@@ -74,6 +93,7 @@ export const useUserUpdate = () => {
                 router.push('/dashboard');
             }, 2000);
         } catch (err) {
+            console.error('[useUserUpdate] Update error:', err);
             setError(err.message || 'Failed to update profile. Please try again.');
         }
     };

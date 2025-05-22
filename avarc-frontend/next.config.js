@@ -27,11 +27,7 @@ const nextConfig = {
   },
   // Proxy all /api requests to the backend
   async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${API_CONFIG.HOST}/rest/:path*`, // Use configured backend URL
-      },
+    const rewrites = [
       {
         source: '/v3/api-docs/:path*',
         destination: `${API_CONFIG.HOST}/v3/api-docs/:path*`, // Use configured backend URL
@@ -40,7 +36,14 @@ const nextConfig = {
         source: '/swagger-ui/:path*',
         destination: `${API_CONFIG.HOST}/swagger-ui/:path*`, // Use configured backend URL
       },
-    ]
+    ];
+
+    // Log each rewrite rule
+    rewrites.forEach(rule => {
+      logger.info(`Rewrite Rule: ${rule.source} -> ${rule.destination}`);
+    });
+
+    return rewrites;
   },
   // Disable direct access to backend endpoints
   async headers() {

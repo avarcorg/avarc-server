@@ -23,5 +23,10 @@
         "passwordTooShort": "Password must be at least 6 characters",
         "invalidUsernameFormat": "Invalid username format",
         "invalidPasswordFormat": "Invalid password format"
+    },
+    "user": {
+        "updateSuccess": "User profile updated successfully",
+        "updateFailed": "Failed to update user profile",
+        "updateError": "Error updating user profile"
     }
 }
