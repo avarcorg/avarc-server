@@ -6,4 +6,18 @@ alwaysApply: true
 # Communication
   - The Frontend and the Backend identify object via UUID
   - Set the UUID in the service classes, not in the mapper
- 
+
+# API Request Flow
+  - Browser makes request to frontend (e.g., `/api/auth/login`)
+  - Frontend (Next.js) receives the request
+  - Frontend makes server-side axios call to backend using `NEXT_PUBLIC_API_HOST`
+  - Backend processes the request and returns response
+  - Frontend forwards the response back to the browser
+
+# Security Architecture
+  - Backend is not directly accessible from the browser
+  - All API calls are proxied through the frontend
+  - CORS is handled server-side
+  - Sensitive headers and tokens are managed server-side
+  - Better control over request/response transformation
+
