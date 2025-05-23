@@ -52,7 +52,7 @@ const Navigation = ({ isAuthenticated, username, onLogout }) => {
                 </Link>
                 <Link href="/profile/update">
                   <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
-                    {safeTranslate('updateProfile', 'dashboard')}
+                    {safeTranslate('navigation.updateProfile', 'common')}
                   </Button>
                 </Link>
                 <Button
@@ -121,7 +121,7 @@ const Navigation = ({ isAuthenticated, username, onLogout }) => {
             </Link>
             <Link href="/profile/update">
               <Button variant="ghost" className="w-full justify-start px-4 py-2 text-gray-700 hover:text-gray-900">
-                {safeTranslate('updateProfile', 'dashboard')}
+                {safeTranslate('navigation.updateProfile', 'common')}
               </Button>
             </Link>
             <Button

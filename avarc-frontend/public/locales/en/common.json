@@ -20,6 +20,7 @@
         "brand": "avArc",
         "dashboard": "Dashboard",
         "profile": "Profile",
+        "updateProfile": "Update Profile",
         "login": "Login",
         "register": "Register",
         "logout": "Logout",

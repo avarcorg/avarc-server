@@ -6,6 +6,5 @@
     "roles": "Roles",
     "loading": "Loading...",
     "noRoles": "No roles assigned",
-    "logout": "Logout",
-    "updateProfile": "Update Profile"
+    "logout": "Logout"
 }
