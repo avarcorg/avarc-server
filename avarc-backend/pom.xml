@@ -270,7 +270,6 @@
                             <mainClass>org.avarc.server.backend.AvarcBackendApplication</mainClass>
                             <layers>
                                 <enabled>true</enabled>
-                                <includeLayerTools>true</includeLayerTools>
                             </layers>
                             <image>
                                 <name>avarc-backend:${project.version}</name>
