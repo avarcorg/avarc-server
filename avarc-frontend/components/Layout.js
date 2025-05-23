@@ -12,7 +12,7 @@ export default function Layout({ children }) {
   const { isAuthenticated, username, handleLogout } = useNavigation();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-filename="Layout.js">
       <Navigation
         isAuthenticated={isAuthenticated}
         username={username}

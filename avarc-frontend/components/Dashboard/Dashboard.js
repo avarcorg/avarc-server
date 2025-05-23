@@ -12,7 +12,7 @@ const Dashboard = () => {
     } = useDashboard();
 
     return (
-        <div>
+        <div data-filename="Dashboard.js">
             <DashboardView
                 data={data}
                 error={error}

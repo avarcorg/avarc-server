@@ -8,7 +8,7 @@ const Home = () => {
     } = useHome();
 
     return (
-        <div>
+        <div data-filename="Home.js">
             <HomeView
                 handleLogin={handleLogin}
                 handleRegister={handleRegister}

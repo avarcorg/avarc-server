@@ -11,7 +11,7 @@ const LoginForm = () => {
     } = useLogin();
 
     return (
-        <div>
+        <div data-filename="LoginForm.js">
             <LoginFormView
                 formData={formData}
                 error={error}

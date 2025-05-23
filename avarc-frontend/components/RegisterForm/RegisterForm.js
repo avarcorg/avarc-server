@@ -11,7 +11,7 @@ const RegisterForm = () => {
     } = useRegister();
 
     return (
-        <div>
+        <div data-filename="RegisterForm.js">
             <RegisterFormView
                 formData={formData}
                 error={error}

@@ -15,7 +15,7 @@ const RegisterFormView = ({
     const { safeTranslate } = useSafeTranslation(['auth', 'api']);
 
     return (
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-md mx-auto" data-filename="RegisterFormView.js">
             <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="space-y-6">
                     <h2 className="text-2xl font-bold text-center">

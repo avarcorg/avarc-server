@@ -11,7 +11,7 @@ const HomeView = ({
     const { safeTranslate } = useSafeTranslation(['common', 'auth', 'api', 'home']);
 
     return (
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-md mx-auto" data-filename="HomeView.js">
             <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="space-y-6">
                     <h1 className="text-2xl font-bold text-center">
