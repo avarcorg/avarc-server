@@ -1,6 +1,5 @@
 import { useLogin } from '../../hooks/useLogin';
 import LoginFormView from './LoginFormView';
-import Layout from '../Layout';
 
 const LoginForm = () => {
     const {
@@ -12,7 +11,7 @@ const LoginForm = () => {
     } = useLogin();
 
     return (
-        <Layout>
+        <div>
             <LoginFormView
                 formData={formData}
                 error={error}
@@ -20,7 +19,7 @@ const LoginForm = () => {
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
             />
-        </Layout>
+        </div>
     );
 };
 

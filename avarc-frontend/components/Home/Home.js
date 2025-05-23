@@ -8,10 +8,12 @@ const Home = () => {
     } = useHome();
 
     return (
-        <HomeView
-            handleLogin={handleLogin}
-            handleRegister={handleRegister}
-        />
+        <div>
+            <HomeView
+                handleLogin={handleLogin}
+                handleRegister={handleRegister}
+            />
+        </div>
     );
 };
 

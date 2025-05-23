@@ -15,7 +15,7 @@ const LoginFormView = ({
     const { safeTranslate } = useSafeTranslation(['auth', 'api']);
 
     return (
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-md mx-auto" data-filename="LoginFormView.js">
             <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="space-y-6">
                     {CONFIG.OAUTH_WITH_GOOGLE && (

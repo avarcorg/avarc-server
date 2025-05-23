@@ -1,6 +1,5 @@
 import { useDashboard } from '../../hooks/useDashboard';
 import DashboardView from './DashboardView';
-import Layout from '../Layout';
 
 const Dashboard = () => {
     const {
@@ -13,7 +12,7 @@ const Dashboard = () => {
     } = useDashboard();
 
     return (
-        <Layout>
+        <div>
             <DashboardView
                 data={data}
                 error={error}
@@ -22,7 +21,7 @@ const Dashboard = () => {
                 uuid={uuid}
                 handleLogout={handleLogout}
             />
-        </Layout>
+        </div>
     );
 };
 

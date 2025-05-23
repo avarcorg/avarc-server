@@ -14,5 +14,16 @@
     "auth": {
         "noToken": "No token found",
         "error": "Authentication error:"
+    },
+    "navigation": {
+        "logoAlt": "avArc Logo",
+        "brand": "avArc",
+        "dashboard": "Dashboard",
+        "profile": "Profile",
+        "login": "Login",
+        "register": "Register",
+        "logout": "Logout",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu"
     }
 }

@@ -1,6 +1,5 @@
 import { useRegister } from '../../hooks/useRegister';
 import RegisterFormView from './RegisterFormView';
-import Layout from '../Layout';
 
 const RegisterForm = () => {
     const {
@@ -12,7 +11,7 @@ const RegisterForm = () => {
     } = useRegister();
 
     return (
-        <Layout>
+        <div>
             <RegisterFormView
                 formData={formData}
                 error={error}
@@ -20,7 +19,7 @@ const RegisterForm = () => {
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
             />
-        </Layout>
+        </div>
     );
 };
 

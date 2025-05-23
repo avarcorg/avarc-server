@@ -17,14 +17,16 @@ const UserUpdateForm = () => {
     };
 
     return (
-        <UserUpdateFormView
-            formData={formData}
-            error={error}
-            success={success}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            onCancel={handleCancel}
-        />
+        <div>
+            <UserUpdateFormView
+                formData={formData}
+                error={error}
+                success={success}
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                onCancel={handleCancel}
+            />
+        </div>
     );
 };
 
