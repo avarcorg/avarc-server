@@ -93,6 +93,8 @@ yarn-error.log*
 
 # Various helper scripts for local debugging
 translate-*.*
+rebuild.cmd
+recommit.cmd
 
 # Backup files
 **/*.bak
