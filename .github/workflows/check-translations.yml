@@ -1,0 +1,40 @@
+name: check-translations
+
+on:
+  schedule:
+    - cron: '30 1 * * *'  # Run at 01:30
+  push:
+    branches: [ main ]
+    paths:
+      - 'public/locales/**'
+      - '.github/workflows/check-translations.yml'
+  workflow_dispatch:
+
+env:
+  GHCR_ORG: avarcorg
+  JAVA_VERSION: '17' # Crowdin CLI requires Java 17
+  NODE_VERSION: '24.1.0'
+
+jobs:
+  translate-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd avarc-frontend
+          npm ci
+
+      - name: Run translation check
+        run: |
+          cd avarc-frontend
+          npm run translate:check
