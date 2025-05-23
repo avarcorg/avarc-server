@@ -1,0 +1,3 @@
+# Prevent local file references in package.json
+package.json:avarc-frontend.*file:
+package-lock.json:avarc-frontend.*file:
