@@ -17,7 +17,7 @@ export default function LanguageSelector() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 flex gap-2 bg-red-500 p-4 rounded-lg shadow-lg z-50">
+    <div className="fixed bottom-4 right-4 flex gap-2 bg-red-500 p-4 rounded-lg shadow-lg z-50" data-filename="LanguageSelector.js">
       <Button
         variant={locale === 'en' ? 'default' : 'outline'}
         size="sm"

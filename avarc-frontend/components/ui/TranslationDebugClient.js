@@ -27,7 +27,7 @@ const TranslationDebugClient = () => {
     }
 
     return (
-        <div className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
+        <div className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50" data-filename="TranslationDebugClient.js">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold">Missing Translations</h3>
                 <button
