@@ -3,6 +3,21 @@ description:
 globs: avarc-frontend/**/*.{*.js,*.css,*.json}
 alwaysApply: false
 ---
+# Design Decisions
+
+## Styling Convention: Tailwind CSS
+- Tailwind CSS utility classes are the standard for styling components. Use `className` attributes with Tailwind classes for all component styles.
+- Do not use inline `style={{...}}` except for rare dynamic cases.
+- Do not embed large CSS blocks in JS files.
+- Separate `.css` files are only for global styles, Tailwind config, or special overrides.
+- A linter is set up to enforce this convention and will run as part of the build process.
+
+## Separation of Concerns
+- CSS and JavaScript files should be kept separated as much as appropriate. Use CSS (or CSS-in-JS) for styling, and keep logic in JS/TS files. Avoid inline styles and mixing logic with presentation unless necessary for a specific use case.
+
+## Debugging Markers
+- The `data-filename` attribute should be kept in JS files on the topmost element of each component. This aids in debugging and tracing rendered components in the DOM. These markers should be filtered out in production/release builds.
+
 # Next.js Configuration
 
 ## File Patterns

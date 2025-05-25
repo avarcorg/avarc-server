@@ -11,7 +11,8 @@
     "translate:push": "npx crowdin upload sources --debug",
     "translate:pull": "npx crowdin download --debug",
     "translate:check-t-usage": "node utils/checkTUsage.js",
-    "translate:check": "node utils/translationCheck.js"
+    "translate:check": "node utils/translationCheck.js",
+    "lint:no-inline-style": "node utils/lintNoInlineStyle.js"
   },
   "dependencies": {
     "axios": "^1.9.0",
