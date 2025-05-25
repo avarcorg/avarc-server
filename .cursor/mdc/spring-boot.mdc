@@ -1,6 +1,6 @@
 ---
 description:
-globs: ["**/*.java"]
+globs: avarc-backend/pom.xml,avarc-backend/src/**/*.java,avarc-backend/src/**/*.yml,avarc-backend/src/**/*.properties
 alwaysApply: false
 ---
 # Spring Boot Development Guidelines
