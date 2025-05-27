@@ -1,4 +1,6 @@
 name: check-translations
+permissions:
+  contents: read
 
 on:
   schedule:
