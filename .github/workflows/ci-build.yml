@@ -58,7 +58,7 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
@@ -142,7 +142,7 @@ jobs:
         run: yj -v
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
