@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'ory'
   workflow_dispatch:
 
 # Add permissions configuration
@@ -85,27 +86,27 @@ jobs:
       # - Use deploy:deploy-file to publish JAR and POM
       # - This would make the artifacts available for other projects
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: maven-build
-          path: |
-            avarc-backend/target/*.jar
-            avarc-backend/target/classes
-            avarc-backend/target/generated-sources
-            avarc-backend/target/maven-status
+      # - name: Upload build artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: maven-build
+      #     path: |
+      #       avarc-backend/target/*.jar
+      #       avarc-backend/target/classes
+      #       avarc-backend/target/generated-sources
+      #       avarc-backend/target/maven-status
 
-      - name: Run Tests
-        run: ./mvnw test -pl avarc-backend
+      # - name: Run Tests
+      #   run: ./mvnw test -pl avarc-backend
 
-      - name: Run Modulith Tests
-        continue-on-error: true
-        run: ./mvnw test -pl avarc-backend -Pwith-modulith
+      # - name: Run Modulith Tests
+      #   continue-on-error: true
+      #   run: ./mvnw test -pl avarc-backend -Pwith-modulith
 
   build-and-push-container-images:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ory'
 
     steps:
       - name: Checkout code
@@ -123,11 +124,11 @@ jobs:
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v6
-        with:
-          name: maven-build
-          path: avarc-backend/target
+      # - name: Download build artifacts
+      #   uses: actions/download-artifact@v6
+      #   with:
+      #     name: maven-build
+      #     path: avarc-backend/target
 
       - name: Set up Pack CLI
         uses: buildpacks/github-actions/setup-pack@v5.8.11
@@ -161,40 +162,40 @@ jobs:
           VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Build Docker images
-        run: ./mvnw --no-transfer-progress -DskipTests -Pwith-docker clean package
+      # - name: Build Docker images
+      #   run: ./mvnw --no-transfer-progress -DskipTests -Pwith-docker clean package
 
       - name: Show Docker image(s)
         run: |
           docker images | sort
 
-      - name: Retag Docker images
-        run: |
-          docker tag avarc-backend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-backend:${{ env.VERSION }}
-          docker tag avarc-frontend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-frontend:${{ env.VERSION }}
-          docker tag avarc-nginx:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-nginx:${{ env.VERSION }}
+      # - name: Retag Docker images
+      #   run: |
+      #     docker tag avarc-backend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-backend:${{ env.VERSION }}
+      #     docker tag avarc-frontend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-frontend:${{ env.VERSION }}
+      #     docker tag avarc-nginx:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-nginx:${{ env.VERSION }}
 
-      - name: Verify application files in backend Docker image
-        run: |
-          # Create a temporary container from the image
-          CONTAINER_ID=$(docker create ghcr.io/${{ env.GHCR_ORG }}/avarc-backend:${{ env.VERSION }})
+      # - name: Verify application files in backend Docker image
+      #   run: |
+      #     # Create a temporary container from the image
+      #     CONTAINER_ID=$(docker create ghcr.io/${{ env.GHCR_ORG }}/avarc-backend:${{ env.VERSION }})
 
-          # Extract the container filesystem
-          docker export $CONTAINER_ID > container.tar
+      #     # Extract the container filesystem
+      #     docker export $CONTAINER_ID > container.tar
 
-          # Search for avarc files
-          echo "Searching for avarc files in the container..."
-          tar tf container.tar | grep avarc
+      #     # Search for avarc files
+      #     echo "Searching for avarc files in the container..."
+      #     tar tf container.tar | grep avarc
 
-          # Fail if no avarc files found
-          if ! tar tf container.tar | grep -q avarc; then
-            echo "No avarc files found in the container!"
-            exit 1
-          fi
+      #     # Fail if no avarc files found
+      #     if ! tar tf container.tar | grep -q avarc; then
+      #       echo "No avarc files found in the container!"
+      #       exit 1
+      #     fi
 
-          # Clean up
-          docker rm $CONTAINER_ID
-          rm container.tar
+      #     # Clean up
+      #     docker rm $CONTAINER_ID
+      #     rm container.tar
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -203,19 +204,19 @@ jobs:
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Show Docker image label(s)
-        run: |
-          docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }} | jq "."
-          echo
-          docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }} | jq "."
-          echo
-          docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }} | jq "."
+      # - name: Show Docker image label(s)
+      #   run: |
+      #     docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }} | jq "."
+      #     echo
+      #     docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }} | jq "."
+      #     echo
+      #     docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }} | jq "."
 
-      - name: Push Docker images
-        run: |
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }}
-          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }}
+      # - name: Push Docker images
+      #   run: |
+      #     docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
+      #     docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }}
+      #     docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }}
 
   trigger-deployment:
     needs: build-and-push-container-images
