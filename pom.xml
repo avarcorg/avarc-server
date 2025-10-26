@@ -54,9 +54,9 @@
     </dependencyManagement>
 
     <modules>
-        <module>avarc-backend</module>
-        <module>avarc-frontend</module>
-        <module>avarc-nginx</module>
+        <!-- <module>avarc-backend</module> -->
+        <!-- <module>avarc-frontend</module> -->
+        <!-- <module>avarc-nginx</module> -->
     </modules>
 
     <build>
