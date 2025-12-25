@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'main'
-      - 'ory'
+      - 'ory-iam'
   workflow_dispatch:
 
 # Add permissions configuration
@@ -106,7 +106,7 @@ jobs:
   build-and-push-container-images:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ory'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ory-iam'
 
     steps:
       - name: Checkout code
