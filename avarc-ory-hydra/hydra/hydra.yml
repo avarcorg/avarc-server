@@ -1,0 +1,82 @@
+# Disable telemetry
+log:
+  level: debug
+  format: json
+
+# Database connection (overridden by DSN environment variable)
+dsn: memory
+
+serve:
+  public:
+    port: 4444
+    cors:
+      enabled: true
+      allowed_origins:
+        - http://localhost:3000
+        - http://localhost:8080
+      allowed_methods:
+        - POST
+        - GET
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+      allowed_headers:
+        - Authorization
+        - Content-Type
+        - X-Requested-With
+      exposed_headers:
+        - Content-Type
+      allow_credentials: true
+  admin:
+    port: 4445
+
+# URLs configuration
+# Note: These can be overridden via environment variables:
+# - URLS_SELF_ISSUER
+# - URLS_CONSENT
+# - URLS_LOGIN
+# - URLS_ERROR
+# - URLS_LOGOUT
+urls:
+  self:
+    issuer: http://localhost:4444/
+  consent: http://localhost:3000/consent
+  login: http://localhost:3000/login
+  error: http://localhost:3000/error
+  logout: http://localhost:3000/logout
+
+# OAuth2 configuration
+oauth2:
+  expose_internal_errors: true
+  hashers:
+    algorithm: bcrypt
+    bcrypt:
+      cost: 10
+
+# Secrets for encryption (overridden by environment variables)
+# Set via SECRETS_SYSTEM environment variable
+secrets:
+  system:
+    - please-change-me-in-production
+
+# Access token configuration
+ttl:
+  access_token: 1h
+  refresh_token: 720h
+  id_token: 1h
+  auth_code: 10m
+
+# Strategies
+strategies:
+  access_token: jwt
+  scope: exact
+
+# OIDC configuration
+oidc:
+  subject_identifiers:
+    supported_types:
+      - pairwise
+      - public
+    pairwise:
+      salt: please-change-me-in-production
