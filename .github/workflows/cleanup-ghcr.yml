@@ -14,7 +14,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAMES: "avarc-backend avarc-frontend avarc-nginx"
+      IMAGE_NAMES: "avarc-backend avarc-frontend avarc-nginx avarc-ory-hydra"
     steps:
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
