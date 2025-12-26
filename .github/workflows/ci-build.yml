@@ -172,10 +172,10 @@ jobs:
       - name: Retag Docker images
         run: |
           docker tag avarc-ory-hydra:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-ory-hydra:${{ env.VERSION }}
+          docker tag avarc-nginx:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-nginx:${{ env.VERSION }}
 
           # docker tag avarc-backend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-backend:${{ env.VERSION }}
           # docker tag avarc-frontend:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-frontend:${{ env.VERSION }}
-          # docker tag avarc-nginx:${{ env.VERSION }} ghcr.io/${{ env.GHCR_ORG }}/avarc-nginx:${{ env.VERSION }}
 
       # - name: Verify application files in backend Docker image
       #   run: |
@@ -210,20 +210,20 @@ jobs:
         run: |
           docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-ory-hydra:${{ env.VERSION }} | jq "."
           echo
+          docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }} | jq "."
+          echo
 
           # docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }} | jq "."
           # echo
           # docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }} | jq "."
-          # echo
-          # docker inspect --format="{{json .Config.Labels}}" ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }} | jq "."
 
       - name: Push Docker images
         run: |
           docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-ory-hydra:${{ env.VERSION }}
+          docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }}
 
       #     docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-backend:${{ env.VERSION }}
       #     docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-frontend:${{ env.VERSION }}
-      #     docker push ghcr.io/${{ env.GHCR_ORG  }}/avarc-nginx:${{ env.VERSION }}
 
   trigger-deployment:
     needs: build-and-push-container-images
