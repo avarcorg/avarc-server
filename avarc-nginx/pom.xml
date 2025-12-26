@@ -47,7 +47,6 @@
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>${exec-maven-plugin.version}</version>
                         <executions>
-                            <!--
                             <execution>
                                 <id>pack-nginx-image</id>
                                 <phase>package</phase>
@@ -56,38 +55,25 @@
                                 </goals>
                                 <configuration>
                                     <executable>pack</executable>
+                                    <environmentVariables>
+                                        <DOCKER_BUILDKIT>1</DOCKER_BUILDKIT>
+                                        <COMPOSE_DOCKER_CLI_BUILD>1</COMPOSE_DOCKER_CLI_BUILD>
+                                    </environmentVariables>
                                     <arguments>
                                         <argument>build</argument>
                                         <argument>avarc-nginx:${project.version}</argument>
-                                        <argument> - -path</argument>
+                                        <argument>--path</argument>
                                         <argument>${project.basedir}</argument>
-                                        <argument> - -builder</argument>
-                                        <argument>paketobuildpacks/builder:base</argument>
-                                        <argument> - -buildpack</argument>
-                                        <argument>gcr.io/paketo-buildpacks/nginx</argument>
-                                        <argument> - -trust-builder</argument>
-                                        <argument> - -env</argument>
+                                        <argument>--builder</argument>
+                                        <argument>paketobuildpacks/builder-jammy-base</argument>
+                                        <argument>--buildpack</argument>
+                                        <argument>docker.io/paketobuildpacks/nginx</argument>
+                                        <argument>--trust-builder</argument>
+                                        <argument>--verbose</argument>
+                                        <argument>--env</argument>
                                         <argument>BP_NGINX_CONF_PATH=nginx.conf</argument>
-                                        <argument> - -env</argument>
+                                        <argument>--env</argument>
                                         <argument>BP_NGINX_STATIC_ROOT=.</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            -->
-                            <execution>
-                                <id>docker-buildx-nginx-image</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>docker</executable>
-                                    <arguments>
-                                        <argument>buildx</argument>
-                                        <argument>build</argument>
-                                        <argument>-t</argument>
-                                        <argument>avarc-nginx:${project.version}</argument>
-                                        <argument>.</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
