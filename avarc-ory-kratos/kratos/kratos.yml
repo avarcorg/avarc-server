@@ -1,0 +1,101 @@
+# Disable telemetry
+log:
+  level: debug
+  format: json
+
+# Database connection (overridden by DSN environment variable)
+dsn: memory
+
+serve:
+  public:
+    base_url: http://localhost:4433/
+    port: 4433
+    cors:
+      enabled: true
+      allowed_origins:
+        - http://localhost:3000
+        - http://localhost:8080
+      allowed_methods:
+        - POST
+        - GET
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+      allowed_headers:
+        - Authorization
+        - Content-Type
+        - X-Requested-With
+      exposed_headers:
+        - Content-Type
+      allow_credentials: true
+  admin:
+    base_url: http://localhost:4434/
+    port: 4434
+
+# Self-service configuration
+selfservice:
+  default_browser_return_url: http://localhost:3000/
+  
+  methods:
+    password:
+      enabled: true
+      config:
+        password_hashers:
+          algorithm: bcrypt
+          bcrypt:
+            cost: 10
+  
+  flows:
+    error:
+      ui_url: http://localhost:3000/error
+    settings:
+      ui_url: http://localhost:3000/settings
+      privileged_session_max_age: 15m
+    recovery:
+      enabled: true
+      ui_url: http://localhost:3000/recovery
+      use: code
+    verification:
+      enabled: true
+      ui_url: http://localhost:3000/verification
+      use: code
+    logout:
+      after:
+        default_browser_return_url: http://localhost:3000/
+
+# Identity schema configuration
+identity:
+  default_schema_id: default
+  schemas:
+    - id: default
+      url: file:///etc/config/kratos/identity.schema.json
+
+# Secrets for encryption (overridden by environment variables)
+# Set via SECRETS_COOKIE and SECRETS_CIPHER environment variables
+secrets:
+  cookie:
+    - please-change-me-in-production-cookie-secret
+  cipher:
+    - please-change-me-in-production-cipher-secret
+
+# Session configuration
+session:
+  lifespan: 720h
+  cookie:
+    domain: localhost
+    name: ory_kratos_session
+    same_site: Lax
+
+# Hashers configuration
+hashers:
+  algorithm: bcrypt
+  bcrypt:
+    cost: 10
+
+# Courier configuration (for emails)
+courier:
+  smtp:
+    connection_uri: smtp://localhost:1025/
+    from_address: noreply@localhost
+

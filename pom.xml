@@ -59,6 +59,7 @@
         <!-- <module>avarc-frontend</module> -->
         <module>avarc-nginx</module>
         <module>avarc-ory-hydra</module>
+        <module>avarc-ory-kratos</module>
     </modules>
 
     <build>
