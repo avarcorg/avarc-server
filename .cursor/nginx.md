@@ -60,6 +60,16 @@ This module (`avarc-nginx`) provides a reverse proxy using NGINX with Paketo Bui
 - Use `proxy_http_version 1.1` for HTTP/1.1 connections
 - Support WebSocket upgrades for frontend (Upgrade, Connection headers)
 
+## Infrastructure Guidelines
+- Configure as reverse proxy (primary function)
+- Implement load balancing when multiple backend instances are available
+- Set up SSL/TLS for production environments
+- Configure secure HTTP headers (already implemented)
+- Optimize performance settings (worker processes, connections)
+- Set up proper logging (JSON format implemented)
+- Implement caching strategies for static content
+- Monitor performance and adjust configuration as needed
+
 ## Testing
 - Verify all upstream services are reachable
 - Test conditional Hydra proxy routes

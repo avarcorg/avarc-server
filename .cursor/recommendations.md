@@ -1,9 +1,4 @@
----
-description:
-globs:
-alwaysApply: true
----
-# Project Recommendations
+# Project Recommendations and Best Practices
 
 ## Security
 - Regular security audits
@@ -52,3 +47,33 @@ alwaysApply: true
 - Document deployment procedures
 - Keep runbooks current
 - Document troubleshooting guides
+
+## Infrastructure Best Practices
+
+### Docker Configuration
+- Use multi-stage builds
+- Implement health checks
+- Configure proper networking
+- Use Docker Compose for development
+- Optimize image sizes
+- Implement proper security practices
+- Use .dockerignore effectively
+
+### Redis Implementation (Planned)
+- Use for state persistence
+- Implement caching strategies
+- Configure Pub/Sub for messaging
+- Set up proper monitoring
+- Implement backup strategies
+- Optimize memory usage
+- Configure proper security
+
+### CI/CD
+- Implement CI/CD pipelines
+- Set up monitoring and alerting
+- Configure proper logging
+- Implement backup strategies
+- Follow security best practices
+- Document infrastructure setup
+- Regular maintenance schedules
+

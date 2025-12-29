@@ -68,9 +68,21 @@ This module (`avarc-db`) provides PostgreSQL database initialization scripts wit
 - Permissions: Only `$POSTGRES_USER` has access to `ory` schema
 - Search path: Prevents accidental cross-schema queries
 
+## PostGIS Best Practices
+- Use spatial data efficiently utilizing PostGIS functions
+- Apply proper indexing for spatial queries (GIST indexes)
+- Implement connection pooling (configured via DSN parameters)
+- Regular backups of spatial data
+- Optimize spatial queries for performance
+- Monitor database performance and query execution times
+- Use appropriate spatial data types (geometry, geography)
+- Leverage PostGIS functions for spatial operations
+
 ## Testing
 - Verify PostGIS extensions are loaded correctly
 - Confirm `ory` schema exists and has correct permissions
 - Test that `search_path` includes both schemas
 - Verify template database creation
+- Test spatial queries and PostGIS functions
+- Validate spatial indexes are created and used
 
