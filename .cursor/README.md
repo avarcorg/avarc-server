@@ -1,6 +1,6 @@
 # Cursor Rules Directory
 
-This directory contains component-specific rules and guidelines for the AvArc server project. Each file focuses on a single responsibility to help maintain clear, focused documentation.
+This directory contains component-specific rules and guidelines for the avArc server project. Each file focuses on a single responsibility to help maintain clear, focused documentation.
 
 ## Files
 
@@ -38,6 +38,11 @@ This directory contains component-specific rules and guidelines for the AvArc se
   - Monorepo organization
   - Technology stack overview
   - Module structure
+
+- **`naming.md`**: Project naming conventions
+  - Project name: **avArc** (letter casing rules)
+  - When to use "avArc" vs "avarc"
+  - Maven, Docker, and package naming conventions
 
 - **`recommendations.md`**: General recommendations and best practices
   - Security, performance, and maintenance guidelines

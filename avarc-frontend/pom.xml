@@ -11,6 +11,9 @@
 
     <artifactId>avarc-frontend</artifactId>
 
+    <name>avArc Frontend</name>
+    <description>avArc frontend application built with Next.js</description>
+
     <build>
         <plugins>
             <plugin>

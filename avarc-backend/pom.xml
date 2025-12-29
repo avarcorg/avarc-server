@@ -11,6 +11,9 @@
 
     <artifactId>avarc-backend</artifactId>
 
+    <name>avArc Backend</name>
+    <description>avArc backend application built with Spring Boot</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

@@ -12,8 +12,8 @@
     <artifactId>avarc-ory-kratos</artifactId>
     <packaging>pom</packaging>
 
-    <name>AvArc Ory Kratos Configuration</name>
-    <description>Configuration module for Ory Kratos identity and user management server</description>
+    <name>avArc Ory Kratos Configuration</name>
+    <description>avArc configuration module for Ory Kratos identity and user management server</description>
 
     <profiles>
         <profile>

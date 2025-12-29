@@ -11,6 +11,9 @@
 
     <artifactId>avarc-nginx</artifactId>
 
+    <name>avArc Nginx Configuration</name>
+    <description>avArc nginx reverse proxy and web server configuration</description>
+
     <profiles>
         <profile>
             <id>with-docker</id>
