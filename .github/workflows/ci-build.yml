@@ -234,7 +234,7 @@ jobs:
         # - devices:posture_attributes:read
         # - devices:routes
         # - dns:read
-        uses: tailscale/github-action@v3
+        uses: tailscale/github-action@v4
         continue-on-error: true
         with:
           oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
