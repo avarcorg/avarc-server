@@ -124,7 +124,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: maven-build
           path: avarc-backend/target
