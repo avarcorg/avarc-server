@@ -6,7 +6,7 @@ set -e
 export PGUSER="$POSTGRES_USER"
 
 # Create the hydra schema for Ory Hydra
-"${psql[@]}" --dbname="$POSTGRES_DB" <<- 'EOSQL'
+psql --dbname="$POSTGRES_DB" <<- EOSQL
 -- Create the hydra schema for Ory Hydra
 CREATE SCHEMA IF NOT EXISTS hydra;
 

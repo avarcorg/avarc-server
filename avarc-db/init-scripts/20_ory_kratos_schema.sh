@@ -6,7 +6,7 @@ set -e
 export PGUSER="$POSTGRES_USER"
 
 # Create the kratos schema for Ory Kratos
-"${psql[@]}" --dbname="$POSTGRES_DB" <<- 'EOSQL'
+psql --dbname="$POSTGRES_DB" <<- EOSQL
 -- Create the kratos schema for Ory Kratos
 CREATE SCHEMA IF NOT EXISTS kratos;
 
