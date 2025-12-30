@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>avArc - Application Index</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .applications {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .app-card h2 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .app-card .description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .app-links {
+            list-style: none;
+        }
+
+        .app-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .app-links a {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .app-links a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .category {
+            margin-bottom: 2rem;
+        }
+
+        .category h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .badge {
+            display: inline-block;
+            background: #764ba2;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 3rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>avArc</h1>
+            <p class="subtitle">Application Services Index</p>
+        </header>
+
+        <div class="category">
+            <h2>Main Applications</h2>
+            <div class="applications">
+                <div class="app-card">
+                    <h2>Frontend</h2>
+                    <p class="description">Main user interface and web application</p>
+                    <ul class="app-links">
+                        <li><a href="/" target="_blank">Open Frontend →</a></li>
+                    </ul>
+                </div>
+
+                <div class="app-card">
+                    <h2>Backend API</h2>
+                    <p class="description">Spring Boot backend API and services</p>
+                    <ul class="app-links">
+                        <li><a href="/actuator" target="_blank">Actuator Endpoints →</a></li>
+                        <li><a href="/v3/api-docs" target="_blank">OpenAPI Documentation →</a></li>
+                        <li><a href="/swagger-ui.html" target="_blank">Swagger UI →</a></li>
+                        <li><a href="/swagger-ui/" target="_blank">Swagger UI (Alt) →</a></li>
+                    </ul>
+                </div>
+
+                <div class="app-card">
+                    <h2>Database Admin</h2>
+                    <p class="description">Adminer database management interface</p>
+                    <ul class="app-links">
+                        <li><a href="/adminer/" target="_blank">Open Adminer →</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2>Identity & Access Management <span class="badge">Ory</span></h2>
+            <div class="applications">
+                <div class="app-card">
+                    <h2>Ory Hydra</h2>
+                    <p class="description">OAuth2 and OpenID Connect server</p>
+                    <ul class="app-links">
+                        <li><a href="/hydra/" target="_blank">Public API →</a></li>
+                        <li><a href="/hydra-admin/" target="_blank">Admin API →</a></li>
+                    </ul>
+                </div>
+
+                <div class="app-card">
+                    <h2>Ory Kratos</h2>
+                    <p class="description">Identity and user management server</p>
+                    <ul class="app-links">
+                        <li><a href="/kratos/" target="_blank">Public API →</a></li>
+                        <li><a href="/kratos-admin/" target="_blank">Admin API →</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>avArc Application Services</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Access this page at <code>/index.html</code> or <code>/well-known/applications</code></p>
+        </div>
+    </div>
+</body>
+</html>
+
