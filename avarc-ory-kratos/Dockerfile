@@ -1,4 +1,4 @@
-ARG ORY_VERSION=${ory.version}
+ARG ORY_VERSION=latest
 FROM oryd/kratos:v${ORY_VERSION}
 
 # Copy Kratos configuration

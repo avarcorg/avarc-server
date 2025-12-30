@@ -20,32 +20,6 @@
             <id>with-docker</id>
             <build>
                 <plugins>
-                    <!-- Filter Dockerfile with Maven properties -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>filter-dockerfile</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.directory}/docker</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${project.basedir}</directory>
-                                            <includes>
-                                                <include>Dockerfile</include>
-                                            </includes>
-                                            <filtering>true</filtering>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <!-- Use exec plugin to run docker buildx -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -64,7 +38,9 @@
                                         <argument>buildx</argument>
                                         <argument>build</argument>
                                         <argument>-f</argument>
-                                        <argument>${project.build.directory}/docker/Dockerfile</argument>
+                                        <argument>${project.basedir}/Dockerfile</argument>
+                                        <argument>--build-arg</argument>
+                                        <argument>ORY_VERSION=${ory.version}</argument>
                                         <argument>-t</argument>
                                         <argument>avarc-ory-kratos:${project.version}</argument>
                                         <argument>.</argument>
