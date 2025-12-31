@@ -13,7 +13,7 @@ jobs:
       actions: write      # Required to delete workflow runs
     steps:
       - name: Cleanup Cancelled Workflow Runs
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -62,7 +62,7 @@ jobs:
       actions: write      # Required to delete workflow runs
     steps:
       - name: Cleanup Unsuccessful Workflow Runs
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -105,7 +105,7 @@ jobs:
       actions: write      # Required to delete workflow runs
     steps:
       - name: Cleanup Successful Workflow Runs
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
