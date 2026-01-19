@@ -40,11 +40,6 @@ selfservice:
   methods:
     password:
       enabled: true
-      config:
-        password_hashers:
-          algorithm: bcrypt
-          bcrypt:
-            cost: 10
   
   flows:
     error:
