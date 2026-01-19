@@ -112,18 +112,30 @@
                         <version>${exec-maven-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>build-docker-image</id>
+                                <id>pack-frontend-image</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>docker</executable>
+                                    <executable>pack</executable>
                                     <arguments>
                                         <argument>build</argument>
-                                        <argument>-t</argument>
                                         <argument>avarc-frontend:${project.version}</argument>
-                                        <argument>.</argument>
+                                        <argument>--path</argument>
+                                        <argument>${project.basedir}</argument>
+                                        <argument>--builder</argument>
+                                        <argument>paketobuildpacks/builder-jammy-base</argument>
+                                        <argument>--buildpack</argument>
+                                        <argument>docker.io/paketobuildpacks/nodejs</argument>
+                                        <argument>--trust-builder</argument>
+                                        <argument>--verbose</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_NODE_RUN_SCRIPTS=build</argument>
+                                        <argument>--env</argument>
+                                        <argument>NODE_ENV=production</argument>
+                                        <argument>--env</argument>
+                                        <argument>BP_NODE_ENV=production</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
