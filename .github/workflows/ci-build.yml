@@ -87,7 +87,7 @@ jobs:
       # - This would make the artifacts available for other projects
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maven-build
           path: |
@@ -125,7 +125,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: maven-build
           path: avarc-backend/target
