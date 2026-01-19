@@ -35,7 +35,7 @@
 
         <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
         <git-commit-id-maven-plugin.version>9.0.1</git-commit-id-maven-plugin.version>
-        <plantuml-maven-plugin.version>0.2.13</plantuml-maven-plugin.version>
+        <plantuml-maven-plugin.version>0.2.14</plantuml-maven-plugin.version>
         <springdoc-openapi-maven-plugin.version>1.5</springdoc-openapi-maven-plugin.version>
         <ory.version>25.4.0</ory.version>
     </properties>
