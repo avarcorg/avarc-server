@@ -1,0 +1,13 @@
+---
+alwaysApply: true
+---
+
+# avArc Frontend (Next.js)
+
+- App lives in `avarc-frontend` using the App Router under `src/app`.
+- Keep `next`, `react`, and `react-dom` pinned to the latest stable releases.
+- Use the Maven build to run install, build, and security audit steps.
+
+## Security
+- Run `npm run audit` (or Maven `verify`) before release.
+- Treat audit findings at `high` or higher as build blockers.

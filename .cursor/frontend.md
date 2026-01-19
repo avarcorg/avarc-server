@@ -1,3 +1,15 @@
+# Frontend
+
+This repository includes a Next.js frontend under `avarc-frontend`.
+
+## Basics
+- Start dev server: `npm run dev` (from `avarc-frontend`)
+- Build with Maven: `mvn -pl avarc-frontend -am verify`
+- Security scan: `npm run audit` or the Maven `verify` phase
+
+## Docs
+- Next.js: https://nextjs.org/docs
+- React: https://react.dev/learn
 # Frontend Development Rules
 
 ## Overview

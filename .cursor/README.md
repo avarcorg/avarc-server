@@ -1,3 +1,7 @@
+# Cursor Notes
+
+Frontend documentation lives in `./frontend.md`.
+Backend documentation lives in `./backend.md`.
 # Cursor Rules Directory
 
 This directory contains component-specific rules and guidelines for the avArc server project. Each file focuses on a single responsibility to help maintain clear, focused documentation.

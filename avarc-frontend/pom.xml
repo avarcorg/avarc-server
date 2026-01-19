@@ -86,6 +86,16 @@
                             <arguments>run build</arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>npm-audit</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run audit</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
