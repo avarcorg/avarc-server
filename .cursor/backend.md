@@ -4,9 +4,9 @@
 This module (`avarc-backend`) is a Spring Boot application providing REST API services with a modular architecture using Spring Modulith.
 
 ## Technology Stack
-- **Framework**: Spring Boot 3.5.0
-- **Java**: Version 24
-- **Architecture**: Spring Modulith (modular monolith)
+- **Framework**: Spring Boot 4.0.1
+- **Java**: Version 25
+- **Architecture**: Spring Modulith 2.0.1 (modular monolith)
 - **Security**: Spring Security
 - **Database**: JPA with PostgreSQL/H2
 - **API Documentation**: SpringDoc OpenAPI
