@@ -58,7 +58,7 @@
     </dependencyManagement>
 
     <modules>
-        <!-- <module>avarc-backend</module> -->
+        <module>avarc-backend</module>
         <!-- <module>avarc-frontend</module> -->
         <module>avarc-nginx</module>
         <module>avarc-ory-hydra</module>
