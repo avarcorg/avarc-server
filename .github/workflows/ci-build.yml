@@ -40,13 +40,13 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Set up Pack CLI
-        uses: buildpacks/github-actions/setup-pack@v5.10.0
+        uses: buildpacks/github-actions/setup-pack@v5.10.1
 
       - name: Display Pack CLI
         run: pack --version
 
       - name: Set up Pack Tools
-        uses: buildpacks/github-actions/setup-tools@v5.10.0
+        uses: buildpacks/github-actions/setup-tools@v5.10.1
 
       - name: Display Pack Tools
         run: yj -v
@@ -131,13 +131,13 @@ jobs:
           path: avarc-backend/target
 
       - name: Set up Pack CLI
-        uses: buildpacks/github-actions/setup-pack@v5.10.0
+        uses: buildpacks/github-actions/setup-pack@v5.10.1
 
       - name: Display Pack CLI
         run: pack --version
 
       - name: Set up Pack Tools
-        uses: buildpacks/github-actions/setup-tools@v5.10.0
+        uses: buildpacks/github-actions/setup-tools@v5.10.1
 
       - name: Display Pack Tools
         run: yj -v
