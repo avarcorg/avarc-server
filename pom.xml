@@ -21,7 +21,7 @@
     <properties>
         <java.version>25</java.version>
 
-        <spring-modulith.version>2.0.1</spring-modulith.version>
+        <spring-modulith.version>2.0.2</spring-modulith.version>
         <jjwt.version>0.13.0</jjwt.version>
         <springdoc-openapi.version>3.0.1</springdoc-openapi.version>
         <com-h2database.version>2.4.240</com-h2database.version>
