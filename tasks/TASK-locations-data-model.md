@@ -1,3 +1,12 @@
+---
+id: AVARC-11
+type: task
+status: open
+priority: normal
+area: locations
+created: 2026-10-11
+---
+
 # TASK: Locations data model
 
 Spec: [SPEC-locations.md](../spec/SPEC-locations.md)

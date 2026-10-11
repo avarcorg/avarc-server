@@ -1,3 +1,12 @@
+---
+id: AVARC-13
+type: decision
+status: open
+priority: normal
+area: auth
+created: 2026-10-11
+---
+
 # TASK: Ory authentication and authorization design
 
 Spec: [SPEC-auth.md](../spec/SPEC-auth.md)

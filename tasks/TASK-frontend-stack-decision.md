@@ -1,3 +1,12 @@
+---
+id: AVARC-7
+type: decision
+status: open
+priority: normal
+area: frontend
+created: 2026-10-11
+---
+
 # TASK: Frontend technology decisions
 
 Spec: [SPEC-frontend.md](../spec/SPEC-frontend.md)

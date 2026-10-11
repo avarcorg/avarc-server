@@ -1,3 +1,12 @@
+---
+id: AVARC-15
+type: task
+status: open
+priority: normal
+area: dependency-updates
+created: 2026-10-11
+---
+
 # TASK: Set up Renovate
 
 Spec: [SPEC-dependency-updates.md](../spec/SPEC-dependency-updates.md)

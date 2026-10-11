@@ -1,7 +1,7 @@
 ---
 id: AVARC-2
 type: task
-status: open
+status: finished
 priority: normal
 area: project
 created: 2026-10-11
@@ -9,7 +9,7 @@ created: 2026-10-11
 
 # TASK: Work tracking
 
-Spec: [SPEC-work-tracking.md](../spec/SPEC-work-tracking.md)
+Spec: [SPEC-work-tracking.md](../../spec/SPEC-work-tracking.md)
 
 - Implement the index generator producing `tasks/INDEX.md` and the check
   described in the spec, as one Python 3 script in `tools/`.

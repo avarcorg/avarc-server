@@ -1,8 +1,16 @@
+---
+id: AVARC-12
+type: task
+status: open
+priority: normal
+area: frontend
+depends-on: [AVARC-6, AVARC-10]
+created: 2026-10-11
+---
+
 # TASK: Locations UI
 
 Spec: [SPEC-frontend.md](../spec/SPEC-frontend.md)
-
-Depends on: frontend-skeleton, locations-crud-api
 
 - Show locations on a map with their descriptions.
 - Add forms to create and edit locations for authorized users.

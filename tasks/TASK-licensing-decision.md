@@ -1,3 +1,12 @@
+---
+id: AVARC-9
+type: decision
+status: open
+priority: normal
+area: project
+created: 2026-10-11
+---
+
 # TASK: Licensing decision
 
 Spec: [SPEC.md](../SPEC.md)

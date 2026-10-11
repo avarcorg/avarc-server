@@ -1,3 +1,12 @@
+---
+id: AVARC-5
+type: task
+status: open
+priority: normal
+area: project
+created: 2026-10-11
+---
+
 # TASK: Contribution guidelines and AI disclosure
 
 Spec: [SPEC.md](../SPEC.md)
