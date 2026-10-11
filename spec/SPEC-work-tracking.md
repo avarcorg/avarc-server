@@ -37,11 +37,20 @@ without external software and without GitHub issues.
 - A check fails on: duplicate or missing IDs, invalid field values, a
   `depends-on` entry that does not resolve, a file in the wrong directory
   for its status, or an `INDEX.md` that is out of date. It runs locally
-  (for example as a pre-commit hook) and in CI.
+  and in CI, as described under Decisions.
 - Tooling has no dependencies beyond a standard shell or Python.
+
+## Decisions
+
+- The index generator and the check are one simple Python 3 script (standard
+  library only) in `tools/`. The GitHub workflow in `.github/workflows/`
+  calls it; it does not contain its own logic.
+- The check runs both locally, as a pre-commit hook, and in a GitHub
+  workflow.
+- ID collisions (duplicate IDs) are a warning when the check runs locally
+  and an error in the workflow, so the first one to land wins and the other
+  author renumbers.
 
 ## Open questions
 
-- Where the index/check script lives and in which language.
-- Whether the check runs as a pre-commit hook, in CI, or both.
-- Handling of ID collisions when several people add items in parallel.
+- None at the moment.
