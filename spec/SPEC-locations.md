@@ -17,10 +17,48 @@ Define how locations of historical importance are represented and stored.
   existing records.
 - Records track who created and last changed them, and when.
 
+## Data model (first release)
+
+Types are logical; the storage mapping is decided with the backend.
+
+**Location**
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `id` | identifier | Stable, assigned by the system, never reused. |
+| `name` | text | Required, non-empty. |
+| `description` | text | Required, may be long. |
+| `position` | Position | Required, see below. |
+| `period_label` | text | Optional free text, for example "Roman, 2nd century". |
+| `period_start`, `period_end` | integer | Optional years, negative for BCE, `period_start` <= `period_end`; for sorting and filtering. |
+| `tags` | set of text | Zero or more free-form tags, created on first use. |
+| `references` | list of Reference | Zero or more, ordered. |
+| `created_at`, `updated_at` | timestamp (UTC) | Set by the system. |
+| `created_by`, `updated_by` | identity id | The Ory identity of the user, see [SPEC-auth.md](SPEC-auth.md). |
+
+**Reference**: `citation` (text, required) and `url` (optional).
+
+**Position** has a `kind` discriminator. The first release defines one kind,
+`point`, with `latitude` and `longitude` in decimal degrees (WGS 84;
+latitude -90 to 90, longitude -180 to 180).
+
+## Extending the position
+
+Further kinds (for example an area, a region, or a point with an uncertainty
+radius) are added as new `kind` values with their own fields. Existing
+records keep their kind and stay valid; consumers must ignore or reject
+unknown kinds explicitly rather than misread them. The `point` kind is never
+changed incompatibly.
+
+## Decisions
+
+- The period is a free-text label plus an optional year range.
+- Tags are free-form and many-to-many; there is no fixed taxonomy.
+- Sources are a list of references with a citation and an optional URL.
+- Media attachments and expression of position uncertainty are not part of
+  the first release; the position `kind` mechanism leaves room for both.
+
 ## Open questions
 
-- Historical period/date of the site: exact, range or free text?
-- Categories/tags.
-- Sources and references for each location.
-- Media attachments.
-- How to express uncertainty of a position.
+- Whether tags are normalised (case, whitespace) and by what rule.
+- Language of descriptions; see the open question in [SPEC.md](../SPEC.md).
