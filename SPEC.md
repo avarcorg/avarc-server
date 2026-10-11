@@ -36,6 +36,8 @@ components and their connections.
 
 - **Time:** all timestamps are stored in UTC. Conversion to a local time zone
   happens only when presenting to a user.
+- **Languages:** the application is multi-language. The first languages are
+  English and German; further languages can be added later.
 
 ## Area specs
 
@@ -52,5 +54,6 @@ components and their connections.
 ## Open questions
 
 - Who may view, who may edit? (anonymous read vs. login required)
-- Language(s) of descriptions; single or multiple.
+- Whether location content (name, description, tags, references) is
+  available per language, and how; see [SPEC-locations.md](spec/SPEC-locations.md).
 - Deployment target and environments.

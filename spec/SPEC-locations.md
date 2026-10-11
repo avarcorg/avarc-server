@@ -72,4 +72,7 @@ changed incompatibly.
 ## Open questions
 
 - Whether tags are normalised (case, whitespace) and by what rule.
-- Language of descriptions; see the open question in [SPEC.md](../SPEC.md).
+- Whether and how location content (name, description, tags, references)
+  is stored per language, given the multi-language decision in
+  [SPEC.md](../SPEC.md): one translation per language, a fallback language,
+  and which fields are translatable.
