@@ -25,8 +25,8 @@ responsibility live in `spec/SPEC-<area>.md`.
 - **Frontend:** Next.js web application.
 - **Backend:** Java/Kotlin service exposing an API consumed by the frontend.
 - **Web server:** a web server in front of all partial applications
-  (frontend, backend, Ory) is the single entry point for clients. Which
-  product is used is to be decided.
+  (frontend, backend, Ory) is the single entry point for clients. It is
+  Caddy, serving one host with path prefixes (see the ingress spec).
 - **Identity:** self-hosted Ory handles authentication and authorization;
   the backend and frontend delegate to it rather than implementing their own.
 - **MCP server (after the MVP):** an MCP server will be added after the MVP
@@ -52,6 +52,7 @@ components and their connections.
 - [Backend](spec/SPEC-backend.md): Java/Kotlin API service.
 - [Frontend](spec/SPEC-frontend.md): Next.js web application.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.
+- [Deployment](spec/SPEC-deployment.md): Docker Compose project, developer deployment.
 - [Dependency updates](spec/SPEC-dependency-updates.md): Renovate setup.
 - [Code scanning](spec/SPEC-code-scanning.md): CodeQL setup.
 - [Work tracking](spec/SPEC-work-tracking.md): file-based tracking of work items.
@@ -60,4 +61,4 @@ components and their connections.
 ## Open questions
 
 - Who may view, who may edit? (anonymous read vs. login required)
-- Deployment target and environments.
+- Deployment target and environments beyond the developer deployment.

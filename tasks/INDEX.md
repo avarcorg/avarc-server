@@ -13,7 +13,7 @@ files. Do not edit by hand. See
 | AVARC-5 | [Contribution guidelines and AI disclosure](TASK-contribution-guidelines.md) | task | open | normal | project |  |
 | AVARC-6 | [Frontend project skeleton](TASK-frontend-skeleton.md) | task | open | normal | frontend | AVARC-7 |
 | AVARC-7 | [Frontend technology decisions](TASK-frontend-stack-decision.md) | decision | open | normal | frontend |  |
-| AVARC-8 | [Ingress web server decision](TASK-ingress-decision.md) | decision | open | normal | ingress | AVARC-13 |
+| AVARC-8 | [Ingress web server decision](finished/TASK-ingress-decision.md) | decision | finished | normal | ingress | AVARC-13 |
 | AVARC-9 | [Licensing decision](TASK-licensing-decision.md) | decision | open | normal | project |  |
 | AVARC-10 | [Locations CRUD API](TASK-locations-crud-api.md) | task | open | normal | backend | AVARC-3, AVARC-11 |
 | AVARC-11 | [Locations data model](finished/TASK-locations-data-model.md) | task | finished | normal | locations |  |
@@ -23,4 +23,4 @@ files. Do not edit by hand. See
 | AVARC-15 | [Set up Renovate](TASK-renovate-setup.md) | task | open | normal | dependency-updates |  |
 | AVARC-16 | [Set up CodeQL](TASK-codeql-setup.md) | task | open | normal | code-scanning | AVARC-3, AVARC-6 |
 | AVARC-17 | [Developer setup](TASK-dev-setup.md) | task | open | normal | project |  |
-| AVARC-18 | [Deployment setup](TASK-deployment-setup.md) | task | open | normal | project | AVARC-3, AVARC-6, AVARC-8 |
+| AVARC-18 | [Deployment setup](TASK-deployment-setup.md) | task | in-progress | normal | project | AVARC-3, AVARC-6, AVARC-8 |

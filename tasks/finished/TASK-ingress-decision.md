@@ -1,7 +1,7 @@
 ---
 id: AVARC-8
 type: decision
-status: open
+status: finished
 priority: normal
 area: ingress
 depends-on: [AVARC-13]
@@ -10,7 +10,7 @@ created: 2026-10-11
 
 # TASK: Ingress web server decision
 
-Spec: [SPEC-ingress.md](../spec/SPEC-ingress.md)
+Spec: [SPEC-ingress.md](../../spec/SPEC-ingress.md)
 
 - Choose the web server product.
 - Decide the URL layout and routing to frontend, backend and Ory.

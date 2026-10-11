@@ -14,7 +14,7 @@ flowchart TB
     AIClient["AI assistant<br/>MCP client (post-MVP)"]
 
     subgraph Server["avarc-server"]
-        Ingress["Web server / ingress<br/>(product undecided)"]
+        Ingress["Web server / ingress<br/>Caddy"]
         Frontend["Frontend<br/>Next.js"]
         Backend["Backend API<br/>Java/Kotlin (undecided)"]
         Ory["Ory<br/>(components undecided)"]
@@ -24,8 +24,8 @@ flowchart TB
 
     Browser -- "HTTPS" --> Ingress
     Ingress -- "pages" --> Frontend
-    Ingress -- "API" --> Backend
-    Ingress -- "auth flows" --> Ory
+    Ingress -- "/api" --> Backend
+    Ingress -- "/auth" --> Ory
     Frontend -. "HTTP API" .-> Backend
     Frontend -. "login/logout flows" .-> Ory
     Backend -- "validate session/identity" --> Ory
@@ -36,7 +36,7 @@ flowchart TB
     MCP -. "validate session/identity" .-> Ory
 
     classDef undecided stroke-dasharray: 5 5;
-    class Ingress,Backend,Ory,DB undecided;
+    class Backend,Ory,DB undecided;
 
     classDef postmvp stroke-dasharray: 2 4,fill:#f4f4f4,stroke:#999,color:#666;
     class AIClient,MCP postmvp;

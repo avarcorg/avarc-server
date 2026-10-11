@@ -1,7 +1,7 @@
 ---
 id: AVARC-18
 type: task
-status: open
+status: in-progress
 priority: normal
 area: project
 depends-on: [AVARC-3, AVARC-6, AVARC-8]
