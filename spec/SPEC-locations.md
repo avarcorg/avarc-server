@@ -28,6 +28,7 @@ Types are logical; the storage mapping is decided with the backend.
 | `id` | UUID | Assigned by the system when the location is created, never reused, and constant for the lifetime of the record, including across import and export. |
 | `translations` | map language -> Translation | At least one entry, see below. |
 | `position` | Position | Required, see below. |
+| `confidence_level` | enum | `low`, `medium` or `high`: how confident the contributors are that the location (identification and position) is correct. Required, defaults to `medium`. |
 | `period_start`, `period_end` | timestamp (UTC) | Optional, `period_start` <= `period_end`; for sorting and filtering. Must be able to represent dates before the common era. |
 | `tags` | set of tag key | Zero or more tags, see below. |
 | `references` | list of Reference | Zero or more, ordered. |
@@ -45,7 +46,10 @@ described in `period_label`.
 
 **Translation** (per language): `name` (text, required, non-empty),
 `description` (text, required, may be long) and `period_label` (optional
-free text, for example "Roman, 2nd century").
+free text, for example "Roman, 2nd century") and `confidence_level` (enum
+`low`, `medium` or `high`: how confident the contributors are in this
+translation of the content, for example `low` for an unreviewed machine
+translation; required, defaults to `medium`).
 
 **Reference**: `url` (optional) and `citations`, a map language -> text with
 at least one entry.
@@ -57,6 +61,10 @@ requested language is shown by its key.
 **Languages** are identified by language code (`en`, `de`). The supported
 languages are those named in [SPEC.md](../SPEC.md); adding one needs no data
 migration.
+
+The two `confidence_level` values are independent: one rates the facts about
+the location, the other the wording in one language. Neither replaces the
+expression of position uncertainty (for example a radius), which is deferred.
 
 Position, period timestamps, URLs, identifiers and audit fields are
 language-neutral.
@@ -93,6 +101,8 @@ the client so that it can mark the content as not translated.
 - Translatable fields: `name`, `description`, `period_label`, reference
   citations and tag labels. Translations are stored per language; at least
   one is required, and a missing one falls back to English.
+- `confidence_level` (`low`, `medium`, `high`) is kept on the location and on
+  each translation.
 - Media attachments and expression of position uncertainty are not part of
   the first release; the position `kind` mechanism leaves room for both.
 
