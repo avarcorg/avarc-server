@@ -38,6 +38,7 @@ responsibility live in `spec/SPEC-<area>.md`.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.
 - [Dependency updates](spec/SPEC-dependency-updates.md): Renovate setup.
 - [Code scanning](spec/SPEC-code-scanning.md): CodeQL setup.
+- [Architecture diagram](spec/SPEC-architecture-diagram.md): diagram of the system.
 
 ## Open questions
 
