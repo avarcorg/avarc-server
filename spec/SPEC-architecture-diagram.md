@@ -17,11 +17,25 @@ specs.
 - The diagram is stored in the repository as text, so changes are reviewable
   in git. A rendered form may be generated from it.
 - It is referenced from the architecture overview in [SPEC.md](../SPEC.md).
-- Whenever a spec changes the architecture, the diagram is updated in the
-  same change set.
+- The diagram is recreated on every major architecture decision (for
+  example choosing the ingress product, the Ory components, the backend
+  stack or the database), in the same change set as the decision. Whenever
+  a spec otherwise changes the architecture, the diagram is updated too.
+- A component or decision that becomes decided loses its undecided marking
+  in the same update.
+
+## Decisions
+
+- Format: Mermaid, stored in [architecture-diagram.md](architecture-diagram.md)
+  as a fenced `mermaid` block, which GitHub renders directly.
+- Only the text source is committed; no rendered image.
+- A single system-level overview diagram, laid out top to bottom so it
+  stays readable as elements are added.
+- Each sub-application may have its own, more detailed architecture diagram;
+  the overview then stays at system level and does not duplicate it.
+- Undecided components are drawn with dashed borders and labelled
+  "(undecided)".
 
 ## Open questions
 
-- Diagram format (for example Mermaid or ASCII) and where it lives.
-- Whether a rendered image is committed or only generated on demand.
-- Level of detail: a single overview, or additional views per area.
+- None at the moment.
