@@ -11,7 +11,8 @@ specs.
 
 - The diagram shows the browser, the web server in front of the partial
   applications, the frontend, the backend, Ory and the database, and the
-  connections between them.
+  connections between them. Planned later additions, such as the MCP server,
+  are shown and marked as such.
 - Components and decisions that are not yet made are marked as undecided in
   the diagram.
 - The diagram is stored in the repository as text, so changes are reviewable
@@ -35,6 +36,9 @@ specs.
   the overview then stays at system level and does not duplicate it.
 - Undecided components are drawn with dashed borders and labelled
   "(undecided)".
+- Components planned for after the MVP are drawn in a muted style with a
+  dotted border and labelled "(post-MVP)"; they are a separate marking from
+  "undecided".
 
 ## Open questions
 

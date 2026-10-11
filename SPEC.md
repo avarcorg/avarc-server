@@ -16,6 +16,7 @@ responsibility live in `spec/SPEC-<area>.md`.
 
 - Anything beyond point locations; richer geometry is deferred to the
   locations spec.
+- The MCP server; planned for after the MVP (see the architecture overview).
 - Public self-registration policy, moderation and import/export; to be
   specified when needed.
 
@@ -28,6 +29,11 @@ responsibility live in `spec/SPEC-<area>.md`.
   product is used is to be decided.
 - **Identity:** self-hosted Ory handles authentication and authorization;
   the backend and frontend delegate to it rather than implementing their own.
+- **MCP server (after the MVP):** an MCP server will be added after the MVP
+  so that AI assistants can use the application. It sits behind the web
+  server, uses the backend API rather than the database, and authenticates
+  through Ory. It is not part of the MVP and is specified when it is taken
+  up.
 
 The [architecture diagram](spec/architecture-diagram.md) shows these
 components and their connections.
