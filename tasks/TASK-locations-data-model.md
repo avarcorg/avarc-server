@@ -1,7 +1,7 @@
 ---
 id: AVARC-11
 type: task
-status: open
+status: in-progress
 priority: normal
 area: locations
 created: 2026-10-11

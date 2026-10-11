@@ -16,7 +16,7 @@ files. Do not edit by hand. See
 | AVARC-8 | [Ingress web server decision](TASK-ingress-decision.md) | decision | open | normal | ingress | AVARC-13 |
 | AVARC-9 | [Licensing decision](TASK-licensing-decision.md) | decision | open | normal | project |  |
 | AVARC-10 | [Locations CRUD API](TASK-locations-crud-api.md) | task | open | normal | backend | AVARC-3, AVARC-11 |
-| AVARC-11 | [Locations data model](TASK-locations-data-model.md) | task | open | normal | locations |  |
+| AVARC-11 | [Locations data model](TASK-locations-data-model.md) | task | in-progress | normal | locations |  |
 | AVARC-12 | [Locations UI](TASK-locations-ui.md) | task | open | normal | frontend | AVARC-6, AVARC-10 |
 | AVARC-13 | [Ory authentication and authorization design](TASK-ory-auth-design.md) | decision | open | normal | auth |  |
 | AVARC-14 | [Ory integration](TASK-ory-integration.md) | task | open | normal | auth | AVARC-13, AVARC-8, AVARC-3, AVARC-6 |
