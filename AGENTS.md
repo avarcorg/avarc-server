@@ -15,7 +15,9 @@ locations and descriptions. No source code exists yet.
 - Tasks are committed to git.
 - Work items carry front matter (`id`, `type`, `status`, ...) and are
   tracked in `tasks/INDEX.md`, as defined in `spec/SPEC-work-tracking.md`.
-  Refer to items by ID (`AVARC-<n>`) in commit messages.
+  Refer to items by ID (`AVARC-<n>`) in commit messages. After editing
+  items, run `tools/tasks.py index`; install the pre-commit check once per
+  clone with `tools/install-hooks.sh`.
 - Finished tasks are moved to `tasks/finished/` (use `git mv`). Every
   reference to a moved task file, in specs, other tasks and docs, is updated
   to the new path in the same change.
