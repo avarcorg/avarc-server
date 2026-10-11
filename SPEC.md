@@ -41,6 +41,7 @@ components and their connections.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.
 - [Dependency updates](spec/SPEC-dependency-updates.md): Renovate setup.
 - [Code scanning](spec/SPEC-code-scanning.md): CodeQL setup.
+- [Work tracking](spec/SPEC-work-tracking.md): file-based tracking of work items.
 - [Architecture diagram](spec/SPEC-architecture-diagram.md): diagram of the system.
 
 ## Open questions
