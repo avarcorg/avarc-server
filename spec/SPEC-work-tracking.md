@@ -40,6 +40,14 @@ without external software and without GitHub issues.
   and in CI, as described under Decisions.
 - Tooling has no dependencies beyond a standard shell or Python.
 
+## Future export
+
+The tasks may later be exported to a dedicated tracking system. The
+front matter and the stable `AVARC-<n>` IDs are the interface for that: every
+field maps to an attribute of an item in such a system, and `depends-on` to
+links between items. No export tooling is specified yet; until then the
+files in the repository remain the single source of truth.
+
 ## Decisions
 
 - The index generator and the check are one simple Python 3 script (standard
