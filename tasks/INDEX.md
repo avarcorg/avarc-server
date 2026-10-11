@@ -22,3 +22,4 @@ files. Do not edit by hand. See
 | AVARC-14 | [Ory integration](TASK-ory-integration.md) | task | open | normal | auth | AVARC-13, AVARC-8, AVARC-3, AVARC-6 |
 | AVARC-15 | [Set up Renovate](TASK-renovate-setup.md) | task | open | normal | dependency-updates |  |
 | AVARC-16 | [Set up CodeQL](TASK-codeql-setup.md) | task | open | normal | code-scanning | AVARC-3, AVARC-6 |
+| AVARC-17 | [Developer setup](TASK-dev-setup.md) | task | open | normal | project |  |
