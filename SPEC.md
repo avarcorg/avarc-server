@@ -36,6 +36,7 @@ responsibility live in `spec/SPEC-<area>.md`.
 - [Backend](spec/SPEC-backend.md): Java/Kotlin API service.
 - [Frontend](spec/SPEC-frontend.md): Next.js web application.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.
+- [Dependency updates](spec/SPEC-dependency-updates.md): Renovate setup.
 
 ## Open questions
 
