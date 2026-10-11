@@ -23,4 +23,4 @@ files. Do not edit by hand. See
 | AVARC-15 | [Set up Renovate](TASK-renovate-setup.md) | task | open | normal | dependency-updates |  |
 | AVARC-16 | [Set up CodeQL](TASK-codeql-setup.md) | task | open | normal | code-scanning | AVARC-3, AVARC-6 |
 | AVARC-17 | [Developer setup](TASK-dev-setup.md) | task | open | normal | project |  |
-| AVARC-18 | [Deployment setup](TASK-deployment-setup.md) | task | in-progress | normal | project | AVARC-3, AVARC-6, AVARC-8 |
+| AVARC-18 | [Deployment setup](finished/TASK-deployment-setup.md) | task | finished | normal | project | AVARC-3, AVARC-6, AVARC-8 |

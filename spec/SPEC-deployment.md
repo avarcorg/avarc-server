@@ -17,7 +17,7 @@ developers; other environments are specified when needed.
 
 ## Decisions (developer deployment)
 
-Introduced in [AVARC-18](../tasks/TASK-deployment-setup.md).
+Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
 
 - **Files:** everything lives in `deploy/`: `docker-compose.template`, the
   ingress `Caddyfile`, `run.sh` and the systemd units `avarc-stage.service`

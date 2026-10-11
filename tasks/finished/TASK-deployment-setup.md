@@ -1,7 +1,7 @@
 ---
 id: AVARC-18
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: project
 depends-on: [AVARC-3, AVARC-6, AVARC-8]
@@ -10,7 +10,7 @@ created: 2026-10-11
 
 # TASK: Deployment setup
 
-Spec: [SPEC.md](../SPEC.md)
+Spec: [SPEC.md](../../SPEC.md)
 
 Set up a first deployment, intended for developers.
 
@@ -25,3 +25,13 @@ Set up a first deployment, intended for developers.
   environments are open in `SPEC.md`) and update the architecture diagram if
   an architecture decision results from it.
 - Document how to use it.
+
+## Outcome
+
+Finished with the ingress and the database only; may need revisiting:
+
+- Add the backend, frontend and Ory services to
+  `deploy/docker-compose.template` once AVARC-3, AVARC-6 and AVARC-13 exist.
+- No `deploy.sh` yet to install the systemd units and files for stage and
+  prod.
+- The PostGIS image is provisional until the database choice (AVARC-4).
