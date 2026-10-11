@@ -1,3 +1,12 @@
+---
+id: AVARC-1
+type: task
+status: finished
+priority: normal
+area: project
+created: 2026-10-11
+---
+
 # TASK: Architecture diagram
 
 Spec: [SPEC-architecture-diagram.md](../../spec/SPEC-architecture-diagram.md)
