@@ -1,7 +1,7 @@
 ---
 id: AVARC-11
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: locations
 created: 2026-10-11
@@ -9,7 +9,7 @@ created: 2026-10-11
 
 # TASK: Locations data model
 
-Spec: [SPEC-locations.md](../spec/SPEC-locations.md)
+Spec: [SPEC-locations.md](../../spec/SPEC-locations.md)
 
 Refine the locations spec into a concrete data model.
 
