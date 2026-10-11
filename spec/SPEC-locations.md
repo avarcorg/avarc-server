@@ -44,12 +44,13 @@ All timestamps are stored in UTC (see [SPEC.md](../SPEC.md)). A period
 timestamp states a bound, not a claim of exact knowledge; imprecise dates are
 described in `period_label`.
 
-**Translation** (per language): `name` (text, required, non-empty),
-`description` (text, required, may be long) and `period_label` (optional
-free text, for example "Roman, 2nd century") and `confidence_level` (integer
-1-5, 1 lowest and 5 highest: how confident the contributors are in this
-translation of the content, for example 1 or 2 for an unreviewed machine
-translation; required, defaults to 3).
+**Translation** (per language):
+- `name`: text, required, non-empty.
+- `description`: text, required, may be long.
+- `period_label`: optional free text, for example "Roman, 2nd century".
+- `confidence_level`: integer 1-5, 1 lowest and 5 highest, how confident the
+  contributors are in this translation of the content (for example 1 or 2
+  for an unreviewed machine translation). Required, defaults to 3.
 
 **Reference**: `url` (optional) and `citations`, a map language -> text with
 at least one entry.
