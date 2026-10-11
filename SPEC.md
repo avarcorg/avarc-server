@@ -37,6 +37,7 @@ responsibility live in `spec/SPEC-<area>.md`.
 - [Frontend](spec/SPEC-frontend.md): Next.js web application.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.
 - [Dependency updates](spec/SPEC-dependency-updates.md): Renovate setup.
+- [Code scanning](spec/SPEC-code-scanning.md): CodeQL setup.
 
 ## Open questions
 
