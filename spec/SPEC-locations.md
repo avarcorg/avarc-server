@@ -8,8 +8,8 @@ Define how locations of historical importance are represented and stored.
 
 ## Requirements
 
-- A location has at least: an identifier, a name, a description, and a
-  position.
+- A location has at least: an identifier, a name, a description (both
+  translatable, see below), and a position.
 - The initial position is a single precise GPS coordinate (WGS 84 latitude
   and longitude).
 - The position representation must be able to grow later (for example
@@ -26,12 +26,10 @@ Types are logical; the storage mapping is decided with the backend.
 | Field | Type | Notes |
 |-------|------|-------|
 | `id` | UUID | Assigned by the system when the location is created, never reused, and constant for the lifetime of the record, including across import and export. |
-| `name` | text | Required, non-empty. |
-| `description` | text | Required, may be long. |
+| `translations` | map language -> Translation | At least one entry, see below. |
 | `position` | Position | Required, see below. |
-| `period_label` | text | Optional free text, for example "Roman, 2nd century". |
 | `period_start`, `period_end` | timestamp (UTC) | Optional, `period_start` <= `period_end`; for sorting and filtering. Must be able to represent dates before the common era. |
-| `tags` | set of text | Zero or more free-form tags, created on first use. |
+| `tags` | set of tag key | Zero or more tags, see below. |
 | `references` | list of Reference | Zero or more, ordered. |
 | `created_at`, `updated_at` | timestamp (UTC) | Set by the system. |
 | `created_by`, `updated_by` | identity id | The Ory identity of the user, see [SPEC-auth.md](SPEC-auth.md). |
@@ -45,7 +43,23 @@ All timestamps are stored in UTC (see [SPEC.md](../SPEC.md)). A period
 timestamp states a bound, not a claim of exact knowledge; imprecise dates are
 described in `period_label`.
 
-**Reference**: `citation` (text, required) and `url` (optional).
+**Translation** (per language): `name` (text, required, non-empty),
+`description` (text, required, may be long) and `period_label` (optional
+free text, for example "Roman, 2nd century").
+
+**Reference**: `url` (optional) and `citations`, a map language -> text with
+at least one entry.
+
+**Tag**: a language-neutral `key` (unique, created on first use) and
+optional `labels`, a map language -> text. A tag without a label for the
+requested language is shown by its key.
+
+**Languages** are identified by language code (`en`, `de`). The supported
+languages are those named in [SPEC.md](../SPEC.md); adding one needs no data
+migration.
+
+Position, period timestamps, URLs, identifiers and audit fields are
+language-neutral.
 
 **Position** has a `kind` discriminator. The first release defines one kind,
 `point`, with `latitude` and `longitude` in decimal degrees (WGS 84;
@@ -59,20 +73,31 @@ records keep their kind and stay valid; consumers must ignore or reject
 unknown kinds explicitly rather than misread them. The `point` kind is never
 changed incompatibly.
 
+## Language fallback
+
+When content is requested in a language it lacks, the value is taken from
+the English entry, and if there is none, from the available entry with the
+lowest language code. The same rule applies to reference citations and tag
+labels, with the tag key as the final fallback. A fallback is reported to
+the client so that it can mark the content as not translated.
+
 ## Decisions
 
 - The period is a free-text label plus an optional start and end timestamp.
 - Locations are identified by a UUID that survives import and export; a
   numeric database key may be added internally for optimisation.
-- Tags are free-form and many-to-many; there is no fixed taxonomy.
-- Sources are a list of references with a citation and an optional URL.
+- Tags are many-to-many and language-neutral, with per-language labels;
+  there is no fixed taxonomy.
+- Sources are a list of references with per-language citations and an
+  optional URL.
+- Translatable fields: `name`, `description`, `period_label`, reference
+  citations and tag labels. Translations are stored per language; at least
+  one is required, and a missing one falls back to English.
 - Media attachments and expression of position uncertainty are not part of
   the first release; the position `kind` mechanism leaves room for both.
 
 ## Open questions
 
-- Whether tags are normalised (case, whitespace) and by what rule.
-- Whether and how location content (name, description, tags, references)
-  is stored per language, given the multi-language decision in
-  [SPEC.md](../SPEC.md): one translation per language, a fallback language,
-  and which fields are translatable.
+- The normalisation rule for tag keys (case, whitespace, allowed characters).
+- Whether the API returns all translations of a location or only the
+  requested language by default.

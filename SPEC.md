@@ -54,6 +54,4 @@ components and their connections.
 ## Open questions
 
 - Who may view, who may edit? (anonymous read vs. login required)
-- Whether location content (name, description, tags, references) is
-  available per language, and how; see [SPEC-locations.md](spec/SPEC-locations.md).
 - Deployment target and environments.
