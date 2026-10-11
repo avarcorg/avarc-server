@@ -1,0 +1,18 @@
+[Unit]
+Description=Avarc (prod)
+After=network.target docker.service tailscaled.service
+Requires=network.target
+
+[Service]
+Type=simple
+Restart=always
+User=avarc-prod
+Group=avarc-prod
+Environment=SECRETS=prod
+WorkingDirectory=/home/avarc-prod
+ExecStart=/home/avarc-prod/run.sh up
+ExecStop=/home/avarc-prod/run.sh down
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+# One host, path prefixes. See spec/SPEC-ingress.md.
+{
+	auto_https off
+}
+
+:80 {
+	handle /api/* {
+		reverse_proxy backend:8080
+	}
+	handle /auth/* {
+		reverse_proxy ory:4433
+	}
+	handle {
+		reverse_proxy frontend:3000
+	}
+}

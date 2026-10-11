@@ -1,0 +1,33 @@
+# Rendered by run.sh with envsubst into docker-compose.yml (gitignored); use
+# $$ for a literal dollar. See spec/SPEC-deployment.md.
+#
+# Backend, frontend and Ory services are added here once their projects
+# exist; the ingress Caddyfile already routes to them by service name.
+name: ${NAME}
+
+services:
+  ingress:
+    image: caddy:2.10-alpine
+    ports:
+      - "${INGRESS_PORT}:80"
+    volumes:
+      - ${P}/Caddyfile:/etc/caddy/Caddyfile:ro
+    labels:
+      - "docktail.service.enable=true"
+      - "docktail.service.name=${NAME}"
+      - "docktail.service.port=80"
+      - "docktail.service.service-port=443"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgis/postgis:17-3.5
+    environment:
+      - POSTGRES_USER=avarc
+      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
+      - POSTGRES_DB=avarc
+    volumes:
+      - ${P}/data/${ENVIRONMENT}/db:/var/lib/postgresql/data
+      - ${SECRETS_RUN_DIR}:/run/secrets:ro
+    restart: unless-stopped

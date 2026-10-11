@@ -1,0 +1,17 @@
+[Unit]
+Description=Avarc (stage)
+After=network.target docker.service tailscaled.service
+Requires=network.target
+
+[Service]
+Type=simple
+Restart=always
+User=avarc-stage
+Group=avarc-stage
+WorkingDirectory=/home/avarc-stage
+ExecStart=/home/avarc-stage/run.sh --stage up
+ExecStop=/home/avarc-stage/run.sh --stage down
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target

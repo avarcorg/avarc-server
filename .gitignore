@@ -37,3 +37,7 @@ secrets*.sh
 # Local scratch task files at the root (committed tasks live in tasks/)
 /TASK.md
 /TASK-*.md
+
+# Developer deployment: local data (secrets.sh is covered above)
+/deploy/data/
+/deploy/docker-compose.yml
