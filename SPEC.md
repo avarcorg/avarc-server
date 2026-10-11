@@ -29,6 +29,9 @@ responsibility live in `spec/SPEC-<area>.md`.
 - **Identity:** self-hosted Ory handles authentication and authorization;
   the backend and frontend delegate to it rather than implementing their own.
 
+The [architecture diagram](spec/architecture-diagram.md) shows these
+components and their connections.
+
 ## Area specs
 
 - [Locations](spec/SPEC-locations.md): data model for historical locations.
