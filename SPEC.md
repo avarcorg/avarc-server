@@ -32,6 +32,11 @@ responsibility live in `spec/SPEC-<area>.md`.
 The [architecture diagram](spec/architecture-diagram.md) shows these
 components and their connections.
 
+## Global decisions
+
+- **Time:** all timestamps are stored in UTC. Conversion to a local time zone
+  happens only when presenting to a user.
+
 ## Area specs
 
 - [Locations](spec/SPEC-locations.md): data model for historical locations.

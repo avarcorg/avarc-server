@@ -25,16 +25,25 @@ Types are logical; the storage mapping is decided with the backend.
 
 | Field | Type | Notes |
 |-------|------|-------|
-| `id` | identifier | Stable, assigned by the system, never reused. |
+| `id` | UUID | Assigned by the system when the location is created, never reused, and constant for the lifetime of the record, including across import and export. |
 | `name` | text | Required, non-empty. |
 | `description` | text | Required, may be long. |
 | `position` | Position | Required, see below. |
 | `period_label` | text | Optional free text, for example "Roman, 2nd century". |
-| `period_start`, `period_end` | integer | Optional years, negative for BCE, `period_start` <= `period_end`; for sorting and filtering. |
+| `period_start`, `period_end` | timestamp (UTC) | Optional, `period_start` <= `period_end`; for sorting and filtering. Must be able to represent dates before the common era. |
 | `tags` | set of text | Zero or more free-form tags, created on first use. |
 | `references` | list of Reference | Zero or more, ordered. |
 | `created_at`, `updated_at` | timestamp (UTC) | Set by the system. |
 | `created_by`, `updated_by` | identity id | The Ory identity of the user, see [SPEC-auth.md](SPEC-auth.md). |
+
+The UUID is the identity of a location in the API, in exports and in
+imports. A storage layer may add its own numeric surrogate key for
+optimisation; it is internal, never exposed, and never used to identify a
+location across systems.
+
+All timestamps are stored in UTC (see [SPEC.md](../SPEC.md)). A period
+timestamp states a bound, not a claim of exact knowledge; imprecise dates are
+described in `period_label`.
 
 **Reference**: `citation` (text, required) and `url` (optional).
 
@@ -52,7 +61,9 @@ changed incompatibly.
 
 ## Decisions
 
-- The period is a free-text label plus an optional year range.
+- The period is a free-text label plus an optional start and end timestamp.
+- Locations are identified by a UUID that survives import and export; a
+  numeric database key may be added internally for optimisation.
 - Tags are free-form and many-to-many; there is no fixed taxonomy.
 - Sources are a list of references with a citation and an optional URL.
 - Media attachments and expression of position uncertainty are not part of
