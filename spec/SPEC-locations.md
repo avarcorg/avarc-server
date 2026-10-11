@@ -28,7 +28,7 @@ Types are logical; the storage mapping is decided with the backend.
 | `id` | UUID | Assigned by the system when the location is created, never reused, and constant for the lifetime of the record, including across import and export. |
 | `translations` | map language -> Translation | At least one entry, see below. |
 | `position` | Position | Required, see below. |
-| `confidence_level` | enum | `low`, `medium` or `high`: how confident the contributors are that the location (identification and position) is correct. Required, defaults to `medium`. |
+| `confidence_level` | integer 1-5 | 1 is the lowest and 5 the highest confidence that the location (identification and position) is correct, as judged by the contributors. Required, defaults to 3. |
 | `period_start`, `period_end` | timestamp (UTC) | Optional, `period_start` <= `period_end`; for sorting and filtering. Must be able to represent dates before the common era. |
 | `tags` | set of tag key | Zero or more tags, see below. |
 | `references` | list of Reference | Zero or more, ordered. |
@@ -46,10 +46,10 @@ described in `period_label`.
 
 **Translation** (per language): `name` (text, required, non-empty),
 `description` (text, required, may be long) and `period_label` (optional
-free text, for example "Roman, 2nd century") and `confidence_level` (enum
-`low`, `medium` or `high`: how confident the contributors are in this
-translation of the content, for example `low` for an unreviewed machine
-translation; required, defaults to `medium`).
+free text, for example "Roman, 2nd century") and `confidence_level` (integer
+1-5, 1 lowest and 5 highest: how confident the contributors are in this
+translation of the content, for example 1 or 2 for an unreviewed machine
+translation; required, defaults to 3).
 
 **Reference**: `url` (optional) and `citations`, a map language -> text with
 at least one entry.
@@ -101,8 +101,8 @@ the client so that it can mark the content as not translated.
 - Translatable fields: `name`, `description`, `period_label`, reference
   citations and tag labels. Translations are stored per language; at least
   one is required, and a missing one falls back to English.
-- `confidence_level` (`low`, `medium`, `high`) is kept on the location and on
-  each translation.
+- `confidence_level`, an integer from 1 to 5, is kept on the location and on
+  each translation. This scale may be revisited.
 - Media attachments and expression of position uncertainty are not part of
   the first release; the position `kind` mechanism leaves room for both.
 
