@@ -59,6 +59,7 @@ components and their connections.
 - [Deployment](spec/SPEC-deployment.md): Docker Compose project, developer deployment.
 - [Dependency updates](spec/SPEC-dependency-updates.md): Renovate setup.
 - [Code scanning](spec/SPEC-code-scanning.md): CodeQL setup.
+- [Releases](spec/SPEC-releases.md): version tags and release notes.
 - [Work tracking](spec/SPEC-work-tracking.md): file-based tracking of work items.
 - [Architecture diagram](spec/SPEC-architecture-diagram.md): diagram of the system.
 
