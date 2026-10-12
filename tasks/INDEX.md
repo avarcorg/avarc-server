@@ -33,3 +33,4 @@ files. Do not edit by hand. See
 | AVARC-25 | [Identity provider observability](TASK-observability-identity.md) | task | open | normal | auth | AVARC-21, AVARC-20 |
 | AVARC-26 | [Release tagging](finished/TASK-release-tagging.md) | task | finished | normal | project |  |
 | AVARC-27 | [Stage deployment](TASK-stage-deployment.md) | task | open | normal | project | AVARC-18, AVARC-20, AVARC-26 |
+| AVARC-28 | [Simplify the architecture documentation for handover](TASK-handover-docs.md) | task | open | low | project |  |
