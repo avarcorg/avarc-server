@@ -79,11 +79,21 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   service also publishes its port on `127.0.0.1` only (8180 dev, 8181
   stage, 8182 prod; `KEYCLOAK_ADMIN_PORT` overrides), which
   `deploy/accounts.sh` uses.
+- **Backend service:** runs the image built by the backend
+  ([SPEC-backend.md](SPEC-backend.md)), image
+  `<IMAGE_NAMESPACE>/avarc-server-backend:<BACKEND_VERSION>`. `run.sh`
+  defaults `IMAGE_NAMESPACE` to `avarcorg` and `BACKEND_VERSION` to the
+  version of the Maven build (`0.1.0-SNAPSHOT`), and the environment
+  overrides both (set `BACKEND_VERSION` to a release version to run a
+  release). The Spring profile named after the environment is active
+  (`SPRING_PROFILES_ACTIVE`); it has no published port, the ingress reaches
+  it by service name.
 - **Database image:** PostGIS, as chosen in
   [SPEC-backend.md](SPEC-backend.md).
 
 ## Open questions
 
-- Backend and frontend services are added to the project once their
-  skeletons exist; the ingress already routes to them.
+- The frontend service is added to the project once its skeleton exists;
+  the ingress already routes to it. Where the backend image is published
+  for stage and prod is not decided.
 - Deployment target and environments beyond the developer deployment.

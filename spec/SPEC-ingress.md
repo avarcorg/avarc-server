@@ -23,6 +23,8 @@ Decided in [AVARC-8](../tasks/finished/TASK-ingress-decision.md).
 - **URL layout:** one host with path prefixes, so the browser sees a single
   origin (no CORS, simple cookie sessions):
   - `/api/` routes to the backend.
+  - `/actuator/` routes to the backend's actuator endpoints. This is for
+    development and stage and will be disabled in prod.
   - `/auth/` routes to the public endpoints of Keycloak (login, logout,
     token and account pages), without prefix stripping; which of its paths
     are routed is defined in [SPEC-auth.md](SPEC-auth.md).

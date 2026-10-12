@@ -34,5 +34,8 @@ Define the API service that stores and serves locations.
   columns or tables without changing existing rows. Locations carry the UUID
   as their identity and may have an internal numeric surrogate key.
   Schema changes are applied by versioned migrations.
+- **Actuator:** only `health` is exposed by default; the `dev` and `stage`
+  environments, through the Spring profile of the same name, expose all
+  actuator endpoints.
 - **API:** REST + OpenAPI, generated from the code (springdoc). Other
   consumers, such as API keys or an MCP adapter, use the same API.
