@@ -56,4 +56,10 @@ Ongoing:
 
 ## Progress
 
-No stage deployment has been done yet.
+- 2026-10-12: Initial setup done on the staging host. The old deployment
+  was archived to `/home/avarc-stage/legacy/`; `deploy/deploy.sh stage`
+  installs the files and `deploy/systemd/avarc-stage.service`; the stage
+  secrets file was created; the service runs the ingress, database and
+  Keycloak. Still to check from the initial list: boot, restart and stop
+  behaviour, the addresses and ingress rules, the first accounts. Updates by
+  release tag wait for [AVARC-26](finished/TASK-release-tagging.md).

@@ -48,7 +48,8 @@ apply it in the console, or on dev with `deploy/run.sh reset`.
 
 A release is a `vMAJOR.MINOR.PATCH` tag on `main` (spec:
 `spec/SPEC-releases.md`). Create it with `tools/release.sh <version>`; add
-`--push` to push the tag too.
+`--push` to push the tag too. To run a release on a host, check out its
+tag and run `deploy/deploy.sh` from there; prod accepts nothing else.
 
 ## Where things do NOT go
 

@@ -12,6 +12,8 @@ Requires Docker with Compose and `envsubst`.
     deploy/run.sh logs -f  # any other argument goes to "docker compose"
     deploy/run.sh --stage up  # stage (what the systemd unit runs)
     deploy/run.sh --help   # usage (also without arguments)
+    sudo deploy/deploy.sh stage  # on the host: install the files and the
+                           # systemd unit into /home/avarc-stage (or prod)
 
 After the first start, run `deploy/accounts.sh` (`--stage` for stage) to
 create the login accounts; see `AGENTS.md`.
