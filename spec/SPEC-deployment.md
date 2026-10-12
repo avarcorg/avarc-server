@@ -20,9 +20,17 @@ developers; other environments are specified when needed.
 Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
 
 - **Files:** everything lives in `deploy/`: `docker-compose.template`, the
-  ingress `Caddyfile`, `run.sh` and the systemd units `avarc-stage.service`
-  and `avarc-prod.service`, each running as its own user and group from that
-  user's home directory (`/home/avarc-<environment>`). `run.sh` renders the template with `envsubst` into `docker-compose.yml`
+  ingress `Caddyfile`, `run.sh` and the systemd units `systemd/avarc-stage.service`
+  and `systemd/avarc-prod.service`, each running as its own user and group from that
+  user's home directory (`/home/avarc-<environment>`). On the host,
+  `deploy/deploy.sh stage|prod` (root only) installs them from a checkout:
+  it copies the unit to `/etc/systemd/system` and `run.sh`, `accounts.sh`,
+  the template, the `Caddyfile`, `keycloak-start.sh` and the realm import
+  together into the home directory, then reloads systemd. It never starts
+  the service and never touches data or secrets. It records the version of
+  the checkout (`git describe --tags`) in `VERSION` next to the files and
+  prints it; for prod it refuses a checkout that is not exactly a release tag
+  (see [SPEC-releases.md](SPEC-releases.md)) or has uncommitted changes. `run.sh` renders the template with `envsubst` into `docker-compose.yml`
   (gitignored, mode 0600) at every start; `$$` is a literal dollar.
 - **Environments:** `dev`, `stage` and `prod`. `run.sh --stage` selects
   stage (the systemd unit on the staging host passes it); without it the
