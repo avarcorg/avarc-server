@@ -23,7 +23,8 @@ responsibility live in `spec/SPEC-<area>.md`.
 ## Architecture overview
 
 - **Frontend:** Next.js web application.
-- **Backend:** Java/Kotlin service exposing an API consumed by the frontend.
+- **Backend:** Java Spring Boot service exposing an API consumed by the
+  frontend.
 - **Web server:** a web server in front of all partial applications
   (frontend, backend, Keycloak) is the single entry point for clients. It is
   Caddy, serving one host with path prefixes (see the ingress spec).
@@ -53,7 +54,7 @@ components and their connections.
 
 - [Locations](spec/SPEC-locations.md): data model for historical locations.
 - [Auth](spec/SPEC-auth.md): authentication, user management and authorization with Keycloak.
-- [Backend](spec/SPEC-backend.md): Java/Kotlin API service.
+- [Backend](spec/SPEC-backend.md): Java Spring Boot API service.
 - [Frontend](spec/SPEC-frontend.md): Next.js web application.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.
 - [Deployment](spec/SPEC-deployment.md): Docker Compose project, developer deployment.

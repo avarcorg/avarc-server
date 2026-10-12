@@ -79,8 +79,8 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   service also publishes its port on `127.0.0.1` only (8180 dev, 8181
   stage, 8182 prod; `KEYCLOAK_ADMIN_PORT` overrides), which
   `deploy/accounts.sh` uses.
-- **Database image:** PostGIS, provisionally, until the database choice in
-  [SPEC-backend.md](SPEC-backend.md) is made.
+- **Database image:** PostGIS, as chosen in
+  [SPEC-backend.md](SPEC-backend.md).
 
 ## Open questions
 

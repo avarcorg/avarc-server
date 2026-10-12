@@ -16,11 +16,11 @@ flowchart TB
     subgraph Server["avarc-server"]
         Ingress["Web server / ingress<br/>Caddy"]
         Frontend["Frontend<br/>Next.js"]
-        Backend["Backend API<br/>Java/Kotlin (undecided)"]
+        Backend["Backend API<br/>Spring Boot"]
         Keycloak["Keycloak"]
         MapServer["Public read-only map server<br/>(post-MVP)"]
         MCP["MCP server<br/>(post-MVP)"]
-        DB[("Database<br/>geo-capable (undecided)")]
+        DB[("Database<br/>PostgreSQL + PostGIS")]
     end
 
     Browser -- "HTTPS" --> Ingress
@@ -41,7 +41,6 @@ flowchart TB
     MCP -. "validate token" .-> Keycloak
 
     classDef undecided stroke-dasharray: 5 5;
-    class Backend,DB undecided;
 
     classDef postmvp stroke-dasharray: 2 4,fill:#f4f4f4,stroke:#999,color:#666;
     class AIClient,MCP,MapServer,Anonymous postmvp;

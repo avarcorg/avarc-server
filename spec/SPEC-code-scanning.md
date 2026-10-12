@@ -39,5 +39,5 @@ CodeQL analysis on GitHub.
 - Whether findings block merging.
 - Revisit the language detection, build mode and any build steps once the
   backend and frontend architecture is agreed
-  ([AVARC-4](../tasks/TASK-backend-stack-decision.md),
+  ([AVARC-4](../tasks/finished/TASK-backend-stack-decision.md),
   [AVARC-7](../tasks/TASK-frontend-stack-decision.md)).
