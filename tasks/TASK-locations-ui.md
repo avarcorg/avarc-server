@@ -12,5 +12,5 @@ created: 2026-10-11
 
 Spec: [SPEC-frontend.md](../spec/SPEC-frontend.md)
 
-- Show locations on a map with their descriptions.
+- Render a map (Leaflet, see the frontend spec) and show locations on it with their descriptions.
 - Add forms to create and edit locations for authorized users.

@@ -33,9 +33,9 @@ Maven Central.
 
     ./mvnw verify                                  # build and test
     ./mvnw -pl avarc-server-backend spring-boot:run   # run on port 8080
-    ./mvnw -Pwith-docker package                   # also build the container image
+    ./mvnw -Pwith-docker package                   # also build the container images
 
-The image is built with Paketo buildpacks by the `pack` CLI (which needs a
+The backend image is built with Paketo buildpacks by the `pack` CLI (which needs a
 running Docker daemon), run from the `with-docker` profile. It is tagged
 `avarcorg/avarc-server-backend:<version>` and `:latest`, and listens on port
 8080. Override the `avarcorg` namespace with `-Dimage.namespace=<name>`, e.g.
@@ -47,9 +47,27 @@ profile named after the environment is activated with
 `SPRING_PROFILES_ACTIVE` (`application-dev.properties`,
 `application-stage.properties`; `spring-boot:run` uses `dev` by default).
 Prod has no profile file and exposes `health` only. The Compose project runs
-the backend image (`IMAGE_NAMESPACE`, `BACKEND_VERSION`, see
-`spec/SPEC-deployment.md`), so build it with `-Pwith-docker` before
+the backend and frontend images (`IMAGE_NAMESPACE`, `BACKEND_VERSION`,
+`FRONTEND_VERSION`, see `spec/SPEC-deployment.md`), so build them with `-Pwith-docker` before
 `deploy/run.sh up`.
+
+## Frontend
+
+Next.js with TypeScript, a module of the same Maven build (spec:
+`spec/SPEC-frontend.md`). Node and npm are not installed anywhere; all of it
+runs in a container, driven by the wrapper:
+
+    ./mvnw -pl avarc-server-frontend verify           # npm ci and next build
+    ./mvnw -pl avarc-server-frontend exec:exec        # dev server, port 3000
+
+`-Pwith-docker` builds the frontend image as well, with Paketo like the
+backend.
+
+For other npm commands (adding a dependency, updating the lockfile) use
+`NODE_IMAGE=<node.image> avarc-server-frontend/docker-node.sh npm ...`; the
+image is the `node.image` property of `avarc-server-frontend/pom.xml`. Image
+naming (`image.namespace`) is the same as for the backend; the frontend is
+the `frontend` service of the Compose project (`FRONTEND_VERSION`).
 
 ## Authentication
 

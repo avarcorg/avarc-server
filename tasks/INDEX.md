@@ -11,7 +11,7 @@ files. Do not edit by hand. See
 | AVARC-3 | [Backend project skeleton](finished/TASK-backend-skeleton.md) | task | finished | normal | backend | AVARC-4 |
 | AVARC-4 | [Backend technology decisions](finished/TASK-backend-stack-decision.md) | decision | finished | normal | backend | AVARC-11 |
 | AVARC-5 | [Contribution guidelines and AI disclosure](TASK-contribution-guidelines.md) | task | open | normal | project |  |
-| AVARC-6 | [Frontend project skeleton](TASK-frontend-skeleton.md) | task | open | normal | frontend | AVARC-7 |
+| AVARC-6 | [Frontend project skeleton](finished/TASK-frontend-skeleton.md) | task | finished | normal | frontend | AVARC-7 |
 | AVARC-7 | [Frontend technology decisions](finished/TASK-frontend-stack-decision.md) | decision | finished | normal | frontend |  |
 | AVARC-8 | [Ingress web server decision](finished/TASK-ingress-decision.md) | decision | finished | normal | ingress | AVARC-13 |
 | AVARC-9 | [Licensing decision](TASK-licensing-decision.md) | decision | open | normal | project |  |

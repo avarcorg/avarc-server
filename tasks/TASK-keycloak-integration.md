@@ -38,7 +38,7 @@ Deployment (does not need the skeletons):
   documentation at implementation time.
 
 Application (blocked on [AVARC-3](finished/TASK-backend-skeleton.md) and
-[AVARC-6](TASK-frontend-skeleton.md)):
+[AVARC-6](finished/TASK-frontend-skeleton.md)):
 
 - Backend: validate the access token locally, map the realm roles to
   permissions, answer 401/403; only the health endpoint is public.
