@@ -22,10 +22,22 @@ CodeQL analysis on GitHub.
   - update branches from dependency tooling: `dependabot/**` and
     `renovate/**` (their pull requests into `main` are still analyzed)
 - Findings are reported in the repository's code scanning alerts.
+- It is an advanced workflow file (`.github/workflows/codeql.yml`), not
+  GitHub's default setup, so triggers, branches and languages are under
+  version control. The default setup must stay disabled.
+- It must not fail for lack of code. A first job lists the tracked files and
+  only the languages that have source files are analyzed (the workflow files
+  for `actions`, `*.java`/`*.kt` for Java/Kotlin, `*.js`/`*.ts` and
+  variants for JavaScript/TypeScript); with none, the analysis is skipped.
+- Java/Kotlin uses build mode `none`.
+- Branches are ignored by allow-listing: the push trigger names only
+  `main`, so no analysis runs for the branches above.
 
 ## Open questions
 
-- Default setup versus an advanced workflow file.
 - Query suite (default versus extended).
 - Whether findings block merging.
-- Build mode for Java/Kotlin.
+- Revisit the language detection, build mode and any build steps once the
+  backend and frontend architecture is agreed
+  ([AVARC-4](../tasks/TASK-backend-stack-decision.md),
+  [AVARC-7](../tasks/TASK-frontend-stack-decision.md)).
