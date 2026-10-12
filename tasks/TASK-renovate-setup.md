@@ -19,7 +19,7 @@ Spec: [SPEC-dependency-updates.md](../spec/SPEC-dependency-updates.md)
   the final configuration.
 - Adapt `renovate.json` once the backend and frontend architecture is
   agreed ([AVARC-4](finished/TASK-backend-stack-decision.md),
-  [AVARC-7](TASK-frontend-stack-decision.md)): enable the package managers
+  [AVARC-7](finished/TASK-frontend-stack-decision.md)): enable the package managers
   of the chosen stacks, group related updates, and set scheduling, rate
   limits and the major/security update policy (the open questions in the
   spec). Keep the Compose template and the GitHub workflows covered.

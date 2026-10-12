@@ -20,7 +20,7 @@ Spec: [SPEC-code-scanning.md](../spec/SPEC-code-scanning.md)
   enabled, as it conflicts with the advanced workflow.
 - Revisit the workflow once the backend and frontend architecture is agreed
   ([AVARC-4](finished/TASK-backend-stack-decision.md),
-  [AVARC-7](TASK-frontend-stack-decision.md)): language detection, build
+  [AVARC-7](finished/TASK-frontend-stack-decision.md)): language detection, build
   mode (and build steps if `none` is not enough) and the query suite.
 - Make sure the branches listed in the spec are ignored, and verify no
   analysis runs for them.
