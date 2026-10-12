@@ -1,7 +1,7 @@
 # AGENTS.md
 
 avarc-server: an application to collect data of historical interest, with
-locations and descriptions. No source code exists yet.
+locations and descriptions.
 
 ## Specs
 
@@ -23,6 +23,29 @@ locations and descriptions. No source code exists yet.
   to the new path in the same change.
 - Root-level `TASK.md` / `TASK-*.md` are gitignored local scratch files and
   are not the same thing as `tasks/`.
+
+## Backend
+
+Java 25, Spring Boot, Maven (spec: `spec/SPEC-backend.md`). The root
+`pom.xml` is the parent and builds the `avarc-server-backend` module; always
+use the wrapper `./mvnw` from the root. The wrapper downloads Maven from
+Maven Central.
+
+    ./mvnw verify                                  # build and test
+    ./mvnw -pl avarc-server-backend spring-boot:run   # run on port 8080
+    ./mvnw -Pwith-docker package                   # also build the container image
+
+The image is built with Paketo buildpacks by the `pack` CLI (which needs a
+running Docker daemon), run from the `with-docker` profile. It is tagged
+`avarcorg/avarc-server-backend:<version>` and `:latest`, and listens on port
+8080. Override the `avarcorg` namespace with `-Dimage.namespace=<name>`, e.g.
+`-Dimage.namespace="$IMAGE_NAMESPACE"`.
+
+The service answers `GET /api/hello` and `GET /actuator/health`. Only in the
+dev environment are all actuator endpoints exposed: the Spring profile named
+after the environment is activated with `SPRING_PROFILES_ACTIVE` (the
+`dev` profile is `application-dev.properties`; `spring-boot:run` uses it by
+default). Stage and prod have no profile file and expose `health` only.
 
 ## Authentication
 
