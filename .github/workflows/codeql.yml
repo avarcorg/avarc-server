@@ -1,0 +1,62 @@
+name: CodeQL
+
+# Only main and pull requests into it are analyzed: the push trigger is
+# restricted to main, so the historic, dependabot/** and renovate/** branches
+# never run it (their pull requests into main do).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "17 4 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  # CodeQL fails a language that has no source files, which is the case until
+  # the stacks exist. Analyze only the languages that have code.
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.languages.outputs.matrix }}
+      any: ${{ steps.languages.outputs.any }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: languages
+        run: |
+          languages=()
+          if [ -n "$(git ls-files '.github/workflows/*.yml' '.github/workflows/*.yaml' | head -n 1)" ]; then
+            languages+=(actions)
+          fi
+          if [ -n "$(git ls-files '*.java' '*.kt' '*.kts' | head -n 1)" ]; then
+            languages+=(java-kotlin)
+          fi
+          if [ -n "$(git ls-files '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx' '*.mts' '*.cts' | head -n 1)" ]; then
+            languages+=(javascript-typescript)
+          fi
+          matrix="$(printf '%s\n' "${languages[@]}" | jq -R . | jq -sc 'map(select(. != "")) | {language: .}')"
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+          echo "any=$([ "${#languages[@]}" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "Languages: ${languages[*]:-none}"
+
+  analyze:
+    needs: detect
+    if: needs.detect.outputs.any == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:${{ matrix.language }}
