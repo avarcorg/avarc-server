@@ -13,7 +13,7 @@
 
     <groupId>org.avarc</groupId>
     <artifactId>avarc-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>avarc-server</name>
     <description>Parent of the avarc-server build</description>

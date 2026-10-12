@@ -12,6 +12,11 @@
 	handle /api/* {
 		reverse_proxy backend:8080
 	}
+	# Will be disabled in prod.
+	@actuator path /actuator /actuator/*
+	handle @actuator {
+		reverse_proxy backend:8080
+	}
 	# Keycloak serves under /auth itself. Only the avarc realm and the static
 	# resources are public; the admin console, the admin API, the master realm
 	# and the management port are not routed. See spec/SPEC-auth.md.

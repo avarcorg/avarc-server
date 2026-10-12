@@ -58,6 +58,9 @@ case "${ENVIRONMENT}" in
     stage) DEFAULT_PORT=8081; SECRETS_FILE=${P}/secrets.stage.sh ;;
     prod)  DEFAULT_PORT=8082; SECRETS_FILE=${P}/secrets.sh ;;
 esac
+# Keep BACKEND_VERSION's default equal to the version in pom.xml.
+export IMAGE_NAMESPACE=${IMAGE_NAMESPACE:-avarcorg}
+export BACKEND_VERSION=${BACKEND_VERSION:-0.1.0-SNAPSHOT}
 export INGRESS_PORT=${INGRESS_PORT:-${DEFAULT_PORT}}
 # The tailnet's domain, under which docktail serves the names with a
 # certificate; empty if it cannot be determined.

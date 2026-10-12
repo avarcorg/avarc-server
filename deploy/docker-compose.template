@@ -1,8 +1,8 @@
 # Rendered by run.sh with envsubst into docker-compose.yml (gitignored); use
 # $$ for a literal dollar. See spec/SPEC-deployment.md.
 #
-# Backend and frontend services are added here once their projects exist;
-# the ingress Caddyfile already routes to them by service name.
+# The frontend service is added here once its project exists; the ingress
+# Caddyfile already routes to it by service name.
 name: ${NAME}
 
 services:
@@ -18,8 +18,15 @@ services:
       - "docktail.service.port=80"
       - "docktail.service.service-port=443"
     depends_on:
+      - backend
       - db
       - keycloak
+    restart: unless-stopped
+
+  backend:
+    image: ${IMAGE_NAMESPACE}/avarc-server-backend:${BACKEND_VERSION}
+    environment:
+      - SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
     restart: unless-stopped
 
   # Creates Keycloak's own database in the database server, once.
