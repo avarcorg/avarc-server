@@ -7,8 +7,17 @@
 	handle /api/* {
 		reverse_proxy backend:8080
 	}
+	# Keycloak serves under /auth itself. Only the avarc realm and the static
+	# resources are public; the admin console, the admin API, the master realm
+	# and the management port are not routed. See spec/SPEC-auth.md.
+	handle /auth/realms/avarc/* {
+		reverse_proxy keycloak:8080
+	}
+	handle /auth/resources/* {
+		reverse_proxy keycloak:8080
+	}
 	handle /auth/* {
-		reverse_proxy ory:4433
+		respond 404
 	}
 	handle {
 		reverse_proxy frontend:3000

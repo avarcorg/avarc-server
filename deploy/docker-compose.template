@@ -1,8 +1,8 @@
 # Rendered by run.sh with envsubst into docker-compose.yml (gitignored); use
 # $$ for a literal dollar. See spec/SPEC-deployment.md.
 #
-# Backend, frontend and Ory services are added here once their projects
-# exist; the ingress Caddyfile already routes to them by service name.
+# Backend and frontend services are added here once their projects exist;
+# the ingress Caddyfile already routes to them by service name.
 name: ${NAME}
 
 services:
@@ -19,6 +19,55 @@ services:
       - "docktail.service.service-port=443"
     depends_on:
       - db
+      - keycloak
+    restart: unless-stopped
+
+  # Creates Keycloak's own database in the database server, once.
+  keycloak-init:
+    image: postgis/postgis:17-3.5
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        export PGPASSWORD="$$(cat /run/secrets/POSTGRES_PASSWORD)"
+        echo "SELECT 'CREATE DATABASE keycloak' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'keycloak')\\gexec" | psql -h db -U avarc -d avarc -v ON_ERROR_STOP=1
+    volumes:
+      - ${SECRETS_RUN_DIR}:/run/secrets:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  # The ingress routes only the avarc realm and its resources (see the
+  # Caddyfile). The admin console is reached on the loopback port below, by
+  # an SSH tunnel from outside the host. The container runs as the user that
+  # started the project so that it can read the secrets directory, which is
+  # closed to others.
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.0
+    user: "${RUN_UID}:0"
+    entrypoint: ["/bin/bash", "/opt/avarc/keycloak-start.sh"]
+    environment:
+      - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
+      - ADMIN_ORIGIN=http://localhost:${KEYCLOAK_ADMIN_PORT}
+    ports:
+      - "127.0.0.1:${KEYCLOAK_ADMIN_PORT}:8080"
+    volumes:
+      - ${P}/keycloak-start.sh:/opt/avarc/keycloak-start.sh:ro
+      - ${P}/keycloak/avarc-realm.json:/opt/keycloak/data/import/avarc-realm.json:ro
+      - ${SECRETS_RUN_DIR}:/run/secrets:ro
+    depends_on:
+      keycloak-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - "CMD"
+        - "/bin/bash"
+        - "-c"
+        - "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /auth/health/ready HTTP/1.0\\r\\n\\r\\n' >&3 && [[ \"$$(cat <&3)\" == *UP* ]]"
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 30s
     restart: unless-stopped
 
   db:
@@ -30,4 +79,9 @@ services:
     volumes:
       - ${P}/data/${ENVIRONMENT}/db:/var/lib/postgresql/data
       - ${SECRETS_RUN_DIR}:/run/secrets:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U avarc -d avarc"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
     restart: unless-stopped

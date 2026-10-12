@@ -59,10 +59,21 @@ case "${ENVIRONMENT}" in
     prod)  DEFAULT_PORT=8082; SECRETS_FILE=${P}/secrets.sh ;;
 esac
 export INGRESS_PORT=${INGRESS_PORT:-${DEFAULT_PORT}}
+case "${ENVIRONMENT}" in
+    dev) export PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-http://localhost:${INGRESS_PORT}} ;;
+    *)   export PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://${NAME}} ;;
+esac
+# The loopback port of the Keycloak admin console (reached by an SSH tunnel).
+case "${ENVIRONMENT}" in
+    dev) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8180} ;;
+    stage) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8181} ;;
+    prod) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8182} ;;
+esac
+export RUN_UID=$(id -u)
 export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-/dev/shm/${NAME}-secrets}
 
 # The secrets the deployment needs; one file each in ${SECRETS_RUN_DIR}.
-NEEDED_SECRETS="POSTGRES_PASSWORD"
+NEEDED_SECRETS="POSTGRES_PASSWORD KEYCLOAK_ADMIN_PASSWORD KEYCLOAK_CLIENT_SECRET"
 
 # Prints the value of secret $2 as exported by the secrets file $1, or
 # nothing. The file is sourced by a shell with an empty environment, so only
@@ -83,8 +94,11 @@ create_dev_secrets () {
             echo "#!/bin/sh"
             for _name in ${NEEDED_SECRETS}
             do
-                echo "export ${_name}=$(head -c 24 /dev/urandom | base64 | tr -dc 'A-Za-z0-9')"
+                echo "export ${_name}=$(head -c 48 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 32)"
             done
+            # the initial account, created by accounts.sh
+            echo "export ADMIN_EMAIL=admin@avarc.invalid"
+            echo "export ADMIN_PASSWORD=$(head -c 48 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 24)"
         } > "${SECRETS_FILE}"
     )
     [ "${_xtrace}" = on ] && set -x
