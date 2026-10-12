@@ -24,6 +24,26 @@ locations and descriptions. No source code exists yet.
 - Root-level `TASK.md` / `TASK-*.md` are gitignored local scratch files and
   are not the same thing as `tasks/`.
 
+## Authentication
+
+Keycloak runs as the `keycloak` service of the Compose project (spec:
+`spec/SPEC-auth.md`); the realm is imported from `deploy/keycloak/`. Create
+the accounts of an environment, the initial admin included, after the project
+is up; it is safe to repeat (needs `curl` and `jq`):
+
+    deploy/accounts.sh [--stage]      # SECRETS=prod for prod
+
+The credentials come from the environment's secrets file (`ADMIN_EMAIL`,
+`ADMIN_PASSWORD`, optionally `EDITOR_*` and `VIEWER_*`); the dev file gets
+`admin@avarc.invalid` with a random password when it is generated. Admins
+manage users, roles and passwords in the console of the `avarc` realm at
+`http://localhost:<port>/auth/admin/avarc/console/` (ports in
+`spec/SPEC-deployment.md`), signing in with their own account. The ingress
+does not route the console. From outside the host, use an SSH tunnel with the
+same local port number. A change of `deploy/keycloak/avarc-realm.json` does
+not reach an existing realm (Keycloak imports only when the realm is absent);
+apply it in the console, or on dev with `deploy/run.sh reset`.
+
 ## Where things do NOT go
 
 Ad-hoc help requests (e.g. "help me ...") and decisions about how to work

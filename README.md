@@ -13,8 +13,11 @@ Requires Docker with Compose and `envsubst`.
     deploy/run.sh --stage up  # stage (what the systemd unit runs)
     deploy/run.sh --help   # usage (also without arguments)
 
+After the first start, run `deploy/accounts.sh` (`--stage` for stage) to
+create the login accounts; see `AGENTS.md`.
+
 Dev secrets are generated on the first start; stage and prod need their
 secrets file (`deploy/secrets.stage.sh`, `deploy/secrets.sh`) first. Local
-data and secrets stay under `deploy/` and are gitignored. Only the ingress
-and the database run so far; the other services are added as their projects
+data and secrets stay under `deploy/` and are gitignored. Only the ingress,
+the database and Keycloak run so far; the other services are added as their projects
 are created. Details: `spec/SPEC-deployment.md`.

@@ -52,3 +52,18 @@ Documentation:
 - Add an Authentication section to `AGENTS.md` (service, provisioning
   script, how admins reach the admin console over an SSH tunnel) and mention
   the accounts step in `README.md`.
+
+## Progress
+
+Done and verified on the developer deployment: the Keycloak service and
+database, the realm import, the ingress routing (only the avarc realm and
+resources; admin console, master realm and traversal attempts answer 404),
+the provisioning script, and the documentation. Role composites, admin-console access of admins only, English and
+German login pages and redirect URI restriction were checked.
+
+Findings for the application part: the token lists only explicitly granted
+roles, so no role means `viewer`; the audience `avarc-api` is set by a
+mapper of the client `avarc-web`; the user profile makes first and last name
+optional, otherwise accounts without them cannot log in. Stage and prod
+(https origin) are not yet exercised. Open: backend token validation,
+frontend login and logout, and the token-relay question of the spec.
