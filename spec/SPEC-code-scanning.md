@@ -40,4 +40,4 @@ CodeQL analysis on GitHub.
 - Revisit the language detection, build mode and any build steps once the
   backend and frontend architecture is agreed
   ([AVARC-4](../tasks/finished/TASK-backend-stack-decision.md),
-  [AVARC-7](../tasks/TASK-frontend-stack-decision.md)).
+  [AVARC-7](../tasks/finished/TASK-frontend-stack-decision.md)).
