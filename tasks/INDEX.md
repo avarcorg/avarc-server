@@ -18,9 +18,11 @@ files. Do not edit by hand. See
 | AVARC-10 | [Locations CRUD API](TASK-locations-crud-api.md) | task | open | normal | backend | AVARC-3, AVARC-11 |
 | AVARC-11 | [Locations data model](finished/TASK-locations-data-model.md) | task | finished | normal | locations |  |
 | AVARC-12 | [Locations UI](TASK-locations-ui.md) | task | open | normal | frontend | AVARC-6, AVARC-10 |
-| AVARC-13 | [Ory authentication and authorization design](TASK-ory-auth-design.md) | decision | open | normal | auth |  |
-| AVARC-14 | [Ory integration](TASK-ory-integration.md) | task | open | normal | auth | AVARC-13, AVARC-8, AVARC-3, AVARC-6 |
+| AVARC-13 | [Ory authentication and authorization design](finished/TASK-ory-auth-design.md) | decision | finished | normal | auth |  |
+| AVARC-14 | [Ory integration](finished/TASK-ory-integration.md) | task | finished | normal | auth | AVARC-13, AVARC-8, AVARC-3, AVARC-6, AVARC-19 |
 | AVARC-15 | [Set up Renovate](TASK-renovate-setup.md) | task | open | normal | dependency-updates |  |
 | AVARC-16 | [Set up CodeQL](TASK-codeql-setup.md) | task | open | normal | code-scanning | AVARC-3, AVARC-6 |
 | AVARC-17 | [Developer setup](TASK-dev-setup.md) | task | open | normal | project |  |
 | AVARC-18 | [Deployment setup](finished/TASK-deployment-setup.md) | task | finished | normal | project | AVARC-3, AVARC-6, AVARC-8 |
+| AVARC-19 | [Revisit the authentication provider and user administration](finished/TASK-auth-provider-revisit.md) | decision | finished | high | auth |  |
+| AVARC-20 | [Keycloak integration](TASK-keycloak-integration.md) | task | open | high | auth | AVARC-19, AVARC-8, AVARC-3, AVARC-6 |
