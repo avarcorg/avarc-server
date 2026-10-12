@@ -20,11 +20,61 @@
 
     <modules>
         <module>avarc-server-backend</module>
+        <module>avarc-server-frontend</module>
     </modules>
 
     <properties>
         <java.version>25</java.version>
         <image.namespace>avarcorg</image.namespace>
+        <image.name>${image.namespace}/${project.artifactId}</image.name>
         <exec-maven-plugin.version>3.6.4</exec-maven-plugin.version>
     </properties>
+
+    <profiles>
+        <!-- Builds a module's container image with Paketo buildpacks through
+             the pack CLI after packaging: ./mvnw -Pwith-docker package. A
+             module that has an image declares exec-maven-plugin in its own
+             with-docker profile and sets image.path, image.builder,
+             image.env and image.env.extra (the values of a pack env option). -->
+        <profile>
+            <id>with-docker</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>exec-maven-plugin</artifactId>
+                            <version>${exec-maven-plugin.version}</version>
+                            <executions>
+                                <execution>
+                                    <id>pack-build</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>exec</goal>
+                                    </goals>
+                                    <configuration>
+                                        <executable>pack</executable>
+                                        <arguments>
+                                            <argument>build</argument>
+                                            <argument>${image.name}:${project.version}</argument>
+                                            <argument>--builder</argument>
+                                            <argument>${image.builder}</argument>
+                                            <argument>--path</argument>
+                                            <argument>${image.path}</argument>
+                                            <argument>--env</argument>
+                                            <argument>${image.env}</argument>
+                                            <argument>--env</argument>
+                                            <argument>${image.env.extra}</argument>
+                                            <argument>--tag</argument>
+                                            <argument>${image.name}:latest</argument>
+                                        </arguments>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 </project>

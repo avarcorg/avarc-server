@@ -50,44 +50,19 @@
     </build>
 
     <profiles>
-        <!-- Builds the container image with Paketo buildpacks through the pack
-             CLI after packaging: ./mvnw -Pwith-docker package -->
         <profile>
             <id>with-docker</id>
             <properties>
-                <image.name>${image.namespace}/${project.artifactId}</image.name>
                 <image.builder>paketobuildpacks/builder-noble-java-tiny</image.builder>
+                <image.path>${project.build.directory}/${project.build.finalName}.jar</image.path>
+                <image.env>BP_JVM_VERSION=${java.version}</image.env>
+                <image.env.extra>BP_JVM_TYPE=JRE</image.env.extra>
             </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>${exec-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>pack-build</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>pack</executable>
-                                    <arguments>
-                                        <argument>build</argument>
-                                        <argument>${image.name}:${project.version}</argument>
-                                        <argument>--builder</argument>
-                                        <argument>${image.builder}</argument>
-                                        <argument>--path</argument>
-                                        <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
-                                        <argument>--env</argument>
-                                        <argument>BP_JVM_VERSION=${java.version}</argument>
-                                        <argument>--tag</argument>
-                                        <argument>${image.name}:latest</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>

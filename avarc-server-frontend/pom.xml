@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.avarc</groupId>
+        <artifactId>avarc-server</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>avarc-server-frontend</artifactId>
+    <packaging>pom</packaging>
+    <name>avarc-server-frontend</name>
+    <description>The avarc-server web frontend</description>
+
+    <properties>
+        <!-- Node runs only in this container, never on the build host. -->
+        <node.version>24</node.version>
+        <node.image>node:${node.version}-alpine</node.image>
+        <!-- Host port of the dev server: ./mvnw -pl avarc-server-frontend exec:exec -->
+        <node.dev.port>3000</node.dev.port>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+                <configuration>
+                    <executable>${project.basedir}/docker-node.sh</executable>
+                    <environmentVariables>
+                        <NODE_IMAGE>${node.image}</NODE_IMAGE>
+                    </environmentVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>npm-ci</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>npm</argument>
+                                <argument>ci</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-build</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>npm</argument>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Not bound to a phase: the command line goal exec:exec runs the dev server -->
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <environmentVariables>
+                                <NODE_PORT>${node.dev.port}</NODE_PORT>
+                            </environmentVariables>
+                            <arguments>
+                                <argument>npm</argument>
+                                <argument>run</argument>
+                                <argument>dev</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>.next</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- The image is built from the standalone server that next build
+             wrote, with its static files and the lockfile copied next to it; the Node
+             buildpack starts server.js (package.json has no start script on purpose). See the parent POM for pack. -->
+        <profile>
+            <id>with-docker</id>
+            <properties>
+                <image.builder>paketobuildpacks/ubuntu-noble-builder</image.builder>
+                <image.path>${project.build.directory}/image</image.path>
+                <image.env>BP_NODE_VERSION=${node.version}</image.env>
+                <!-- next build has already run -->
+                <image.env.extra>BP_NODE_RUN_SCRIPTS=</image.env.extra>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>stage-image</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${image.path}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>.next/standalone</directory>
+                                        </resource>
+                                        <resource>
+                                            <directory>.</directory>
+                                            <includes>
+                                                <include>package-lock.json</include>
+                                            </includes>
+                                        </resource>
+                                        <resource>
+                                            <directory>.next/static</directory>
+                                            <targetPath>.next/static</targetPath>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
