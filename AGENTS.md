@@ -42,10 +42,14 @@ running Docker daemon), run from the `with-docker` profile. It is tagged
 `-Dimage.namespace="$IMAGE_NAMESPACE"`.
 
 The service answers `GET /api/hello` and `GET /actuator/health`. Only in the
-dev environment are all actuator endpoints exposed: the Spring profile named
-after the environment is activated with `SPRING_PROFILES_ACTIVE` (the
-`dev` profile is `application-dev.properties`; `spring-boot:run` uses it by
-default). Stage and prod have no profile file and expose `health` only.
+dev and stage environments are all actuator endpoints exposed: the Spring
+profile named after the environment is activated with
+`SPRING_PROFILES_ACTIVE` (`application-dev.properties`,
+`application-stage.properties`; `spring-boot:run` uses `dev` by default).
+Prod has no profile file and exposes `health` only. The Compose project runs
+the backend image (`IMAGE_NAMESPACE`, `BACKEND_VERSION`, see
+`spec/SPEC-deployment.md`), so build it with `-Pwith-docker` before
+`deploy/run.sh up`.
 
 ## Authentication
 
