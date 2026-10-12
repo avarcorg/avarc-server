@@ -45,9 +45,9 @@ What "basic user management" means here, as the yardstick for the options:
 ## Where the Kratos decision stands
 
 Kratos is a headless identity service: it provides the flows and the API,
-and no user interface at all. What exists in the repository is the service,
-its configuration, the ingress routing and `deploy/accounts.sh`. What is
-still open is exactly the part this revisit is about:
+and no user interface at all. Nothing of it is built yet; the repository has
+only the ingress route for `/auth/` to a placeholder service. What would
+have to be built is exactly the part this revisit is about:
 
 - Frontend pages for login, error and, for requirement 5, settings (change
   password) and recovery, each rendered from the flow's JSON nodes, including
@@ -69,7 +69,7 @@ is taken.
 
 ### A. Keep Kratos, administer with scripts
 
-- Advantages: already running in the Compose project; very light (one Go
+- Advantages: the design of the previous decision (AVARC-13); very light (one Go
   process, shares the existing PostgreSQL server); Apache-2.0; plain cookie
   sessions with a simple backend check; scripts can do everything through
   the admin API; no email service needed (admin-created recovery links).
@@ -92,9 +92,9 @@ is taken.
   calling `whoami`.
 - Disadvantages: heavy (a JVM service, typically a few hundred MB of RAM up
   to about 1 GB); a large configuration surface and frequent upgrades; login
-  pages are Keycloak's, not ours, unless themed; replaces the current
-  Kratos integration, so spec, ingress, deployment and diagram change; an
-  OIDC login flow in the frontend instead of Kratos's cookie flow.
+  pages are Keycloak's, not ours, unless themed; replaces the Ory design, so
+  spec, ingress, deployment and diagram change; an OIDC login flow in the
+  frontend instead of Kratos's cookie flow.
 - Effort: realm import, one service, OIDC login in Next.js, token validation
   in the backend, a provisioning script via `kcadm.sh`.
 
@@ -158,7 +158,7 @@ Kratos. Caddy basic auth: no accounts, roles or reset.
 | MCP tokens later | needs Hydra | included | included | included | build |
 | Licence | Apache-2.0 | Apache-2.0 | AGPL-3.0 | permissive | own |
 | Maturity, community | high | highest | medium | low | n/a |
-| Rework of current repo | none | large | large | large | large |
+| Rework of the Ory design | none | large | large | large | large |
 | Security burden on us | low | low | low | low | high |
 
 ## Assessment
@@ -210,7 +210,7 @@ Verified on 2026-10-11 against the upstream repositories.
   production host's capacity remains to be evaluated and is an open question
   in the spec.
 - Nothing of the backend or frontend integration exists yet, so changing the
-  provider costs only the small Kratos deployment.
+  provider costs only the Ory design, which has not been built.
 
 Kratos (A) was the fallback had production turned out too small.
 
@@ -222,6 +222,4 @@ Kratos (A) was the fallback had production turned out too small.
 - [AVARC-13](TASK-ory-auth-design.md) and
   [AVARC-14](TASK-ory-integration.md) are superseded and not carried out
   further.
-- The implementation, including removal of the Kratos service,
-  configuration and script, is
-  [AVARC-20](../TASK-keycloak-integration.md).
+- The implementation is [AVARC-20](../TASK-keycloak-integration.md).

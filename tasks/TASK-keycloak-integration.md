@@ -18,24 +18,21 @@ Implements the decisions of
 
 Deployment (does not need the skeletons):
 
-- Replace the `kratos` and `kratos-init` services of the Compose project
-  with a `keycloak` service and its on-demand `keycloak` database, in
-  production mode (development mode only for the developer deployment).
-  Replace the Kratos secrets in `run.sh` by those Keycloak needs, delivered
-  as files like all secrets (see
+- Add a `keycloak` service and its on-demand `keycloak` database to the
+  Compose project, in production mode (development mode only for the
+  developer deployment). Add the secrets Keycloak needs to `run.sh`,
+  delivered as files like all secrets (see
   [SPEC-deployment.md](../spec/SPEC-deployment.md)).
-- Remove `deploy/kratos.yml`, `deploy/kratos-start.sh` and
-  `deploy/identity.schema.json`.
 - Add the realm import file (roles with their composites, default role,
   client, English and German locales, brute-force protection,
   self-registration and password reset disabled, no secrets in it).
 - Route `/auth/` in `deploy/Caddyfile` to the realm endpoints and resources
-  only, without prefix stripping; never the admin console, the admin API,
+  only, without prefix stripping, replacing the placeholder route; never the admin console, the admin API,
   the `master` realm or the management port. Configure hostname and
   forwarded headers for the public origin.
-- Replace `deploy/accounts.sh` by a provisioning script that creates the
-  admin account and optional editor and viewer accounts through Keycloak's
-  CLI from the environment's secrets file, guards the source line against
+- Add a provisioning script `deploy/accounts.sh` that creates the admin
+  account and optional editor and viewer accounts through Keycloak's admin
+  API from the environment's secrets file, guards the source line against
   inherited `xtrace`, and is safe to repeat.
 - Verify the version of Keycloak and the options named above against its
   documentation at implementation time.
@@ -52,6 +49,6 @@ Application (blocked on [AVARC-3](TASK-backend-skeleton.md) and
 
 Documentation:
 
-- Update the Authentication section of `AGENTS.md` (service, provisioning
-  script, how admins reach the admin console over an SSH tunnel) and the
-  Kratos mention in `README.md`.
+- Add an Authentication section to `AGENTS.md` (service, provisioning
+  script, how admins reach the admin console over an SSH tunnel) and mention
+  the accounts step in `README.md`.
