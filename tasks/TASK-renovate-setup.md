@@ -18,7 +18,7 @@ Spec: [SPEC-dependency-updates.md](../spec/SPEC-dependency-updates.md)
   (commit `3b7b8a9`) with only `config:recommended`. It is a baseline, not
   the final configuration.
 - Adapt `renovate.json` once the backend and frontend architecture is
-  agreed ([AVARC-4](TASK-backend-stack-decision.md),
+  agreed ([AVARC-4](finished/TASK-backend-stack-decision.md),
   [AVARC-7](TASK-frontend-stack-decision.md)): enable the package managers
   of the chosen stacks, group related updates, and set scheduling, rate
   limits and the major/security update policy (the open questions in the

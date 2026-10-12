@@ -39,7 +39,7 @@ What "basic user management" means here, as the yardstick for the options:
    constrain the open [licensing decision](../TASK-licensing-decision.md).
 9. Fits the single-origin ingress and a Next.js frontend; the backend stack
    (Java/Kotlin) is still undecided
-   ([AVARC-4](../TASK-backend-stack-decision.md)).
+   ([AVARC-4](TASK-backend-stack-decision.md)).
 10. The post-MVP MCP server needs token-based access for AI assistants.
 
 ## Where the Kratos decision stands
