@@ -11,7 +11,7 @@ Define the web user interface for browsing and managing locations.
 - Implemented with Next.js.
 - Displays locations, in particular on a map, with their descriptions.
 - Provides forms to create and edit locations for authorized users.
-- Handles login and logout through Ory as defined by
+- Handles login and logout as the OIDC client of Keycloak, as defined by
   [SPEC-auth.md](SPEC-auth.md).
 - Talks to the backend only through its HTTP API.
 

@@ -25,14 +25,18 @@ responsibility live in `spec/SPEC-<area>.md`.
 - **Frontend:** Next.js web application.
 - **Backend:** Java/Kotlin service exposing an API consumed by the frontend.
 - **Web server:** a web server in front of all partial applications
-  (frontend, backend, Ory) is the single entry point for clients. It is
+  (frontend, backend, Keycloak) is the single entry point for clients. It is
   Caddy, serving one host with path prefixes (see the ingress spec).
-- **Identity:** self-hosted Ory handles authentication and authorization;
-  the backend and frontend delegate to it rather than implementing their own.
+- **Identity:** self-hosted Keycloak handles authentication, user
+  management and roles; the backend and frontend delegate to it rather than
+  implementing their own.
+- **Public map server (after the MVP):** a separate read-only server exposes
+  data intended for the public. The application itself requires login (see
+  the auth spec).
 - **MCP server (after the MVP):** an MCP server will be added after the MVP
   so that AI assistants can use the application. It sits behind the web
   server, uses the backend API rather than the database, and authenticates
-  through Ory. It is not part of the MVP and is specified when it is taken
+  through Keycloak. It is not part of the MVP and is specified when it is taken
   up.
 
 The [architecture diagram](spec/architecture-diagram.md) shows these
@@ -48,7 +52,7 @@ components and their connections.
 ## Area specs
 
 - [Locations](spec/SPEC-locations.md): data model for historical locations.
-- [Auth](spec/SPEC-auth.md): authentication and authorization with Ory.
+- [Auth](spec/SPEC-auth.md): authentication, user management and authorization with Keycloak.
 - [Backend](spec/SPEC-backend.md): Java/Kotlin API service.
 - [Frontend](spec/SPEC-frontend.md): Next.js web application.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.
@@ -60,5 +64,4 @@ components and their connections.
 
 ## Open questions
 
-- Who may view, who may edit? (anonymous read vs. login required)
 - Deployment target and environments beyond the developer deployment.

@@ -10,7 +10,7 @@ specs.
 ## Requirements
 
 - The diagram shows the browser, the web server in front of the partial
-  applications, the frontend, the backend, Ory and the database, and the
+  applications, the frontend, the backend, Keycloak and the database, and the
   connections between them. Planned later additions, such as the MCP server,
   are shown and marked as such.
 - Components and decisions that are not yet made are marked as undecided in
@@ -19,7 +19,7 @@ specs.
   in git. A rendered form may be generated from it.
 - It is referenced from the architecture overview in [SPEC.md](../SPEC.md).
 - The diagram is recreated on every major architecture decision (for
-  example choosing the ingress product, the Ory components, the backend
+  example choosing the ingress product, the identity provider, the backend
   stack or the database), in the same change set as the decision. Whenever
   a spec otherwise changes the architecture, the diagram is updated too.
 - A component or decision that becomes decided loses its undecided marking

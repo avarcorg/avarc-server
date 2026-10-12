@@ -4,7 +4,7 @@ Source of truth for the system diagram required by
 [SPEC-architecture-diagram.md](SPEC-architecture-diagram.md). Dashed borders
 mark undecided components; dotted, muted borders mark components planned for
 after the MVP. Dotted arrows are connections whose route is not decided yet
-or that belong to post-MVP components. Each sub-application (frontend, backend, Ory
+or that belong to post-MVP components. Each sub-application (frontend, backend, Keycloak
 setup, ingress) may have its own, more detailed architecture diagram next to
 its code.
 
@@ -17,7 +17,8 @@ flowchart TB
         Ingress["Web server / ingress<br/>Caddy"]
         Frontend["Frontend<br/>Next.js"]
         Backend["Backend API<br/>Java/Kotlin (undecided)"]
-        Ory["Ory<br/>(components undecided)"]
+        Keycloak["Keycloak"]
+        MapServer["Public read-only map server<br/>(post-MVP)"]
         MCP["MCP server<br/>(post-MVP)"]
         DB[("Database<br/>geo-capable (undecided)")]
     end
@@ -25,19 +26,23 @@ flowchart TB
     Browser -- "HTTPS" --> Ingress
     Ingress -- "pages" --> Frontend
     Ingress -- "/api" --> Backend
-    Ingress -- "/auth" --> Ory
+    Ingress -- "/auth (realm endpoints)" --> Keycloak
     Frontend -. "HTTP API" .-> Backend
-    Frontend -. "login/logout flows" .-> Ory
-    Backend -- "validate session/identity" --> Ory
+    Frontend -. "OIDC login/logout" .-> Keycloak
+    Backend -- "signing keys (token validation)" --> Keycloak
     Backend --> DB
+    Anonymous["Anonymous public<br/>(post-MVP)"]
+    Anonymous -. "HTTPS" .-> Ingress
+    Ingress -. "map" .-> MapServer
+    MapServer -. "public data" .-> DB
     AIClient -. "MCP" .-> Ingress
     Ingress -. "MCP" .-> MCP
     MCP -. "API" .-> Backend
-    MCP -. "validate session/identity" .-> Ory
+    MCP -. "validate token" .-> Keycloak
 
     classDef undecided stroke-dasharray: 5 5;
-    class Backend,Ory,DB undecided;
+    class Backend,DB undecided;
 
     classDef postmvp stroke-dasharray: 2 4,fill:#f4f4f4,stroke:#999,color:#666;
-    class AIClient,MCP postmvp;
+    class AIClient,MCP,MapServer,Anonymous postmvp;
 ```

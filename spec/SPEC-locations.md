@@ -33,7 +33,7 @@ Types are logical; the storage mapping is decided with the backend.
 | `tags` | set of tag key | Zero or more tags, see below. |
 | `references` | list of Reference | Zero or more, ordered. |
 | `created_at`, `updated_at` | timestamp (UTC) | Set by the system. |
-| `created_by`, `updated_by` | identity id | The Ory identity of the user, see [SPEC-auth.md](SPEC-auth.md). |
+| `created_by`, `updated_by` | identity id | The Keycloak user id of the user, see [SPEC-auth.md](SPEC-auth.md). |
 
 The UUID is the identity of a location in the API, in exports and in
 imports. A storage layer may add its own numeric surrogate key for
