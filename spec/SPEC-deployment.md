@@ -10,7 +10,7 @@ developers; other environments are specified when needed.
 ## Requirements
 
 - The whole application runs as one Docker Compose project: ingress,
-  frontend, backend, Ory and the database.
+  frontend, backend, Keycloak and the database.
 - It is easy to bring up and to reset to a clean state, with all data local
   to the checkout.
 - Secrets are never committed and never printed.
@@ -50,13 +50,28 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   read-only at `/run/secrets` in the containers that need it. Secrets are
   not passed as environment variables; a start with a missing value fails
   naming it. `run.sh` keeps shell tracing off while it handles values.
+- **Accounts:** the secrets file also holds the credentials of the initial
+  accounts (`ADMIN_EMAIL`, `ADMIN_PASSWORD`, and optionally `EDITOR_*` and
+  `VIEWER_*` pairs). These are read only by `deploy/accounts.sh`, never
+  mounted into containers. The dev secrets file gets an admin account
+  with a random password when it is generated.
 - **Other configuration:** non-secret variables (for example
-  `INGRESS_PORT`) are exported by `run.sh` and referenced in `compose.yaml`.
+  `INGRESS_PORT`, and `PUBLIC_ORIGIN`, the externally visible origin, which
+  defaults to `http://localhost:<ingress port>` for dev and
+  `https://avarc-<environment>` otherwise) are exported by `run.sh` and referenced in `compose.yaml`.
+- **Keycloak admin console:** the `keycloak` service publishes its port on
+  `127.0.0.1` only (8180 dev, 8181 stage, 8182 prod; `KEYCLOAK_ADMIN_PORT`
+  overrides). Admins reach the console of the `avarc` realm at
+  `/auth/admin/avarc/console/` on that port, from outside the host through
+  an SSH tunnel with the same local port number, since the console's
+  address is `localhost:<port>`. The `master` realm administrator is
+  `keycloak-admin` with the secret `KEYCLOAK_ADMIN_PASSWORD`. The ingress
+  does not route any of this.
 - **Database image:** PostGIS, provisionally, until the database choice in
   [SPEC-backend.md](SPEC-backend.md) is made.
 
 ## Open questions
 
-- Backend, frontend and Ory services are added to the project once their
-  skeletons and the Ory design exist; the ingress already routes to them.
+- Backend and frontend services are added to the project once their
+  skeletons exist; the ingress already routes to them.
 - Deployment target and environments beyond the developer deployment.
