@@ -88,12 +88,16 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   release). The Spring profile named after the environment is active
   (`SPRING_PROFILES_ACTIVE`); it has no published port, the ingress reaches
   it by service name.
+- **Frontend service:** runs the image built by the frontend
+  ([SPEC-frontend.md](SPEC-frontend.md)), image
+  `<IMAGE_NAMESPACE>/avarc-server-frontend:<FRONTEND_VERSION>`, versioned
+  like the backend (`FRONTEND_VERSION`); it has no published port, the
+  ingress reaches it as `frontend:3000`.
 - **Database image:** PostGIS, as chosen in
   [SPEC-backend.md](SPEC-backend.md).
 
 ## Open questions
 
-- The frontend service is added to the project once its skeleton exists;
-  the ingress already routes to it. Where the backend image is published
-  for stage and prod is not decided.
+- Where the backend and frontend images are published for stage and prod is
+  not decided.
 - Deployment target and environments beyond the developer deployment.

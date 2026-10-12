@@ -33,6 +33,28 @@ Define the web user interface for browsing and managing locations.
   route; English and German first, further languages without code changes
   to the routing ([SPEC.md](../SPEC.md)).
 
+## Build
+
+Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
+
+- **Module:** `avarc-server-frontend`, a module of the Maven build, which
+  orchestrates installing the dependencies (`npm ci`) and `next build`
+  (which also type-checks) in the `compile` lifecycle. The `package.json`
+  pins exact versions and `package-lock.json` is committed.
+- **No Node on the host:** every Node command runs in a container of the
+  `node.image` Maven property, as the calling user, through
+  `docker-node.sh`. The development server runs the same way. Node and npm
+  are not required on the build server or the developer machine.
+- **Image:** with the `with-docker` profile, Paketo buildpacks through the
+  `pack` CLI package the standalone server that `next build` wrote (with its
+  static files copied next to it) into
+  `<image.namespace>/avarc-server-frontend:<version>` (and `latest`),
+  listening on port 3000. The `pack` invocation and the `image.namespace`
+  and `image.name` properties are shared with the other modules through the
+  parent POM.
+- **Scope so far:** the skeleton renders a greeting only; the map and the
+  other decisions above are applied as the pages are built.
+
 ## Open questions
 
 - The concrete tile provider.
