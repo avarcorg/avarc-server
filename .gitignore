@@ -41,3 +41,6 @@ secrets*.sh
 # Developer deployment: local data (secrets.sh is covered above)
 /deploy/data/
 /deploy/docker-compose.yml
+
+# Maven build output
+target/
