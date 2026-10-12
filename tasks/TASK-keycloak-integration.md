@@ -37,7 +37,7 @@ Deployment (does not need the skeletons):
 - Verify the version of Keycloak and the options named above against its
   documentation at implementation time.
 
-Application (blocked on [AVARC-3](TASK-backend-skeleton.md) and
+Application (blocked on [AVARC-3](finished/TASK-backend-skeleton.md) and
 [AVARC-6](TASK-frontend-skeleton.md)):
 
 - Backend: validate the access token locally, map the realm roles to

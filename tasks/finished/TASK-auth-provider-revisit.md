@@ -58,7 +58,7 @@ have to be built is exactly the part this revisit is about:
 - Token access for the MCP server would need another Ory component (Hydra).
 
 Everything backend- and frontend-side is blocked on the skeletons
-([AVARC-3](../TASK-backend-skeleton.md), [AVARC-6](../TASK-frontend-skeleton.md)),
+([AVARC-3](TASK-backend-skeleton.md), [AVARC-6](../TASK-frontend-skeleton.md)),
 so deciding now costs no integration work.
 
 ## Options
