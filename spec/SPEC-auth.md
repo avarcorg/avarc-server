@@ -87,10 +87,9 @@ Apache-2.0 licensed.
   - Only the realm endpoints and static resources of the `avarc` realm are
     routed (login, token, keys, logout, account console). The admin console,
     the admin REST API, the `master` realm and the management and health
-    port are never routed; admins reach the console over an SSH tunnel to a
-    port published on `127.0.0.1` only (see
-    [SPEC-deployment.md](SPEC-deployment.md)). Routing the console to admins on a
-    restricted address is a possible later change.
+    port are never routed by the ingress; admins reach the console on the
+    tailnet under a name of its own (see
+    [SPEC-deployment.md](SPEC-deployment.md)).
   - Keycloak is served under `/auth` without prefix stripping and is
     configured with the public origin as its hostname, trusting the
     forwarded headers of the ingress.

@@ -57,16 +57,20 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   with a random password when it is generated.
 - **Other configuration:** non-secret variables (for example
   `INGRESS_PORT`, and `PUBLIC_ORIGIN`, the externally visible origin, which
-  defaults to `http://localhost:<ingress port>` for dev and
-  `https://avarc-<environment>` otherwise) are exported by `run.sh` and referenced in `compose.yaml`.
-- **Keycloak admin console:** the `keycloak` service publishes its port on
-  `127.0.0.1` only (8180 dev, 8181 stage, 8182 prod; `KEYCLOAK_ADMIN_PORT`
-  overrides). Admins reach the console of the `avarc` realm at
-  `/auth/admin/avarc/console/` on that port, from outside the host through
-  an SSH tunnel with the same local port number, since the console's
-  address is `localhost:<port>`. The `master` realm administrator is
-  `keycloak-admin` with the secret `KEYCLOAK_ADMIN_PASSWORD`. The ingress
-  does not route any of this.
+  defaults to `https://avarc-<environment>.<tailnet domain>`, the domain being
+  that of the tailnet the host is in, and without a tailnet to
+  `http://localhost:<ingress port>` for dev) are exported by `run.sh` and referenced in `compose.yaml`.
+- **Keycloak admin console:** the `keycloak` service carries docktail labels
+  that expose it on the tailnet as `avarc-<environment>-kc` on port 443,
+  where docktail terminates TLS. Admins reach the console of the `avarc`
+  realm at
+  `https://avarc-<environment>-kc.<tailnet domain>/auth/admin/avarc/console/`
+  (`KEYCLOAK_ADMIN_ORIGIN` overrides the address). The `master` realm
+  administrator is `keycloak-admin` with the secret
+  `KEYCLOAK_ADMIN_PASSWORD`. The ingress does not route any of this. The
+  service also publishes its port on `127.0.0.1` only (8180 dev, 8181
+  stage, 8182 prod; `KEYCLOAK_ADMIN_PORT` overrides), which
+  `deploy/accounts.sh` uses.
 - **Database image:** PostGIS, provisionally, until the database choice in
   [SPEC-backend.md](SPEC-backend.md) is made.
 

@@ -35,6 +35,12 @@ Decided in [AVARC-8](../tasks/finished/TASK-ingress-decision.md).
   non-public request, as required by [SPEC-auth.md](SPEC-auth.md). This
   keeps a single enforcement point. AVARC-13 confirmed this.
 
+- **Forwarded headers:** TLS is terminated before the ingress (see
+  [SPEC-deployment.md](SPEC-deployment.md)), so the ingress trusts the
+  forwarded headers of private-range hops and passes them on unchanged;
+  the upstreams see the original scheme and host, which Keycloak needs for
+  secure cookies.
+
 ## Open questions
 
 - Caching, compression and rate limiting.
