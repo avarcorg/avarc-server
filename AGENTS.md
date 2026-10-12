@@ -44,6 +44,12 @@ own account. The ingress does not route the console. A change of `deploy/keycloa
 not reach an existing realm (Keycloak imports only when the realm is absent);
 apply it in the console, or on dev with `deploy/run.sh reset`.
 
+## Releases
+
+A release is a `vMAJOR.MINOR.PATCH` tag on `main` (spec:
+`spec/SPEC-releases.md`). Create it with `tools/release.sh <version>`; add
+`--push` to push the tag too.
+
 ## Where things do NOT go
 
 Ad-hoc help requests (e.g. "help me ...") and decisions about how to work

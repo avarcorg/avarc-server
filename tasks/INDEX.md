@@ -31,4 +31,4 @@ files. Do not edit by hand. See
 | AVARC-23 | [Frontend observability](TASK-observability-frontend.md) | task | open | normal | frontend | AVARC-21, AVARC-6 |
 | AVARC-24 | [Ingress and database observability](TASK-observability-ingress-database.md) | task | open | normal | ingress | AVARC-21 |
 | AVARC-25 | [Identity provider observability](TASK-observability-identity.md) | task | open | normal | auth | AVARC-21, AVARC-20 |
-| AVARC-26 | [Release tagging](TASK-release-tagging.md) | task | open | normal | project |  |
+| AVARC-26 | [Release tagging](finished/TASK-release-tagging.md) | task | finished | normal | project |  |

@@ -1,7 +1,7 @@
 ---
 id: AVARC-26
 type: task
-status: open
+status: finished
 priority: normal
 area: project
 created: 2026-10-12
@@ -9,8 +9,7 @@ created: 2026-10-12
 
 # TASK: Release tagging
 
-Spec: `spec/SPEC-releases.md` (to be created, linked from
-[SPEC.md](../SPEC.md))
+Spec: [SPEC-releases.md](../../spec/SPEC-releases.md)
 
 Mark named releases in the source tree with git tags, so that stage and
 production run a known, reproducible version instead of whatever is checked
@@ -23,8 +22,9 @@ out.
   history since the previous tag).
 - Decide how a tag selects what a host runs: the checkout `deploy.sh` is run
   from, and the image versions of the Compose project. Stage follows tags
-  too ([AVARC-27](TASK-stage-deployment.md)).
+  too ([AVARC-27](../TASK-stage-deployment.md)).
 - Provide a small script in `tools/` that creates a release (checks the
   working tree and branch, creates the tag, optionally pushes it), and
   document the procedure in the specification.
-- Create the first release tag once the procedure exists.
+- Name the first release (`0.1.0`, in the specification); it is created
+  with the script once the history is final.
