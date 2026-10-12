@@ -59,16 +59,29 @@ case "${ENVIRONMENT}" in
     prod)  DEFAULT_PORT=8082; SECRETS_FILE=${P}/secrets.sh ;;
 esac
 export INGRESS_PORT=${INGRESS_PORT:-${DEFAULT_PORT}}
-case "${ENVIRONMENT}" in
-    dev) export PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-http://localhost:${INGRESS_PORT}} ;;
-    *)   export PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://${NAME}} ;;
-esac
-# The loopback port of the Keycloak admin console (reached by an SSH tunnel).
+# The tailnet's domain, under which docktail serves the names with a
+# certificate; empty if it cannot be determined.
+TAILNET_DOMAIN=$(tailscale status --json 2>/dev/null | jq -r '.MagicDNSSuffix // empty' 2>/dev/null || true)
+# Keycloak's admin console, served under another name, takes its realm
+# addresses from this origin, so a browser on the tailnet must be able to
+# reach it. Only without a tailnet does dev fall back to localhost.
+if [ -n "${TAILNET_DOMAIN}" ]
+then
+    export PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://${NAME}.${TAILNET_DOMAIN}}
+elif [ "${ENVIRONMENT}" = "dev" ]
+then
+    export PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-http://localhost:${INGRESS_PORT}}
+else
+    export PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://${NAME}}
+fi
+# The loopback port of Keycloak (used by accounts.sh), and the address of its
+# admin console, which docktail serves on the tailnet as ${NAME}-kc.
 case "${ENVIRONMENT}" in
     dev) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8180} ;;
     stage) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8181} ;;
     prod) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8182} ;;
 esac
+export KEYCLOAK_ADMIN_ORIGIN=${KEYCLOAK_ADMIN_ORIGIN:-https://${NAME}-kc${TAILNET_DOMAIN:+.${TAILNET_DOMAIN}}}
 export RUN_UID=$(id -u)
 export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-/dev/shm/${NAME}-secrets}
 

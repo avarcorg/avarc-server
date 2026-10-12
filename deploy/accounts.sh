@@ -9,8 +9,8 @@
 # EDITOR_PASSWORD and VIEWER_EMAIL / VIEWER_PASSWORD, plus the
 # KEYCLOAK_ADMIN_PASSWORD that run.sh also needs. Accounts are created in
 # the avarc realm; the email is the user name, and the role is a realm role.
-# Needs curl, jq and a running project. It talks to the admin console port
-# on the loopback interface; the passwords reach Keycloak in request bodies
+# Needs curl, jq and a running project. It talks to Keycloak's port on the
+# loopback interface; the passwords reach Keycloak in request bodies
 # and never on a command line. See spec/SPEC-auth.md.
 set -e
 
@@ -49,7 +49,7 @@ set +x
 
 REALM=avarc
 
-# The admin console port, published on the loopback interface only.
+# Keycloak's port, published on the loopback interface only.
 ADMIN_PORT=$(docker compose -p "avarc-${ENVIRONMENT}" port keycloak 8080 | sed 's/.*://')
 BASE=http://127.0.0.1:${ADMIN_PORT}/auth
 

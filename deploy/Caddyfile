@@ -1,6 +1,11 @@
 # One host, path prefixes. See spec/SPEC-ingress.md.
 {
 	auto_https off
+	# TLS is terminated before the ingress (see spec/SPEC-deployment.md); trust
+	# the forwarded headers of that hop so that the upstreams see https.
+	servers {
+		trusted_proxies static private_ranges
+	}
 }
 
 :80 {
