@@ -37,10 +37,10 @@ The credentials come from the environment's secrets file (`ADMIN_EMAIL`,
 `ADMIN_PASSWORD`, optionally `EDITOR_*` and `VIEWER_*`); the dev file gets
 `admin@avarc.invalid` with a random password when it is generated. Admins
 manage users, roles and passwords in the console of the `avarc` realm at
-`http://localhost:<port>/auth/admin/avarc/console/` (ports in
-`spec/SPEC-deployment.md`), signing in with their own account. The ingress
-does not route the console. From outside the host, use an SSH tunnel with the
-same local port number. A change of `deploy/keycloak/avarc-realm.json` does
+`https://avarc-<environment>-kc.<tailnet domain>/auth/admin/avarc/console/`
+on the tailnet
+(served by docktail, see `spec/SPEC-deployment.md`), signing in with their
+own account. The ingress does not route the console. A change of `deploy/keycloak/avarc-realm.json` does
 not reach an existing realm (Keycloak imports only when the realm is absent);
 apply it in the console, or on dev with `deploy/run.sh reset`.
 
