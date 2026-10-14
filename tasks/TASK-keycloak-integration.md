@@ -40,12 +40,16 @@ Deployment (does not need the skeletons):
 Application (blocked on [AVARC-3](finished/TASK-backend-skeleton.md) and
 [AVARC-6](finished/TASK-frontend-skeleton.md)):
 
-- Backend: validate the access token locally, map the realm roles to
-  permissions, answer 401/403; only the health endpoint is public.
-- Frontend: OIDC login and logout against Keycloak, and show or hide editing
+- Backend: login and logout as the OIDC client, with a session
+  ([AVARC-29](TASK-backend-login.md)); map the realm roles to permissions,
+  answer 401/403; only the health endpoint and the login endpoints are
+  public. Validating bearer tokens of API clients is left to the task that
+  needs it.
+- Frontend: login and logout pages
+  ([AVARC-30](TASK-frontend-login.md)), and showing or hiding editing
   controls based on the role reported by the backend.
-- Decide the open question of the spec: how browser calls to `/api/` carry
-  the token.
+- The open question of the spec, how browser calls to `/api/` carry the
+  token, is decided: they carry the backend's session cookie.
 
 Documentation:
 
