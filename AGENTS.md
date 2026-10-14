@@ -43,7 +43,8 @@ running Docker daemon), run from the `with-docker` profile. It is tagged
 8080. Override the `avarcorg` namespace with `-Dimage.namespace=<name>`, e.g.
 `-Dimage.namespace="$IMAGE_NAMESPACE"`.
 
-The service answers `GET /api/hello` and `GET /actuator/health`. Only in the
+The service answers `GET /actuator/health`; everything else, such as
+`GET /api/hello`, needs a login (see Authentication). Only in the
 dev and stage environments are all actuator endpoints exposed: the Spring
 profile named after the environment is activated with
 `SPRING_PROFILES_ACTIVE` (`application-dev.properties`,
@@ -96,6 +97,13 @@ on the tailnet
 own account. The ingress does not route the console. A change of `deploy/keycloak/avarc-realm.json` does
 not reach an existing realm (Keycloak imports only when the realm is absent);
 apply it in the console, or on dev with `deploy/run.sh reset`.
+
+Users log in and out through the backend, which is the OIDC client of
+Keycloak and keeps the session in a cookie: the frontend pages `/login` and
+`/logged-out` link to `/api/auth/login/keycloak` and post to
+`/api/auth/logout`, and `GET /api/auth/me` reports the logged-in user. On
+the developer deployment the origin is the one `run.sh` prints in
+`PUBLIC_ORIGIN`, not necessarily `localhost`; a login only works through it.
 
 ## Releases
 

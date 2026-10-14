@@ -41,12 +41,12 @@ Application (blocked on [AVARC-3](finished/TASK-backend-skeleton.md) and
 [AVARC-6](finished/TASK-frontend-skeleton.md)):
 
 - Backend: login and logout as the OIDC client, with a session
-  ([AVARC-29](TASK-backend-login.md)); map the realm roles to permissions,
+  ([AVARC-29](finished/TASK-backend-login.md)); map the realm roles to permissions,
   answer 401/403; only the health endpoint and the login endpoints are
   public. Validating bearer tokens of API clients is left to the task that
   needs it.
 - Frontend: login and logout pages
-  ([AVARC-30](TASK-frontend-login.md)), and showing or hiding editing
+  ([AVARC-30](finished/TASK-frontend-login.md)), and showing or hiding editing
   controls based on the role reported by the backend.
 - The open question of the spec, how browser calls to `/api/` carry the
   token, is decided: they carry the backend's session cookie.
@@ -69,5 +69,9 @@ Findings for the application part: the token lists only explicitly granted
 roles, so no role means `viewer`; the audience `avarc-api` is set by a
 mapper of the client `avarc-web`; the user profile makes first and last name
 optional, otherwise accounts without them cannot log in. Stage and prod
-(https origin) are not yet exercised. Open: backend token validation,
-frontend login and logout, and the token-relay question of the spec.
+(https origin) are not yet exercised. Login and logout through the backend are done
+([AVARC-29](finished/TASK-backend-login.md),
+[AVARC-30](finished/TASK-frontend-login.md)), which also settles the
+token-relay question of the spec: browser calls carry the session cookie.
+Open: role-based permissions on the API and the editing controls, and
+bearer-token validation for clients without a browser.

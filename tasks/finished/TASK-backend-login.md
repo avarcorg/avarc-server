@@ -1,7 +1,7 @@
 ---
 id: AVARC-29
 type: task
-status: open
+status: finished
 priority: high
 area: auth
 depends-on: [AVARC-20, AVARC-3]
@@ -10,10 +10,10 @@ created: 2026-10-14
 
 # TASK: Backend login and logout
 
-Spec: [SPEC-auth.md](../spec/SPEC-auth.md) (Login and logout),
-[SPEC-backend.md](../spec/SPEC-backend.md)
+Spec: [SPEC-auth.md](../../spec/SPEC-auth.md) (Login and logout),
+[SPEC-backend.md](../../spec/SPEC-backend.md)
 
-Part of the application work of [AVARC-20](TASK-keycloak-integration.md);
+Part of the application work of [AVARC-20](../TASK-keycloak-integration.md);
 followed by [AVARC-30](TASK-frontend-login.md), the pages that use it. The
 frontend talks to the backend, and only the backend talks to Keycloak.
 
@@ -40,3 +40,15 @@ frontend talks to the backend, and only the backend talks to Keycloak.
 Log in as the accounts of `deploy/create-admin-user.sh` on the developer
 deployment, with `curl` through the ingress, and check the user report and
 the logout.
+
+## Result
+
+Verified with `curl` through the ingress of the developer deployment (the
+origin is the tailnet name in `PUBLIC_ORIGIN`, since the session cookie
+belongs to it): `/api/hello` and `/api/auth/me` answer 401 without a
+session, the login ends at `/`, `/api/auth/me` reports the admin account
+with the roles `viewer`, `editor` and `admin`, a logout without the CSRF
+token answers 403, and the logout ends at `/logged-out`, after which
+`/api/auth/me` answers 401 again. The roles are read from the access token
+of the code exchange; the secret is mounted into the backend as a single
+file.

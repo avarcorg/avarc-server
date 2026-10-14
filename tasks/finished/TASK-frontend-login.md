@@ -1,7 +1,7 @@
 ---
 id: AVARC-30
 type: task
-status: open
+status: finished
 priority: high
 area: frontend
 depends-on: [AVARC-29, AVARC-6]
@@ -10,11 +10,11 @@ created: 2026-10-14
 
 # TASK: Frontend login and logout pages
 
-Spec: [SPEC-auth.md](../spec/SPEC-auth.md) (Login and logout),
-[SPEC-frontend.md](../spec/SPEC-frontend.md)
+Spec: [SPEC-auth.md](../../spec/SPEC-auth.md) (Login and logout),
+[SPEC-frontend.md](../../spec/SPEC-frontend.md)
 
 Follows [AVARC-29](TASK-backend-login.md); part of the application work of
-[AVARC-20](TASK-keycloak-integration.md).
+[AVARC-20](../TASK-keycloak-integration.md).
 
 - Page `/login`: a short explanation and one sign-in link to the backend's
   login endpoint. It shows a message when the login failed. The password
@@ -34,3 +34,10 @@ Follows [AVARC-29](TASK-backend-login.md); part of the application work of
 Through the ingress of the developer deployment: `/` redirects to `/login`,
 signing in returns to `/` with the user shown, the logout button ends up on
 `/logged-out`, and `/` redirects to `/login` again.
+
+## Result
+
+Verified through the ingress of the developer deployment: `/` redirects to
+`/login`, the sign-in link leads to Keycloak's form, the login returns to `/`
+showing the account and its roles, and the logout button ends up on
+`/logged-out`.
