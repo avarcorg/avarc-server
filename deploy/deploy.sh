@@ -55,7 +55,9 @@ chmod 0755 ${D}/keycloak
 
 copy ${P}/systemd/${NAME}.service /etc/systemd/system/${NAME}.service 0644
 copy ${P}/run.sh ${D}/run.sh 0755
-copy ${P}/accounts.sh ${D}/accounts.sh 0755
+copy ${P}/keycloak-lib.sh ${D}/keycloak-lib.sh 0644
+copy ${P}/create-admin-user.sh ${D}/create-admin-user.sh 0755
+copy ${P}/create-user.sh ${D}/create-user.sh 0755
 copy ${P}/docker-compose.template ${D}/docker-compose.template 0644
 copy ${P}/Caddyfile ${D}/Caddyfile 0644
 copy ${P}/keycloak-start.sh ${D}/keycloak-start.sh 0755

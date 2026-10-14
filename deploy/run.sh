@@ -78,7 +78,7 @@ then
 else
     export PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-https://${NAME}}
 fi
-# The loopback port of Keycloak (used by accounts.sh), and the address of its
+# The loopback port of Keycloak (used by the account scripts), and the address of its
 # admin console, which docktail serves on the tailnet as ${NAME}-kc.
 case "${ENVIRONMENT}" in
     dev) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8180} ;;
