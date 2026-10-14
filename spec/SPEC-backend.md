@@ -22,8 +22,9 @@ Define the API service that stores and serves locations.
 ## Decisions
 
 - **Language, framework, build:** Java with Spring Boot and Maven. Spring
-  Security's OAuth2 resource server validates the Keycloak access tokens
-  ([SPEC-auth.md](SPEC-auth.md)).
+  Security's OAuth2 client logs users in at Keycloak and keeps the session
+  ([SPEC-auth.md](SPEC-auth.md)); the OAuth2 resource server for bearer
+  tokens is added when a client needs it.
 - **Architecture:** a monolithic application built with Spring Modulith:
   one deployable Spring Boot service holds the whole API and its business
   logic, structured into application modules whose boundaries Spring

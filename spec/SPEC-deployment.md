@@ -87,12 +87,16 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   overrides both (set `BACKEND_VERSION` to a release version to run a
   release). The Spring profile named after the environment is active
   (`SPRING_PROFILES_ACTIVE`); it has no published port, the ingress reaches
-  it by service name.
+  it by service name. It gets `PUBLIC_ORIGIN` and, mounted as a file, only
+  the secret `KEYCLOAK_CLIENT_SECRET` (not the whole secrets directory);
+  `KEYCLOAK_INTERNAL_URL` (default `http://keycloak:8080/auth/realms/avarc`)
+  overrides the address at which it reaches Keycloak.
 - **Frontend service:** runs the image built by the frontend
   ([SPEC-frontend.md](SPEC-frontend.md)), image
   `<IMAGE_NAMESPACE>/avarc-server-frontend:<FRONTEND_VERSION>`, versioned
   like the backend (`FRONTEND_VERSION`); it has no published port, the
-  ingress reaches it as `frontend:3000`.
+  ingress reaches it as `frontend:3000`. `BACKEND_URL` (`http://backend:8080`)
+  is the address at which its server side reaches the backend.
 - **Database image:** PostGIS, as chosen in
   [SPEC-backend.md](SPEC-backend.md).
 

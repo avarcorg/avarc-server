@@ -12,8 +12,8 @@ Define how users are identified and what they are allowed to do.
   self-hosted Keycloak.
 - The application does not store passwords, implement its own login flow or
   build its own user administration.
-- The backend authenticates every request that is not explicitly public by
-  validating the token issued via Keycloak.
+- The backend authenticates every request that is not explicitly public,
+  through the session established by a login at Keycloak.
 - Authorization distinguishes at least viewing and editing locations; the
   roles are defined here.
 - The first public version has basic user management: an admin can create
@@ -33,14 +33,15 @@ Apache-2.0 licensed.
   logout, account (change password) and admin screens, so none of them are
   built in this project.
 - **Protocol and session model:** OpenID Connect, authorization code flow
-  with PKCE. The frontend's server side is the OIDC client; the browser
-  holds only the frontend's HttpOnly session cookie, never a token in
-  scripts. The backend receives the user's access token and validates it
-  locally (signature through the realm's published keys, issuer, audience,
-  expiry); it does not call Keycloak per request. The token carries the
-  explicitly granted roles only, so a user without any is a `viewer`. The single origin served
-  by the ingress (see [SPEC-ingress.md](SPEC-ingress.md)) keeps CORS out of
-  the picture.
+  with PKCE. The backend is the OIDC client (the confidential client
+  `avarc-web`) and the only component that talks to Keycloak; the frontend
+  talks to the backend. The backend keeps the tokens in a server-side
+  session; the browser holds only the backend's HttpOnly session cookie,
+  never a token. The access token carries the explicitly granted roles
+  only, so a user without any is a `viewer`. The single origin served by
+  the ingress (see [SPEC-ingress.md](SPEC-ingress.md)) keeps CORS out of
+  the picture. Validating bearer access tokens, for clients without a
+  browser such as the MCP server, is added when such a client is taken up.
 - **Access policy:** login is required for everything; there is no anonymous
   access to the application or its API. Public exposure of data is the job
   of a separate read-only map server (post-MVP, see below), not of an
@@ -52,6 +53,32 @@ Apache-2.0 licensed.
   - `admin`: additionally manage users and grant and revoke roles.
   - Every authenticated user is implicitly a `viewer`. Editor and admin are
     explicit grants.
+- **Login and logout:** the pages `/login` and `/logged-out` belong to the
+  frontend ([SPEC-frontend.md](SPEC-frontend.md)); the password form is
+  Keycloak's. The backend offers, under `/api/auth/`:
+  - `GET /api/auth/login/keycloak` starts the login: a redirect to the realm's
+    authorization endpoint with PKCE. `GET /api/auth/callback` receives the
+    code, exchanges it with the client secret, creates the session and
+    redirects to `/`. A failed login redirects to `/login?error`.
+  - `POST /api/auth/logout` ends the session and redirects to Keycloak's
+    end-session endpoint, which returns to `/logged-out`. It requires the
+    CSRF token.
+  - `GET /api/auth/me` answers `200` with `username`, `name`, `email`,
+    `roles` and `csrfToken` of the logged-in user, or `401`.
+  - Every other request without a session, `/api/` included, answers `401`;
+    only these login endpoints and the health endpoint are public. The
+    development and stage actuator endpoints stay as in
+    [SPEC-backend.md](SPEC-backend.md).
+  - The backend reaches Keycloak by its internal address for the token and
+    key requests, and sends the browser to the public one
+    (`<public origin>/auth/realms/avarc`); the issuer of the tokens is the
+    public one. It reads the realm's endpoints from its configuration, not
+    by discovery, so it starts without Keycloak. The client secret is a
+    file secret.
+  - The session cookie is HttpOnly, `Secure` (except on the plain-http
+    developer origin) and `SameSite=Lax`; the session expires after 30
+    minutes without use and is kept in memory, so a restart of the backend
+    logs everyone out.
 - **Role storage:** the roles are Keycloak realm roles, with the inclusion
   above modelled as composite roles and `viewer` as the realm's default
   role. The token carries them and the backend maps them to permissions in
@@ -117,8 +144,4 @@ component is expected. The details are specified when it is taken up.
 ## Open questions
 
 - Which locations are public for the read-only map server.
-- Whether browser calls to `/api/` carry the access token themselves or go
-  through the frontend's server side, which relays it; decided with the
-  integration ([AVARC-20](../tasks/TASK-keycloak-integration.md)) once the
-  backend and frontend stacks are chosen.
 - The capacity of the production host for Keycloak.

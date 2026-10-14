@@ -11,16 +11,20 @@ Define the web user interface for browsing and managing locations.
 - Implemented with Next.js and TypeScript.
 - Displays locations, in particular on a map, with their descriptions.
 - Provides forms to create and edit locations for authorized users.
-- Handles login and logout as the OIDC client of Keycloak, as defined by
+- Provides the login and logout pages and shows the logged-in user; the
+  login itself is done by the backend, as defined by
   [SPEC-auth.md](SPEC-auth.md).
 - Talks to the backend only through its HTTP API.
 
 ## Decisions
 
 - **Framework:** Next.js with TypeScript, using the App Router and
-  server-side rendering. The server side is needed because it is the OIDC
-  client and holds the session ([SPEC-auth.md](SPEC-auth.md)); the frontend
-  is therefore not a static export.
+  server-side rendering. The server side is needed because pages ask the
+  backend for the current user, forwarding the session cookie
+  (`BACKEND_URL`, the backend's internal address), and redirect visitors
+  without a session to `/login`; the frontend is therefore not a static
+  export. The pages `/login` and `/logged-out` are public; everything else
+  requires a session ([SPEC-auth.md](SPEC-auth.md)).
 - **Map:** Leaflet through react-leaflet, with markers for `point`
   positions. Further position kinds ([SPEC-locations.md](SPEC-locations.md))
   are drawn as they are added.
