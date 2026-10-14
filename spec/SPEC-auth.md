@@ -75,7 +75,11 @@ Apache-2.0 licensed.
   that must be changed at the next login). The initial admin account, and
   optionally editor and viewer accounts of an environment, are created by a
   provisioning script in `deploy/` from credentials in the environment's
-  secrets file; it skips accounts that already exist. The backend has no
+  secrets file; it skips accounts that already exist. Further users are
+  created by a second script, which takes email addresses and makes them
+  editors, or admins with an option; each gets a random one-time password
+  that must be changed at the first login, or, with an option, a password
+  read per user that stays valid. The backend has no
   user-management endpoints.
 - **Account policies:** self-registration, "forgot password" and email
   verification are disabled because there is no email service in the MVP;

@@ -24,7 +24,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   and `systemd/avarc-prod.service`, each running as its own user and group from that
   user's home directory (`/home/avarc-<environment>`). On the host,
   `deploy/deploy.sh stage|prod` (root only) installs them from a checkout:
-  it copies the unit to `/etc/systemd/system` and `run.sh`, `accounts.sh`,
+  it copies the unit to `/etc/systemd/system` and `run.sh`, the account scripts,
   the template, the `Caddyfile`, `keycloak-start.sh` and the realm import
   together into the home directory, then reloads systemd. It never starts
   the service and never touches data or secrets. It records the version of
@@ -60,7 +60,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   naming it. `run.sh` keeps shell tracing off while it handles values.
 - **Accounts:** the secrets file also holds the credentials of the initial
   accounts (`ADMIN_EMAIL`, `ADMIN_PASSWORD`, and optionally `EDITOR_*` and
-  `VIEWER_*` pairs). These are read only by `deploy/accounts.sh`, never
+  `VIEWER_*` pairs). These are read only by `deploy/create-admin-user.sh`, never
   mounted into containers. The dev secrets file gets an admin account
   with a random password when it is generated.
 - **Other configuration:** non-secret variables (for example
@@ -78,7 +78,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `KEYCLOAK_ADMIN_PASSWORD`. The ingress does not route any of this. The
   service also publishes its port on `127.0.0.1` only (8180 dev, 8181
   stage, 8182 prod; `KEYCLOAK_ADMIN_PORT` overrides), which
-  `deploy/accounts.sh` uses.
+  the account scripts use.
 - **Backend service:** runs the image built by the backend
   ([SPEC-backend.md](SPEC-backend.md)), image
   `<IMAGE_NAMESPACE>/avarc-server-backend:<BACKEND_VERSION>`. `run.sh`
