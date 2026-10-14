@@ -15,7 +15,7 @@ Requires Docker with Compose and `envsubst`.
     sudo deploy/deploy.sh stage  # on the host: install the files and the
                            # systemd unit into /home/avarc-stage (or prod)
 
-After the first start, run `deploy/accounts.sh` (`--stage` for stage) to
+After the first start, run `deploy/create-admin-user.sh` (`--stage` for stage) to
 create the login accounts; see `AGENTS.md`.
 
 Dev secrets are generated on the first start; stage and prod need their

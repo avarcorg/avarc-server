@@ -37,7 +37,7 @@ database):
   and the public origin and the admin console address derived from the
   tailnet domain must serve the application (`avarc-stage`) and the Keycloak
   console (`avarc-stage-kc`).
-- Run `deploy/accounts.sh --stage` for the first accounts and sign in at the
+- Run `deploy/create-admin-user.sh --stage` for the first accounts and sign in at the
   console to confirm.
 - Verify the ingress rules on the real addresses: realm endpoints answer,
   everything else under `/auth/` does not.

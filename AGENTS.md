@@ -76,7 +76,13 @@ Keycloak runs as the `keycloak` service of the Compose project (spec:
 the accounts of an environment, the initial admin included, after the project
 is up; it is safe to repeat (needs `curl` and `jq`):
 
-    deploy/accounts.sh [--stage]      # SECRETS=prod for prod
+    deploy/create-admin-user.sh [--stage]      # SECRETS=prod for prod
+
+Further users are created with `deploy/create-user.sh [--stage] [--admin]
+EMAIL...` (same `SECRETS`): editors, or admins with `--admin`. It prints a
+random one-time password per new user, to be changed at the first login;
+with `--permanent` it reads a password per user instead (hidden prompt, or
+one line per user on stdin), which stays valid.
 
 The credentials come from the environment's secrets file (`ADMIN_EMAIL`,
 `ADMIN_PASSWORD`, optionally `EDITOR_*` and `VIEWER_*`); the dev file gets
