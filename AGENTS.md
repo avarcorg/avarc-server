@@ -12,7 +12,9 @@ locations and descriptions.
 ## Tasks
 
 - Tasks live in `tasks/`, one file per task, named `TASK-<slug>.md`.
-- Tasks are committed to git.
+- Tasks are committed to git, including finished ones, which stay in
+  history until a better place is found. This overrides any general rule
+  against committing task files, and applies to this repository only.
 - Work items carry front matter (`id`, `type`, `status`, ...) and are
   tracked in `tasks/INDEX.md`, as defined in `spec/SPEC-work-tracking.md`.
   Refer to items by ID (`AVARC-<n>`) in commit messages. After editing
