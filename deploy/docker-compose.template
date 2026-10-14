@@ -25,10 +25,16 @@ services:
     image: ${IMAGE_NAMESPACE}/avarc-server-backend:${BACKEND_VERSION}
     environment:
       - SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
+      - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
+    # Only the client secret, not the other secrets.
+    volumes:
+      - ${SECRETS_RUN_DIR}/KEYCLOAK_CLIENT_SECRET:/run/secrets/KEYCLOAK_CLIENT_SECRET:ro
     restart: unless-stopped
 
   frontend:
     image: ${IMAGE_NAMESPACE}/avarc-server-frontend:${FRONTEND_VERSION}
+    environment:
+      - BACKEND_URL=http://backend:8080
     restart: unless-stopped
 
   # Creates Keycloak's own database in the database server, once.

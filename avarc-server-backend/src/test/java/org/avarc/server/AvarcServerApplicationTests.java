@@ -1,5 +1,6 @@
 package org.avarc.server;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -20,9 +21,14 @@ class AvarcServerApplicationTests {
 
     @Test
     void helloReturnsGreeting() throws Exception {
-        mockMvc.perform(get("/api/hello"))
+        mockMvc.perform(get("/api/hello").with(oidcLogin()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello, avarc!"));
+    }
+
+    @Test
+    void helloNeedsALogin() throws Exception {
+        mockMvc.perform(get("/api/hello")).andExpect(status().isUnauthorized());
     }
 
     @Test
