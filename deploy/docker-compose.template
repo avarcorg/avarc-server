@@ -39,6 +39,7 @@ services:
       - BACKEND_URL=http://backend:8080
       - FOOTER_API_DOCS=${FOOTER_API_DOCS}
       - FOOTER_DBTOOL_URL=${FOOTER_DBTOOL_URL}
+      - FOOTER_KEYCLOAK_URL=${FOOTER_KEYCLOAK_URL}
     restart: unless-stopped
 
   # Creates Keycloak's own database in the database server, once.

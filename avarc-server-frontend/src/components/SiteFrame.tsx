@@ -22,6 +22,7 @@ export async function SiteFrame({
   const nav = await getTranslations("Nav");
   const devLinks = developerLinks({
     database: t("linkDatabase"),
+    keycloak: t("linkKeycloak"),
     swagger: t("linkSwagger"),
     openapi: t("linkOpenapi"),
   });

@@ -10,6 +10,7 @@
     "logout": "Log out",
     "devLinks": "Developer links",
     "linkDatabase": "Database tool",
+    "linkKeycloak": "Keycloak admin",
     "linkSwagger": "Swagger UI",
     "linkOpenapi": "JSON API"
   },

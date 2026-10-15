@@ -5,6 +5,7 @@ export type DeveloperLink = { href: string; label: string };
 // the same everywhere; unset or empty means no link.
 export function developerLinks(labels: {
   database: string;
+  keycloak: string;
   swagger: string;
   openapi: string;
 }): DeveloperLink[] {
@@ -12,6 +13,10 @@ export function developerLinks(labels: {
   const database = process.env.FOOTER_DBTOOL_URL;
   if (database) {
     links.push({ href: database, label: labels.database });
+  }
+  const keycloak = process.env.FOOTER_KEYCLOAK_URL;
+  if (keycloak) {
+    links.push({ href: keycloak, label: labels.keycloak });
   }
   if (process.env.FOOTER_API_DOCS === "true") {
     links.push({ href: "/api/docs", label: labels.swagger });
