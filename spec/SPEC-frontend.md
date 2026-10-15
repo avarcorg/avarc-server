@@ -62,7 +62,9 @@ Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
   parent POM.
 - **Scope so far:** the login, logged-out and home pages
   ([SPEC-auth.md](SPEC-auth.md)), styled with Tailwind CSS (v4, through
-  PostCSS) with a light and a dark appearance following the browser; the
+  PostCSS) in the layout below, in English and German with the language in
+  the route (`/en/...`, `/de/...`; a path without a language goes to the
+  language of the browser, the backend's redirects need no language); the
   map and the other decisions above are applied as the pages are built.
 
 ## Layout
