@@ -49,6 +49,17 @@ checked out.
   builds). Pull requests
   only build. The publishing logic is the script
   `tools/publish-images.sh`, not the workflow.
+  - **Notification:** after a successful build and publishing of a push to
+    `main` of this repository (not a pull request, fork or release tag), a
+    separate job of the workflow posts one message with the commit to a chat
+    channel through an incoming webhook, the only thing it needs being one
+    secret. A listener of the deployment side reads the message as a hint
+    only: it checks the registry for new `snapshot` images before it updates
+    stage, so a forged message cannot deploy anything that was not
+    published. The notification is best effort: without the secret it is
+    skipped, and a failure only shows as a warning, so it never fails the
+    workflow. The chat server, the listener and how stage is updated are
+    not part of this repository.
   - **Registry:** the GitHub Container Registry, namespace
     `ghcr.io/avarcorg`, images `avarc-backend`,
     `avarc-frontend`, `avarc-ingress` and `avarc-keycloak`. The packages are public (the source is), so a host
