@@ -115,7 +115,7 @@ create_dev_secrets () {
             do
                 echo "export ${_name}=$(head -c 48 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 32)"
             done
-            # the initial account, created by accounts.sh
+            # the initial account, created by create-admin-user.sh
             echo "export ADMIN_EMAIL=admin@avarc.invalid"
             echo "export ADMIN_PASSWORD=$(head -c 48 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 24)"
         } > "${SECRETS_FILE}"
