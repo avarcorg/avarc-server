@@ -14,6 +14,7 @@ Spec: [SPEC-releases.md](../../spec/SPEC-releases.md),
 [SPEC-deployment.md](../../spec/SPEC-deployment.md)
 
 GitHub issue: [#380](https://github.com/avarcorg/avarc-server/issues/380)
+(closed as completed on 2026-10-15)
 
 Build the project automatically on GitHub and publish the container images,
 so that hosts can pull a version instead of building it.
@@ -21,7 +22,8 @@ so that hosts can pull a version instead of building it.
 Decisions:
 
 - The registry is the GitHub Container Registry, `ghcr.io/avarcorg`; the
-  images are `avarc-server-backend` and `avarc-server-frontend` there. The
+  images were `avarc-server-backend` and `avarc-server-frontend` there (renamed since, see
+  the note at the end). The
   packages stay private for now, so hosts log in to pull; making them
   public is a later decision.
 - Every push to `main` publishes a snapshot of both images. A
@@ -68,3 +70,11 @@ the earlier attempt were deleted by hand.
 
 Pulling a published image on a host (after `docker login ghcr.io`) works.
 Done.
+
+Later changes: the images are named `avarc-backend` and `avarc-frontend`
+(without `-server`), and the Keycloak and the ingress images
+(`avarc-keycloak`, `avarc-ingress`,
+[AVARC-32](../TASK-keycloak-image.md),
+[AVARC-33](../TASK-ingress-image.md)) are built and published by the same
+workflow and script. Hosts pulling the published images from the registry
+wait (see [SPEC-releases.md](../../spec/SPEC-releases.md)).
