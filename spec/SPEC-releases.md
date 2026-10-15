@@ -51,9 +51,8 @@ checked out.
   `tools/publish-images.sh`, not the workflow.
   - **Registry:** the GitHub Container Registry, namespace
     `ghcr.io/avarcorg`, images `avarc-backend`,
-    `avarc-frontend`, `avarc-ingress` and `avarc-keycloak`. The packages are private for now, so a host logs
-    in to the registry with a token that may read packages before it
-    pulls; making them public is a later decision. The workflow logs in
+    `avarc-frontend`, `avarc-ingress` and `avarc-keycloak`. The packages are public (the source is), so a host
+    pulls without logging in. The workflow logs in
     with its own token, which only pushes may use. The images carry the `org.opencontainers.image.source`
     label of the repository, which links the packages to it.
   - **Tags:** a push to `main` publishes the moving tag `snapshot` and the
