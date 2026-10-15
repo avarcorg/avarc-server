@@ -37,8 +37,8 @@ files. Do not edit by hand. See
 | AVARC-29 | [Backend login and logout](finished/TASK-backend-login.md) | task | finished | high | auth | AVARC-20, AVARC-3 |
 | AVARC-30 | [Frontend login and logout pages](finished/TASK-frontend-login.md) | task | finished | high | frontend | AVARC-29, AVARC-6 |
 | AVARC-31 | [Automated image builds and publishing](finished/TASK-image-builds.md) | task | finished | normal | project | AVARC-26 |
-| AVARC-32 | [Custom Keycloak image](TASK-keycloak-image.md) | task | in-progress | normal | auth | AVARC-20, AVARC-31 |
-| AVARC-33 | [Custom ingress image](TASK-ingress-image.md) | task | in-progress | normal | ingress | AVARC-8, AVARC-31, AVARC-32 |
+| AVARC-32 | [Custom Keycloak image](finished/TASK-keycloak-image.md) | task | finished | normal | auth | AVARC-20, AVARC-31 |
+| AVARC-33 | [Custom ingress image](finished/TASK-ingress-image.md) | task | finished | normal | ingress | AVARC-8, AVARC-31, AVARC-32 |
 | AVARC-34 | [Expose the API description and Swagger UI on dev and stage](finished/TASK-api-docs.md) | task | finished | normal | backend | AVARC-3, AVARC-33 |
 | AVARC-35 | [Verify the module boundaries with Spring Modulith](finished/TASK-modulith-verification.md) | task | finished | normal | backend | AVARC-3 |
 | AVARC-36 | [Notify the deployment system after a successful build](TASK-deploy-notification.md) | task | blocked | normal | project | AVARC-27, AVARC-31, AVARC-37 |

@@ -74,7 +74,7 @@ Done.
 Later changes: the images are named `avarc-backend` and `avarc-frontend`
 (without `-server`), and the Keycloak and the ingress images
 (`avarc-keycloak`, `avarc-ingress`,
-[AVARC-32](../TASK-keycloak-image.md),
-[AVARC-33](../TASK-ingress-image.md)) are built and published by the same
+[AVARC-32](TASK-keycloak-image.md),
+[AVARC-33](TASK-ingress-image.md)) are built and published by the same
 workflow and script. Hosts pulling the published images from the registry
 wait (see [SPEC-releases.md](../../spec/SPEC-releases.md)).

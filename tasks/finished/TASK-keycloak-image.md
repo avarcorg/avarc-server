@@ -1,7 +1,7 @@
 ---
 id: AVARC-32
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: auth
 depends-on: [AVARC-20, AVARC-31]
@@ -10,9 +10,9 @@ created: 2026-10-15
 
 # TASK: Custom Keycloak image
 
-Spec: [SPEC-auth.md](../spec/SPEC-auth.md),
-[SPEC-deployment.md](../spec/SPEC-deployment.md),
-[SPEC-releases.md](../spec/SPEC-releases.md)
+Spec: [SPEC-auth.md](../../spec/SPEC-auth.md),
+[SPEC-deployment.md](../../spec/SPEC-deployment.md),
+[SPEC-releases.md](../../spec/SPEC-releases.md)
 
 Today the `keycloak` service runs the stock image and gets this project's
 customizations at start from files mounted from the host: the entrypoint
@@ -20,7 +20,7 @@ customizations at start from files mounted from the host: the entrypoint
 installed on each host by `deploy/deploy.sh`. Build an image that holds all
 of them, so that a host needs only the image and its secrets, and the image
 is versioned, built and published like the backend and the frontend
-([AVARC-31](finished/TASK-image-builds.md)).
+([AVARC-31](TASK-image-builds.md)).
 
 - The image is based on the pinned Keycloak image and contains:
   - the realm import file, still free of secrets and with its placeholders
@@ -63,9 +63,9 @@ is versioned, built and published like the backend and the frontend
 On the developer deployment, from a fresh start (`deploy/run.sh reset`):
 Keycloak starts from the image alone, the realm is imported, the accounts
 script creates the admin, and the login and logout of
-[AVARC-29](finished/TASK-backend-login.md) work. Then the image runs on
+[AVARC-29](TASK-backend-login.md) work. Then the image runs on
 stage. Stage ran the image built on its host first, and has run the published
-one since 2026-10-15 ([AVARC-37](TASK-registry-pull.md)).
+one since 2026-10-15 ([AVARC-37](../TASK-registry-pull.md)).
 
 ## Progress
 
@@ -101,4 +101,4 @@ Registry (checked 2026-10-15): the CI Build of `be179d8` published
 `sha-be179d8` (the packages are public since 2026-10-15).
 
 Stage runs the published `snapshot` image since 2026-10-15; the realm endpoint
-answers 200. Open: the login and logout in a browser on it.
+answers 200, and the login and logout in a browser work. Done.

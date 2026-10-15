@@ -15,7 +15,7 @@ Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
 
 The CI Build publishes the backend, frontend, ingress and Keycloak images to
 the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
-[AVARC-32](TASK-keycloak-image.md), [AVARC-33](TASK-ingress-image.md)). Stage
+[AVARC-32](finished/TASK-keycloak-image.md), [AVARC-33](finished/TASK-ingress-image.md)). Stage
 does not pull them yet: it runs images built on its own host. Pulling from the
 registry has been postponed by the maintainer; this task is the work to do
 when it is taken up, and the tasks that wait for it point here
@@ -39,8 +39,8 @@ when it is taken up, and the tasks that wait for it point here
   must fail with a clear message, before the old stack is stopped.
 - Update the specs (releases and deployment: the sentence that stage and prod
   run host-built images until then goes away) and `AGENTS.md`, and remove the
-  related notes from [AVARC-32](TASK-keycloak-image.md),
-  [AVARC-33](TASK-ingress-image.md) and AVARC-27.
+  related notes from [AVARC-32](finished/TASK-keycloak-image.md),
+  [AVARC-33](finished/TASK-ingress-image.md) and AVARC-27.
 
 ## Progress
 
@@ -49,7 +49,7 @@ when it is taken up, and the tasks that wait for it point here
   and `run.sh` pulls (with retries) before the start and takes the namespace
   and versions from the secrets file. The first run found that the ingress
   image failed without a `PORT` variable; its configuration now has the port
-  written in ([AVARC-33](TASK-ingress-image.md)). After the restart through
+  written in ([AVARC-33](finished/TASK-ingress-image.md)). After the restart through
   the deploy job the smoke checks answer as before (health 200, API 401 without
   a login, realm endpoint 200, origin 307). Open: the choice between
   `snapshot` and a pinned `sha-<commit>`, the update and rollback procedure

@@ -1,7 +1,7 @@
 ---
 id: AVARC-33
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: ingress
 depends-on: [AVARC-8, AVARC-31, AVARC-32]
@@ -10,16 +10,16 @@ created: 2026-10-15
 
 # TASK: Custom ingress image
 
-Spec: [SPEC-ingress.md](../spec/SPEC-ingress.md),
-[SPEC-deployment.md](../spec/SPEC-deployment.md),
-[SPEC-releases.md](../spec/SPEC-releases.md)
+Spec: [SPEC-ingress.md](../../spec/SPEC-ingress.md),
+[SPEC-deployment.md](../../spec/SPEC-deployment.md),
+[SPEC-releases.md](../../spec/SPEC-releases.md)
 
 Today the `ingress` service runs the stock Caddy image and gets the routing
 at start from `deploy/Caddyfile`, mounted from the host and installed on
 each host by `deploy/deploy.sh`. Build an image that holds the routing
 configuration, so that a host needs only the image, and the image is
 versioned, built and published like the other images
-([AVARC-31](finished/TASK-image-builds.md),
+([AVARC-31](TASK-image-builds.md),
 [AVARC-32](TASK-keycloak-image.md)). Unlike the Keycloak image, this one
 should be built with Paketo buildpacks through the shared `pack`
 configuration of the parent POM, using a Paketo managed web server, and the
@@ -30,7 +30,7 @@ product may change for that.
   (a custom buildpack, or no `pack` build) or whether the ingress switches
   to nginx or httpd. Weigh the shared build path (and one more image built
   like the rest) against Caddy's small configuration, and against the
-  decision of [AVARC-8](finished/TASK-ingress-decision.md), which chose
+  decision of [AVARC-8](TASK-ingress-decision.md), which chose
   Caddy. Record the finding and the decision in this task and in
   `spec/SPEC-ingress.md` before implementing; if the product changes, the
   decision section of the spec changes with it.
@@ -67,7 +67,7 @@ product may change for that.
 - Keep working: the published port and the docktail labels, the dependency
   on the other services, and the routing described above.
 - Update the observability tasks if they assume the old product
-  ([AVARC-24](TASK-observability-ingress-database.md)).
+  ([AVARC-24](../TASK-observability-ingress-database.md)).
 - Specify the result (ingress, deployment and releases specs) and update
   `AGENTS.md`.
 
@@ -78,10 +78,10 @@ the routes of the spec answer as before (frontend page, `/api/hello` with and
 without a login, `/actuator/health`, the Keycloak realm endpoints, `404`
 for the admin console, the `master` realm and traversal attempts under
 `/auth/`), the login and logout of
-[AVARC-29](finished/TASK-backend-login.md) work through the new ingress, and
+[AVARC-29](TASK-backend-login.md) work through the new ingress, and
 the forwarded scheme reaches Keycloak. Then the image runs on stage, first built
 on its host and since 2026-10-15 the published one
-([AVARC-37](TASK-registry-pull.md)).
+([AVARC-37](../TASK-registry-pull.md)).
 
 ## Progress
 
@@ -138,7 +138,7 @@ The published image failed on stage: the buildpack fills `{{port}}` from the
 `PORT` variable, which has no default and which the image does not set, so
 `listen` was empty (the host-built image had worked). The port 8080 is now
 written into `nginx.conf`. Stage then ran the published `snapshot` image: health
-200, API 401, realm endpoint 200, origin 307. Open: the login and logout in a
-browser on it.
-[AVARC-24](TASK-observability-ingress-database.md) names no product, so it
+200, API 401, realm endpoint 200, origin 307, and the login and logout in a
+browser work. Done.
+[AVARC-24](../TASK-observability-ingress-database.md) names no product, so it
 needs no change.
