@@ -1,7 +1,7 @@
 ---
 id: AVARC-15
 type: task
-status: open
+status: finished
 priority: normal
 area: dependency-updates
 depends-on: [AVARC-4, AVARC-7]
@@ -10,7 +10,7 @@ created: 2026-10-11
 
 # TASK: Set up Renovate
 
-Spec: [SPEC-dependency-updates.md](../spec/SPEC-dependency-updates.md)
+Spec: [SPEC-dependency-updates.md](../../spec/SPEC-dependency-updates.md)
 
 - Decide the Renovate deployment (hosted app or self-hosted) and enable it
   for this repository.
@@ -18,8 +18,8 @@ Spec: [SPEC-dependency-updates.md](../spec/SPEC-dependency-updates.md)
   (commit `3b7b8a9`) with only `config:recommended`. It is a baseline, not
   the final configuration.
 - Adapt `renovate.json` once the backend and frontend architecture is
-  agreed ([AVARC-4](finished/TASK-backend-stack-decision.md),
-  [AVARC-7](finished/TASK-frontend-stack-decision.md)): enable the package managers
+  agreed ([AVARC-4](TASK-backend-stack-decision.md),
+  [AVARC-7](TASK-frontend-stack-decision.md)): enable the package managers
   of the chosen stacks, group related updates, and set scheduling, rate
   limits and the major/security update policy (the open questions in the
   spec). Keep the Compose template and the GitHub workflows covered.
@@ -32,3 +32,11 @@ Spec: [SPEC-dependency-updates.md](../spec/SPEC-dependency-updates.md)
 - Decide whether the stale `dependabot/**` and `renovate/**` branches on the
   remote are deleted; deleting them needs the user's explicit approval.
 - Update `spec/SPEC-dependency-updates.md` with the decisions.
+
+Outcome: hosted Renovate app; `renovate.json` restricts the base branch to
+`main`, covers the Compose template, disables automerge and labels major
+updates; no `.github/dependabot.yml` exists, so Dependabot version updates
+are off; the `dependabot/**` branches are gone from the remote. Renovate
+only looks at its base branch, so the ignored branches need no pattern. The
+config validates with `renovate-config-validator --strict`; a dry run
+needs a token and was not done.
