@@ -11,15 +11,25 @@ Define the web server that sits in front of the partial applications.
 - Clients reach the frontend, the backend API and the Keycloak endpoints only
   through this web server.
 - It routes requests to the right partial application.
-- It terminates TLS.
+- TLS is terminated in front of it (see
+  [SPEC-deployment.md](SPEC-deployment.md)).
 
 ## Decisions
 
 Decided in [AVARC-8](../tasks/finished/TASK-ingress-decision.md).
 
-- **Product:** Caddy. It terminates TLS with automatic certificate handling
-  and needs only a small configuration, which suits the developer
-  deployment as well as production.
+- **Product:** nginx, changed from Caddy in
+  [AVARC-33](../tasks/TASK-ingress-image.md) (which first chose Caddy,
+  [AVARC-8](../tasks/finished/TASK-ingress-decision.md)). nginx is a web
+  server of the Paketo buildpacks, so the ingress image is built with
+  `pack` like the backend and the frontend, through the shared build
+  configuration, from the configuration file `nginx.conf` alone; Caddy has
+  no buildpack. The configuration is in the module `avarc-server-ingress`
+  and is part of the image; the nginx version is the one the buildpack
+  selects. The image listens on port 8080 and runs as the unprivileged user
+  of the buildpack run image. The upstreams (`backend`, `frontend`,
+  `keycloak`) are looked up per request through Docker's resolver, so a
+  restarted service is found again and the ingress starts before they do.
 - **URL layout:** one host with path prefixes, so the browser sees a single
   origin (no CORS, simple cookie sessions):
   - `/api/` routes to the backend.
@@ -41,7 +51,8 @@ Decided in [AVARC-8](../tasks/finished/TASK-ingress-decision.md).
   [SPEC-deployment.md](SPEC-deployment.md)), so the ingress trusts the
   forwarded headers of private-range hops and passes them on unchanged;
   the upstreams see the original scheme and host, which Keycloak needs for
-  secure cookies.
+  secure cookies. For a hop that is not trusted, the headers are replaced by
+  the values of the connection.
 
 ## Open questions
 

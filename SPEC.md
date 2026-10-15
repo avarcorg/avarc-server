@@ -27,7 +27,7 @@ responsibility live in `spec/SPEC-<area>.md`.
   frontend.
 - **Web server:** a web server in front of all partial applications
   (frontend, backend, Keycloak) is the single entry point for clients. It is
-  Caddy, serving one host with path prefixes (see the ingress spec).
+  nginx, serving one host with path prefixes (see the ingress spec).
 - **Identity:** self-hosted Keycloak handles authentication, user
   management and roles; the backend and frontend delegate to it rather than
   implementing their own.

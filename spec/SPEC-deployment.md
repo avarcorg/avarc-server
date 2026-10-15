@@ -19,14 +19,13 @@ developers; other environments are specified when needed.
 
 Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
 
-- **Files:** everything lives in `deploy/`: `docker-compose.template`, the
-  ingress `Caddyfile`, `run.sh` and the systemd units `systemd/avarc-stage.service`
+- **Files:** everything lives in `deploy/`: `docker-compose.template`,
+  `run.sh` and the systemd units `systemd/avarc-stage.service`
   and `systemd/avarc-prod.service`, each running as its own user and group from that
   user's home directory (`/home/avarc-<environment>`). On the host,
   `deploy/deploy.sh stage|prod` (root only) installs them from a checkout:
-  it copies the unit to `/etc/systemd/system` and `run.sh`, the account scripts,
-  the template and the `Caddyfile`
-  together into the home directory, then reloads systemd. It never starts
+  it copies the unit to `/etc/systemd/system` and `run.sh`, the account scripts and
+  the template together into the home directory, then reloads systemd. It never starts
   the service and never touches data or secrets. It records the version of
   the checkout (`git describe --tags`) in `VERSION` next to the files and
   prints it; for prod it refuses a checkout that is not exactly a release tag
@@ -98,6 +97,12 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   like the backend (`FRONTEND_VERSION`); it has no published port, the
   ingress reaches it as `frontend:3000`. `BACKEND_URL` (`http://backend:8080`)
   is the address at which its server side reaches the backend.
+- **Ingress service:** runs the image of the module `avarc-server-ingress`
+  ([SPEC-ingress.md](SPEC-ingress.md)), image
+  `<IMAGE_NAMESPACE>/avarc-ingress:<INGRESS_VERSION>`, versioned like the
+  backend (`INGRESS_VERSION`). The container listens on port 8080, published
+  as `INGRESS_PORT` and exposed by docktail; the routing is part of the
+  image.
 - **Keycloak service:** runs the image of the module `avarc-server-keycloak`
   ([SPEC-auth.md](SPEC-auth.md)), image
   `<IMAGE_NAMESPACE>/avarc-keycloak:<KEYCLOAK_VERSION>`, versioned like the

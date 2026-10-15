@@ -14,7 +14,7 @@ flowchart TB
     AIClient["AI assistant<br/>MCP client (post-MVP)"]
 
     subgraph Server["avarc-server"]
-        Ingress["Web server / ingress<br/>Caddy"]
+        Ingress["Web server / ingress<br/>nginx"]
         Frontend["Frontend<br/>Next.js"]
         Backend["Backend API<br/>Spring Boot"]
         Keycloak["Keycloak"]

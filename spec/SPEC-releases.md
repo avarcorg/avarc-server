@@ -51,7 +51,7 @@ checked out.
   `tools/publish-images.sh`, not the workflow.
   - **Registry:** the GitHub Container Registry, namespace
     `ghcr.io/avarcorg`, images `avarc-backend`,
-    `avarc-frontend` and `avarc-keycloak`. The packages are private for now, so a host logs
+    `avarc-frontend`, `avarc-ingress` and `avarc-keycloak`. The packages are private for now, so a host logs
     in to the registry with a token that may read packages before it
     pulls; making them public is a later decision. The workflow logs in
     with its own token, which only pushes may use. The images carry the `org.opencontainers.image.source`
@@ -72,7 +72,7 @@ checked out.
     works with GitHub's cache service.
   - **Using them:** the Compose project runs a published image when
     `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,
-    `FRONTEND_VERSION` and `KEYCLOAK_VERSION` name a tag (see
+    `FRONTEND_VERSION`, `INGRESS_VERSION` and `KEYCLOAK_VERSION` name a tag (see
     [SPEC-deployment.md](SPEC-deployment.md)). Pulling the published images
     from the registry on stage and prod has to wait: until then those hosts
     run images built on the host itself (`-Pwith-docker`) under the default
