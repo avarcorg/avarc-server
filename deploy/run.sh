@@ -14,6 +14,10 @@
 # selects stage; without it the environment is dev. SECRETS=dev|stage|prod
 # overrides the environment, which is how prod is selected.
 #
+# The database is served on the tailnet as avarc-<environment>-db when the
+# secrets file sets DB_TAILNET=true (dev and stage only; create-db-user.sh
+# makes the read-only account for it).
+#
 # Secrets: the values live in secrets.dev.sh (dev; generated on first run),
 # secrets.stage.sh (stage) or secrets.sh (prod), all exporting one variable
 # per secret (it may also set IMAGE_NAMESPACE and the *_VERSION variables
@@ -84,6 +88,20 @@ host_setting FRONTEND_VERSION 0.1.0-SNAPSHOT
 host_setting INGRESS_VERSION 0.1.0-SNAPSHOT
 host_setting KEYCLOAK_VERSION 0.1.0-SNAPSHOT
 export INGRESS_PORT=${INGRESS_PORT:-${DEFAULT_PORT}}
+# Exposing the database on the tailnet is an opt-in of dev and stage
+# (DB_TAILNET=true in the secrets file) and never happens on prod.
+host_setting DB_TAILNET false
+DB_DOCKTAIL_ENABLE=false
+if [ "${DB_TAILNET}" = "true" ]
+then
+    if [ "${ENVIRONMENT}" = "prod" ]
+    then
+        echo "run.sh: DB_TAILNET is ignored on prod, the database is not exposed" >&2
+    else
+        DB_DOCKTAIL_ENABLE=true
+    fi
+fi
+export DB_DOCKTAIL_ENABLE
 # The tailnet's domain, under which docktail serves the names with a
 # certificate; empty if it cannot be determined.
 TAILNET_DOMAIN=$(tailscale status --json 2>/dev/null | jq -r '.MagicDNSSuffix // empty' 2>/dev/null || true)

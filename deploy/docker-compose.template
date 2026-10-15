@@ -85,12 +85,21 @@ services:
       start_period: 30s
     restart: unless-stopped
 
+  # DB_DOCKTAIL_ENABLE is true only on dev and stage and only when the
+  # secrets file sets DB_TAILNET=true (see run.sh); docktail then serves the
+  # database on the tailnet as ${NAME}-db, port 5432.
   db:
     image: postgis/postgis:17-3.5
     environment:
       - POSTGRES_USER=avarc
       - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
       - POSTGRES_DB=avarc
+    labels:
+      - "docktail.service.enable=${DB_DOCKTAIL_ENABLE}"
+      - "docktail.service.name=${NAME}-db"
+      - "docktail.service.port=5432"
+      - "docktail.service.protocol=tcp"
+      - "docktail.service.service-port=5432"
     volumes:
       - ${P}/data/${ENVIRONMENT}/db:/var/lib/postgresql/data
       - ${SECRETS_RUN_DIR}:/run/secrets:ro
