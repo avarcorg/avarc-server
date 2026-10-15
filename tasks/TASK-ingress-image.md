@@ -99,8 +99,10 @@ Findings with the buildpack (`paketobuildpacks/ubuntu-noble-builder`):
   follows the builder; Renovate cannot pin it.
 - The launch command already sets `pid`, and this nginx has no `uwsgi` and
   `scgi` modules, no `mime.types` in the application directory; the
-  configuration must not use them. `{{port}}` is filled in at start
-  (default 8080); the user is unprivileged, so port 80 is out.
+  configuration must not use them. The buildpack's `{{port}}` is
+  the `PORT` variable, which has no default and which the image does not set
+  (an empty `listen` fails at start), so the port 8080 is written into the
+  file; the user is unprivileged, so port 80 is out.
 - A `proxy_pass` with variables and no URI passes the request unchanged and
   needs `resolver 127.0.0.11`; it makes the upstreams resolved per request.
   A prefix location with `proxy_pass` redirects the bare prefix, hence the
