@@ -94,7 +94,7 @@ no header or footer markup of their own.
 - **Typography:** a serif face for headings, which gives the historical
   feel, and the system sans-serif font for text; both are system fonts, so
   nothing is loaded from a third party.
-- **Developer links:** introduced in [AVARC-45](../tasks/TASK-footer-dev-links.md).
+- **Developer links:** introduced in [AVARC-45](../tasks/finished/TASK-footer-dev-links.md).
   On dev and stage the footer also links to the tools that exist there: the
   web database tool, Swagger UI (`/api/docs`) and the JSON API document
   (`/api/docs/openapi.json`, [SPEC-backend.md](SPEC-backend.md)). The
