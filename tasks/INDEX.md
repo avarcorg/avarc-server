@@ -50,4 +50,4 @@ files. Do not edit by hand. See
 | AVARC-42 | [User entities](finished/TASK-user-entities.md) | task | finished | normal | backend | AVARC-29, AVARC-35 |
 | AVARC-43 | [Keycloak theme](TASK-keycloak-theme.md) | task | open | low | auth | AVARC-32, AVARC-41 |
 | AVARC-44 | [Java formatter](finished/TASK-java-formatter.md) | task | finished | normal | backend |  |
-| AVARC-45 | [Developer links in the footer on non-prod](TASK-footer-dev-links.md) | task | open | normal | frontend | AVARC-41 |
+| AVARC-45 | [Developer links in the footer on non-prod](finished/TASK-footer-dev-links.md) | task | finished | normal | frontend | AVARC-41 |

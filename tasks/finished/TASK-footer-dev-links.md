@@ -1,7 +1,7 @@
 ---
 id: AVARC-45
 type: task
-status: open
+status: finished
 priority: normal
 area: frontend
 depends-on: [AVARC-41]
@@ -10,8 +10,8 @@ created: 2026-10-15
 
 # TASK: Developer links in the footer on non-prod
 
-Spec: [SPEC-frontend.md](../spec/SPEC-frontend.md),
-[SPEC-deployment.md](../spec/SPEC-deployment.md)
+Spec: [SPEC-frontend.md](../../spec/SPEC-frontend.md),
+[SPEC-deployment.md](../../spec/SPEC-deployment.md)
 
 On the dev and stage environments the footer of the website shows links to
 the tools that exist there, so a developer or tester does not have to know
@@ -22,7 +22,7 @@ the addresses. On prod the footer shows none of them.
 Each link appears only if its target is enabled in that environment:
 
 - **Database tool:** the web database tool, served when `DB_TAILNET=true`
-  ([SPEC-deployment.md](../spec/SPEC-deployment.md)).
+  ([SPEC-deployment.md](../../spec/SPEC-deployment.md)).
 - **Swagger UI:** `/api/docs`, served on dev and stage.
 - **JSON API document:** `/api/docs/openapi.json`, served on dev and stage.
 
