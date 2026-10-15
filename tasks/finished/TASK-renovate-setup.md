@@ -34,9 +34,10 @@ Spec: [SPEC-dependency-updates.md](../../spec/SPEC-dependency-updates.md)
 - Update `spec/SPEC-dependency-updates.md` with the decisions.
 
 Outcome: hosted Renovate app; `renovate.json` restricts the base branch to
-`main`, covers the Compose template, disables automerge and labels major
+`main`, covers the Compose template and the Node version (custom manager), disables automerge and labels major
 updates; no `.github/dependabot.yml` exists, so Dependabot version updates
 are off; the `dependabot/**` branches are gone from the remote. Renovate
 only looks at its base branch, so the ignored branches need no pattern. The
-config validates with `renovate-config-validator --strict`; a dry run
-needs a token and was not done.
+config validates with `renovate-config-validator --strict` and a local run
+extracts the Compose and Node dependencies; a dry run against GitHub needs a
+token and was not done.
