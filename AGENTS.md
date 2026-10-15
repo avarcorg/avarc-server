@@ -8,6 +8,11 @@ locations and descriptions.
 - `SPEC.md` is the main global spec. It links to per-area specs.
 - Per-area specs live in `spec/` and are named `SPEC-<area>.md`.
 - Specs are committed to git.
+- The architecture diagram (`spec/architecture-diagram.md`) and the data model
+  diagram (`spec/datamodel-diagram.md`) are kept current: a change of the
+  architecture, or a new or changed Flyway migration, updates the matching
+  diagram in the same change set (`spec/SPEC-architecture-diagram.md`,
+  `spec/SPEC-datamodel-diagram.md`).
 
 ## Tasks
 
