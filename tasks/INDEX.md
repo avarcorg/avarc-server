@@ -45,3 +45,4 @@ files. Do not edit by hand. See
 | AVARC-37 | [Run the published images on stage](TASK-registry-pull.md) | task | open | normal | project | AVARC-31, AVARC-32, AVARC-33 |
 | AVARC-38 | [Optionally expose the database on the tailnet (dev and stage)](finished/TASK-database-tailnet.md) | task | finished | low | project | AVARC-18 |
 | AVARC-39 | [Clean old workflow runs](TASK-clean-action-runs.md) | task | open | low | project |  |
+| AVARC-40 | [Clean old container images](TASK-clean-images.md) | task | open | low | project | AVARC-31 |
