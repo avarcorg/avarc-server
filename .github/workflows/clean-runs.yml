@@ -1,0 +1,54 @@
+name: Clean workflow runs
+
+# Deletes old, finished workflow runs. The retention is in
+# spec/SPEC-releases.md. Images, releases and tags are not touched.
+on:
+  schedule:
+    - cron: "17 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: Delete runs older than this many days
+        default: "30"
+      keep:
+        description: Keep at least this many latest runs of each workflow
+        default: "5"
+      dry-run:
+        description: List what would be deleted and delete nothing
+        type: boolean
+        default: false
+
+permissions:
+  actions: write
+
+jobs:
+  clean-runs:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      DAYS: ${{ inputs.days || '30' }}
+      KEEP: ${{ inputs.keep || '5' }}
+      DRY_RUN: ${{ inputs.dry-run && 'true' || 'false' }}
+    steps:
+      - name: Delete old runs
+        run: |
+          set -eu
+          cutoff=$(date -u -d "${DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
+          # Finished runs only; of each workflow the latest ${KEEP} stay.
+          gh api --paginate --slurp "repos/${REPO}/actions/runs?per_page=100&status=completed" \
+            | jq -r --arg cutoff "$cutoff" --argjson keep "$KEEP" '
+                [.[].workflow_runs[]]
+                | group_by(.workflow_id)[]
+                | sort_by(.created_at) | reverse | .[$keep:][]
+                | select(.created_at < $cutoff)
+                | "\(.id) \(.name) \(.created_at)"' > old-runs.txt
+          echo "Runs older than ${DAYS} days beyond the latest ${KEEP} per workflow: $(wc -l < old-runs.txt)"
+          cat old-runs.txt
+          if [ "${DRY_RUN}" = "true" ]; then
+            echo "Dry run, nothing deleted."
+            exit 0
+          fi
+          while read -r id _; do
+            gh api -X DELETE "repos/${REPO}/actions/runs/${id}"
+          done < old-runs.txt
