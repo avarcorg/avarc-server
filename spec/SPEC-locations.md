@@ -116,7 +116,8 @@ Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
   description: no translation, a language that is not supported, an empty
   name or description, a confidence level outside 1-5, a position outside
   the ranges or of an unknown `kind`, `periodStart` after `periodEnd`, a
-  reference without a citation, a tag key that does not follow the rule below.
+  reference without a citation or with a url that is not an absolute http or
+  https address, a tag key that does not follow the rule below.
 - `createdBy` and `updatedBy` are the Keycloak subject of the user.
 - Tag keys are trimmed and lower-cased, then must be 1-64 characters of
   `a-z`, `0-9` and single hyphens inside the key.
