@@ -1,7 +1,7 @@
 ---
 id: AVARC-32
 type: task
-status: open
+status: in-progress
 priority: normal
 area: auth
 depends-on: [AVARC-20, AVARC-31]
@@ -65,3 +65,25 @@ Keycloak starts from the image alone, the realm is imported, the accounts
 script creates the admin, and the login and logout of
 [AVARC-29](finished/TASK-backend-login.md) work. Then the published image
 runs on stage.
+
+## Progress
+
+Decision: a Dockerfile built with `docker build` (module
+`avarc-server-keycloak`, `-Pwith-docker`), not `pack`. Paketo with a
+`Procfile` was tried: with the Java and Procfile buildpacks it builds and,
+on the full `ubuntu-noble-run` image (the tiny one has no `bash`), runs
+Keycloak, but needs the distribution downloaded into the build, cannot run
+`kc.sh build` (the start then fails with `--optimized`, or is slow without
+it) and puts the version in a Maven property. The Keycloak version is the
+tag in the `FROM` line, which Renovate tracks natively. The health check
+stays in the Compose file.
+
+Done and verified on the developer deployment from a fresh `reset`: Keycloak
+starts from the image alone (optimized, up in about 2 s), imports the realm,
+the admin script creates the admin, and the backend's login redirects to the
+realm. The image carries the source label. Compose, `deploy.sh`, `run.sh`
+(`KEYCLOAK_VERSION`), `tools/publish-images.sh`, the CI label step and the
+docs are updated.
+
+Open: a full browser login and logout on the new image, and running the
+published image on stage (after the first CI publish).
