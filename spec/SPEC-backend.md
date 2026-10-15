@@ -28,7 +28,14 @@ Define the API service that stores and serves locations.
 - **Architecture:** a monolithic application built with Spring Modulith:
   one deployable Spring Boot service holds the whole API and its business
   logic, structured into application modules whose boundaries Spring
-  Modulith verifies; there are no separate microservices.
+  Modulith verifies; there are no separate microservices. Introduced in
+  [AVARC-35](../tasks/TASK-modulith-verification.md): an application module
+  is a direct sub-package of `org.avarc.server`; the types in its top-level
+  package are its API and its sub-packages are internal; modules depend on
+  each other only through that API and without cycles; the root package
+  holds the application class only. A test calls
+  `ApplicationModules.verify()`, so `./mvnw verify` fails when a boundary is
+  broken.
 - **Database:** PostgreSQL with PostGIS. A `point` position is stored as a
   `geography(Point, 4326)` column (WGS 84) next to the `kind` discriminator
   column, so further kinds ([SPEC-locations.md](SPEC-locations.md)) add
