@@ -22,7 +22,7 @@ Spec: [SPEC-backend.md](../spec/SPEC-backend.md), [SPEC-locations.md](../spec/SP
   [SPEC-backend.md](../spec/SPEC-backend.md): baseline on first run, a
   schema of its own for the application's tables, or ignoring the objects
   that belong to the extension. This holds for every task that adds tables,
-  [AVARC-42](TASK-user-entities.md) included.
+  [AVARC-42](finished/TASK-user-entities.md) included.
 - Cover with tests.
 - The locations code is an application module of its own under the module
   rule of [SPEC-backend.md](../spec/SPEC-backend.md)

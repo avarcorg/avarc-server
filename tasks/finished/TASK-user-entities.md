@@ -1,7 +1,7 @@
 ---
 id: AVARC-42
 type: task
-status: open
+status: finished
 priority: normal
 area: backend
 depends-on: [AVARC-29, AVARC-35]
@@ -10,11 +10,11 @@ created: 2026-10-15
 
 # TASK: User entities
 
-Spec: [SPEC-backend.md](../spec/SPEC-backend.md),
-[SPEC-auth.md](../spec/SPEC-auth.md)
+Spec: [SPEC-backend.md](../../spec/SPEC-backend.md),
+[SPEC-auth.md](../../spec/SPEC-auth.md)
 
 Keycloak owns the accounts, credentials and roles
-([SPEC-auth.md](../spec/SPEC-auth.md)); the application has no record of
+([SPEC-auth.md](../../spec/SPEC-auth.md)); the application has no record of
 its own users. It needs one, to attach data of the application to a person,
 starting with their preferences. A `User` entity is created in the
 application database when someone logs in successfully through Keycloak.
@@ -30,8 +30,8 @@ application keeps; `SPEC-backend.md` names the new module.
 
 - **Module:** the backend code is an application module of its own, `user`,
   a direct sub-package of `org.avarc.server`, under the module rule of
-  [SPEC-backend.md](../spec/SPEC-backend.md)
-  ([AVARC-35](finished/TASK-modulith-verification.md)). Its API is the types
+  [SPEC-backend.md](../../spec/SPEC-backend.md)
+  ([AVARC-35](TASK-modulith-verification.md)). Its API is the types
   in its top-level package; entity, repository and persistence stay in
   internal sub-packages. `auth` does not depend on `user` internals, and
   the two modules do not form a cycle: the login in `auth` announces a
@@ -41,7 +41,7 @@ application keeps; `SPEC-backend.md` names the new module.
   module appears in the generated diagrams.
 - **Identity:** the user is identified by the Keycloak subject (`sub`) of
   the realm, stored unique; the entity has its own UUID as identity, like
-  the locations ([SPEC-locations.md](../spec/SPEC-locations.md)). The
+  the locations ([SPEC-locations.md](../../spec/SPEC-locations.md)). The
   application never matches users by email or name, which can change.
 - **Creation:** on the first successful login, no user exists for the
   subject yet and one is created. A later login finds it. Creation is
@@ -56,7 +56,7 @@ application keeps; `SPEC-backend.md` names the new module.
   edits them and treats them as read-only. Whether to store them at all or
   to read them from the session on demand is decided in the specification
   phase, with a view to data protection: keep only what a feature uses.
-  Roles are not copied; they stay in the token ([SPEC-auth.md](../spec/SPEC-auth.md)).
+  Roles are not copied; they stay in the token ([SPEC-auth.md](../../spec/SPEC-auth.md)).
 - **Preferences:** the entity holds the user's preferences, owned by the
   application. The first one is the appearance, `light`, `dark` or
   `system` (default, follow the browser). The language is a candidate for
@@ -69,10 +69,10 @@ application keeps; `SPEC-backend.md` names the new module.
   else's. `GET /api/auth/me` keeps its meaning. The endpoints show up in
   the OpenAPI document.
 - **Database:** a versioned migration creates the table
-  ([SPEC-backend.md](../spec/SPEC-backend.md)). The persistence setup
+  ([SPEC-backend.md](../../spec/SPEC-backend.md)). The persistence setup
   (JPA, migrations, test database, and the handling of the existing schema
   described there) is shared with the locations
-  ([AVARC-10](TASK-locations-crud-api.md)); whichever task comes first
+  ([AVARC-10](../TASK-locations-crud-api.md)); whichever task comes first
   sets it up, the other uses it.
 - **Deleting accounts:** an account deleted in Keycloak leaves its user
   record behind; what happens to it is decided in the specification phase

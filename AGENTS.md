@@ -43,6 +43,11 @@ running Docker daemon), run from the `with-docker` profile. It is tagged
 8080. Override the `avarcorg` namespace with `-Dimage.namespace=<name>`, e.g.
 `-Dimage.namespace="$IMAGE_NAMESPACE"`.
 
+The backend stores its data in PostgreSQL with Flyway migrations
+(`src/main/resources/db/migration`, tables in the schema `avarc`); its
+tests start a PostGIS container, so `./mvnw verify` needs a running Docker
+daemon (spec: `spec/SPEC-backend.md`).
+
 The backend code is split into application modules, direct sub-packages of
 `org.avarc.server` (rule in `spec/SPEC-backend.md`); `ModularityTests`, part
 of `./mvnw verify`, fails on a broken boundary and writes the module
