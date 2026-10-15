@@ -47,3 +47,4 @@ files. Do not edit by hand. See
 | AVARC-39 | [Clean old workflow runs](TASK-clean-action-runs.md) | task | open | low | project |  |
 | AVARC-40 | [Clean old container images](TASK-clean-images.md) | task | open | low | project | AVARC-31 |
 | AVARC-41 | [A nicer layout for the website](TASK-website-layout.md) | task | open | normal | frontend | AVARC-6 |
+| AVARC-42 | [User entities](TASK-user-entities.md) | task | open | normal | backend | AVARC-29, AVARC-35 |
