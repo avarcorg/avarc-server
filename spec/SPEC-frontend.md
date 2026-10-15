@@ -65,6 +65,40 @@ Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
   PostCSS) with a light and a dark appearance following the browser; the
   map and the other decisions above are applied as the pages are built.
 
+## Layout
+
+Introduced in [AVARC-41](../tasks/TASK-website-layout.md). One frame, a
+single layout component of the App Router, carries every page; pages hold
+no header or footer markup of their own.
+
+- **Frame:** a top bar, the content, a footer. The top bar has the site
+  name (a link home) on the left, then the navigation, and on the right the
+  language switch and the user menu with the logout action. The footer has
+  the application version and links; it stays small.
+- **Navigation:** one entry per page that exists, so the list grows with
+  the pages (the locations list and the map, [AVARC-12](../tasks/TASK-locations-ui.md)).
+  Editing controls are shown by role ([SPEC-auth.md](SPEC-auth.md)).
+- **Content width:** text and form pages sit in a centred column of limited
+  width; a page may opt out and take the full width, which the map does.
+  The public pages (`/login`, `/logged-out`) use the same frame without
+  navigation and user menu.
+- **Phone:** the same frame; the navigation collapses behind a menu button
+  and opens as a dropdown below the top bar. The content uses the full
+  width with a small side padding. Nothing scrolls horizontally.
+- **Colours:** the warm stone neutrals with the amber accent of the current
+  pages, light and dark following the browser. The colours are Tailwind
+  theme values defined once in the stylesheet (`@theme`) and used by name,
+  not repeated as literal shades in the pages.
+- **Typography:** a serif face for headings, which gives the historical
+  feel, and the system sans-serif font for text; both are system fonts, so
+  nothing is loaded from a third party.
+- **Texts:** every text of the frame comes from the translations
+  (Languages above), none is written into the component.
+- **Accessibility:** semantic landmarks (`header`, `nav`, `main`,
+  `footer`), a "skip to content" link, visible keyboard focus, text
+  contrast of at least WCAG AA in both appearances, and a navigation that
+  works with the keyboard alone, the menu button included.
+
 ## Open questions
 
 - The concrete tile provider.
