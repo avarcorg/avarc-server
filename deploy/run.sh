@@ -15,7 +15,8 @@
 #
 # Secrets: the values live in secrets.dev.sh (dev; generated on first run),
 # secrets.stage.sh (stage) or secrets.sh (prod), all exporting one variable
-# per secret. Containers get one read-only file per secret from a directory
+# per secret (it may also set IMAGE_NAMESPACE and the *_VERSION variables
+# when the environment does not). Containers get one read-only file per secret from a directory
 # in memory (/dev/shm), never an environment variable. The compose file is
 # rendered with envsubst from docker-compose.template. See
 # spec/SPEC-deployment.md.
@@ -59,12 +60,28 @@ case "${ENVIRONMENT}" in
     stage) DEFAULT_PORT=8081; SECRETS_FILE=${P}/secrets.stage.sh ;;
     prod)  DEFAULT_PORT=8082; SECRETS_FILE=${P}/secrets.sh ;;
 esac
+# Prints the value of secret $2 as exported by the secrets file $1, or
+# nothing. The file is sourced by a shell with an empty environment, so only
+# what it exports is found, never the launcher's own variables.
+secret_value () {
+    env -i sh -c '. "$0" > /dev/null 2>&1; printenv "$1" || true' "$1" "$2"
+}
+
+# Exports $1 from the environment, else from the secrets file, else as $2.
+host_setting () {
+    eval "_setting=\${$1:-}"
+    if [ -z "${_setting}" ] && [ -r "${SECRETS_FILE}" ]
+    then
+        _setting=$(secret_value "${SECRETS_FILE}" "$1")
+    fi
+    export "$1=${_setting:-$2}"
+}
 # Keep the *_VERSION defaults equal to the version in pom.xml.
-export IMAGE_NAMESPACE=${IMAGE_NAMESPACE:-avarcorg}
-export BACKEND_VERSION=${BACKEND_VERSION:-0.1.0-SNAPSHOT}
-export FRONTEND_VERSION=${FRONTEND_VERSION:-0.1.0-SNAPSHOT}
-export INGRESS_VERSION=${INGRESS_VERSION:-0.1.0-SNAPSHOT}
-export KEYCLOAK_VERSION=${KEYCLOAK_VERSION:-0.1.0-SNAPSHOT}
+host_setting IMAGE_NAMESPACE avarcorg
+host_setting BACKEND_VERSION 0.1.0-SNAPSHOT
+host_setting FRONTEND_VERSION 0.1.0-SNAPSHOT
+host_setting INGRESS_VERSION 0.1.0-SNAPSHOT
+host_setting KEYCLOAK_VERSION 0.1.0-SNAPSHOT
 export INGRESS_PORT=${INGRESS_PORT:-${DEFAULT_PORT}}
 # The tailnet's domain, under which docktail serves the names with a
 # certificate; empty if it cannot be determined.
@@ -95,13 +112,6 @@ export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-/dev/shm/${NAME}-secrets}
 
 # The secrets the deployment needs; one file each in ${SECRETS_RUN_DIR}.
 NEEDED_SECRETS="POSTGRES_PASSWORD KEYCLOAK_ADMIN_PASSWORD KEYCLOAK_CLIENT_SECRET"
-
-# Prints the value of secret $2 as exported by the secrets file $1, or
-# nothing. The file is sourced by a shell with an empty environment, so only
-# what it exports is found, never the launcher's own variables.
-secret_value () {
-    env -i sh -c '. "$0" > /dev/null 2>&1; printenv "$1" || true' "$1" "$2"
-}
 
 # Creates the dev secrets file with random values, once.
 create_dev_secrets () {
