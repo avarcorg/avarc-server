@@ -47,7 +47,8 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `keycloak-init`, which creates Keycloak's database) leaves an exited
   container behind. `run.sh up` watches such a service in the background
   and removes its container once it has exited and the services that
-  depend on it have been created, so `docker compose ps -a` shows only the
+  depend on it have been started after that (never earlier: compose would
+  fail waiting for it), so `docker compose ps -a` shows only the
   running project. A further `up` creates it again.
 - **Entry point:** the ingress is published on the environment's port on
   localhost. It carries docktail labels that expose it on the tailnet as
