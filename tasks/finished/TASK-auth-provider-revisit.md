@@ -222,4 +222,4 @@ Kratos (A) was the fallback had production turned out too small.
 - [AVARC-13](TASK-ory-auth-design.md) and
   [AVARC-14](TASK-ory-integration.md) are superseded and not carried out
   further.
-- The implementation is [AVARC-20](../TASK-keycloak-integration.md).
+- The implementation is [AVARC-20](TASK-keycloak-integration.md).

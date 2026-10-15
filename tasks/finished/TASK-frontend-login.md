@@ -14,7 +14,7 @@ Spec: [SPEC-auth.md](../../spec/SPEC-auth.md) (Login and logout),
 [SPEC-frontend.md](../../spec/SPEC-frontend.md)
 
 Follows [AVARC-29](TASK-backend-login.md); part of the application work of
-[AVARC-20](../TASK-keycloak-integration.md).
+[AVARC-20](TASK-keycloak-integration.md).
 
 - Page `/login`: a short explanation and one sign-in link to the backend's
   login endpoint. It shows a message when the login failed. The password

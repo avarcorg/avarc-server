@@ -13,7 +13,7 @@ created: 2026-10-14
 Spec: [SPEC-auth.md](../../spec/SPEC-auth.md) (Login and logout),
 [SPEC-backend.md](../../spec/SPEC-backend.md)
 
-Part of the application work of [AVARC-20](../TASK-keycloak-integration.md);
+Part of the application work of [AVARC-20](TASK-keycloak-integration.md);
 followed by [AVARC-30](TASK-frontend-login.md), the pages that use it. The
 frontend talks to the backend, and only the backend talks to Keycloak.
 

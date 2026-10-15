@@ -16,4 +16,4 @@ Spec: [SPEC-auth.md](../../spec/SPEC-auth.md)
 - Protect the backend API as designed.
 - Add login and logout to the frontend.
 
-Superseded by [AVARC-19](TASK-auth-provider-revisit.md): the provider is Keycloak. Nothing of this plan was carried out; the work is [AVARC-20](../TASK-keycloak-integration.md).
+Superseded by [AVARC-19](TASK-auth-provider-revisit.md): the provider is Keycloak. Nothing of this plan was carried out; the work is [AVARC-20](TASK-keycloak-integration.md).

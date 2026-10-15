@@ -53,6 +53,9 @@ Ongoing:
 - Back up and restore the database and the Keycloak realm; test a restore.
 - Evaluate the capacity of the host, which also informs the production
   host.
+- Exercise Keycloak login and logout on the https origin of stage and, later,
+  prod (carried over from
+  [AVARC-20](finished/TASK-keycloak-integration.md)).
 - Apply the observability tasks (AVARC-21 and its follow-ups) to stage first.
 - Keep this list current when stage reveals problems that dev does not.
 
