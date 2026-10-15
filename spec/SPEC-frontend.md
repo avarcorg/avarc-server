@@ -104,7 +104,7 @@ no header or footer markup of their own.
   `FOOTER_DBTOOL_URL` and `FOOTER_KEYCLOAK_URL` show the database tool and
   Keycloak admin console links. `run.sh` sets them
   ([SPEC-deployment.md](SPEC-deployment.md)); unset or empty means no link,
-  so prod has none, and nothing is baked into the page bundle.
+  so prod has none. The links open in a new browser tab. Nothing is baked into the page bundle.
 - **Texts:** every text of the frame comes from the translations
   (Languages above), none is written into the component.
 - **Accessibility:** semantic landmarks (`header`, `nav`, `main`,
