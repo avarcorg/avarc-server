@@ -59,7 +59,7 @@ Define the API service that stores and serves locations.
   configured at runtime (address, database and user in the environment, the
   password a file secret). Tests that touch the database run against a
   PostGIS container (Testcontainers).
-- **Java format:** introduced in [AVARC-44](../tasks/TASK-java-formatter.md).
+- **Java format:** introduced in [AVARC-44](../tasks/finished/TASK-java-formatter.md).
   The Java sources (`src/main/java`, `src/test/java`) are formatted by
   Open Java Format (MIT licensed, a drop-in for palantir-java-format, lines
   of 120 characters), which has one style and no options, so formatting is
