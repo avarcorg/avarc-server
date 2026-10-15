@@ -1,7 +1,7 @@
 ---
 id: AVARC-10
 type: task
-status: open
+status: in-progress
 priority: normal
 area: backend
 depends-on: [AVARC-3, AVARC-11]
@@ -24,3 +24,6 @@ Spec: [SPEC-backend.md](../spec/SPEC-backend.md), [SPEC-locations.md](../spec/SP
 - **Authorization** (carried over from
   [AVARC-20](finished/TASK-keycloak-integration.md)): enforce the realm roles
   per endpoint (`ROLE_<role>`, already mapped) and answer 401 and 403.
+- **Open:** the usage of tags is not settled and is revisited later (see the
+  open questions of [SPEC-locations.md](../spec/SPEC-locations.md)). The
+  code is pushed as it is; the task stays in progress until that is decided.
