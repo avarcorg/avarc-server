@@ -43,6 +43,12 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   keeping data, any other argument is passed to `docker compose`. `reset`
   (dev only) stops the project and deletes its local data and generated
   secrets. Without arguments, or with `--help`, it prints the usage.
+- **One-shot services:** a service that only does a job at start (today
+  `keycloak-init`, which creates Keycloak's database) leaves an exited
+  container behind. `run.sh up` watches such a service in the background
+  and removes its container once it has exited and the services that
+  depend on it have been created, so `docker compose ps -a` shows only the
+  running project. A further `up` creates it again.
 - **Entry point:** the ingress is published on the environment's port on
   localhost. It carries docktail labels that expose it on the tailnet as
   `avarc-<environment>` on port 443, where docktail terminates TLS; the
