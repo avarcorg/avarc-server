@@ -68,6 +68,51 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   running the script without the option withdraws it again.
   The application's own credentials are not handed out. Who may reach the
   service is decided by the tailnet's access rules.
+- **Database tool (optional):** introduced with
+  [AVARC-38](../tasks/TASK-database-tailnet.md). With `DB_TAILNET=true`, the
+  `dbtool` service is started as well: CloudBeaver (Community edition, image
+  `dbeaver/cloudbeaver`, pinned to an exact version in the template), a web
+  tool to browse tables, run read-only queries and show spatial columns on a
+  map. It is served on the tailnet by docktail labels as
+  `avarc-<environment>-dbadmin` (HTTPS on 443, docktail terminates TLS), has
+  no published host port and is not routed by the ingress. Without the
+  variable, and on prod always, the service is not started (a Compose
+  profile that `run.sh` enables only then). It is written for "the database",
+  not for one engine: a connection is listed per database of the
+  environment, so an engine change or an internal SQLite database adds or
+  replaces a connection, not the tool. A SQLite file is read from a
+  read-only mount and has no port of its own.
+  - **No setup by hand:** `run.sh` configures the tool at each start from
+    files it renders into the in-memory secrets directory and mounts
+    read-only, so the first-run wizard never appears. The server
+    configuration is a Java properties file mounted as
+    `conf/.cloudbeaver.auto.conf` (keys `CB_SERVER_NAME`, `CB_SERVER_URL`,
+    `CB_ADMIN_NAME`, `CB_ADMIN_PASSWORD`); the admin name and password are
+    `DBTOOL_ADMIN_NAME` and `DBTOOL_ADMIN_PASSWORD` of the secrets file,
+    generated and appended when missing, the password meeting the tool's
+    policy (at least eight characters, mixed case, a digit). The
+    connections are `GlobalConfiguration/.dbeaver/data-sources.json`, with
+    `read-only` set, the user and password of the read-only account in
+    `auth-properties`, and no custom connections for users. The password is
+    therefore in a file that exists only in the memory directory, never in
+    the repository or on disk between starts. The configuration is
+    regenerated at every start and wins over changes made in the tool.
+  - **Access:** the tool's own login (the admin account above) is required;
+    anonymous access is switched off. The connections use the read-only
+    account of `create-db-user.sh`, never the application's role, so the
+    database stays read-only whatever is typed in the tool; Keycloak's
+    database is not a connection. The map view loads its base map from a
+    public tile server in the browser of the person using it.
+  - **State:** the tool's workspace is under `deploy/data/<environment>/`,
+    which `reset` removes. The container runs as the user that started the
+    project, like `keycloak`, to read the secrets directory.
+  - **Verified (CloudBeaver 26.2.2):** with the environment variables
+    `CB_*`, and with the properties file above, the server starts
+    configured and the admin can log in; a connection from the rendered
+    `data-sources.json` with `read-only` and plain `auth-properties`
+    connects to PostGIS. Not verified yet: the properties file together
+    with the rendered connections on a read-only mount, the SQLite
+    connection and the spatial viewer, which the implementation checks.
 - **Data:** bind-mounted under `deploy/data/<environment>/` (gitignored).
 - **Secrets:** their values are in `deploy/secrets.dev.sh` (dev; generated
   with random values on the first start), `deploy/secrets.stage.sh` or
