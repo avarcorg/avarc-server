@@ -43,3 +43,4 @@ files. Do not edit by hand. See
 | AVARC-35 | [Verify the module boundaries with Spring Modulith](finished/TASK-modulith-verification.md) | task | finished | normal | backend | AVARC-3 |
 | AVARC-36 | [Notify the deployment system after a successful build](TASK-deploy-notification.md) | task | in-progress | normal | project | AVARC-27, AVARC-31, AVARC-37 |
 | AVARC-37 | [Run the published images on stage](TASK-registry-pull.md) | task | open | normal | project | AVARC-31, AVARC-32, AVARC-33 |
+| AVARC-38 | [Optionally expose the database on the tailnet (dev and stage)](finished/TASK-database-tailnet.md) | task | finished | low | project | AVARC-18 |
