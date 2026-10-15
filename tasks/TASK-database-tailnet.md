@@ -54,21 +54,54 @@ Reopened to add a web-based database tool next to the exposed port. When
 Compose project; without the variable it is not started at all (not just
 hidden), and on prod it is never started, by the same rule as the port.
 
-- **Tool:** decided in the specification phase, with a view to the data
-  here: PostGIS geometries. A candidate is pgAdmin, which can show geometry
-  columns on a map; lighter candidates are Adminer and CloudBeaver. The
-  spec records the choice and why, and the image is pinned like the others.
+The wording of this task is deliberately about "the database", not about
+PostGIS: the engine may change, and an internal SQLite database may be added
+to the application ([SPEC-backend.md](../spec/SPEC-backend.md)). A SQLite
+file has no port, so for it the tool is the only way in, reading the file
+from a read-only mount. Keycloak's database stays a PostgreSQL database
+whatever the application uses.
+
+- **Tool:** CloudBeaver (Community edition) is the candidate, because it
+  works across engines (PostgreSQL, SQLite and others) and has a viewer for
+  spatial data. pgAdmin is the better PostgreSQL-only tool and Adminer the
+  smallest, but neither covers an engine change and a map together. The
+  specification phase confirms the choice against the documentation of the
+  pinned version, in particular these points that this task has not
+  verified: the spatial viewer in the Community edition, and a read-only
+  mode for a connection. The image is pinned like the others.
 - **Reaching it:** served on the tailnet through docktail as
   `${NAME}-dbadmin` (HTTPS on 443), like the Keycloak console, with no
   published host port and not routed by the ingress.
-- **Access:** it connects with the read-only role of
-  `deploy/create-db-user.sh`, never the application's role; the role's
-  password is entered by the person using the tool, or provided to the tool
-  as a file secret if it supports that (never an environment variable, see
-  [SPEC-deployment.md](../spec/SPEC-deployment.md)). The tool has its own
-  login if it offers one, and its state (saved servers, settings) lives
-  under `deploy/data/<environment>/` or in a volume that `reset` removes.
-  Keycloak's database stays closed to the role unless `--keycloak` opened it.
+- **Automatic admin setup:** nobody walks through the first-run wizard. The
+  server is configured by a generated `.cloudbeaver.auto.conf` next to
+  `cloudbeaver.conf` (server name, server URL, admin name, admin password)
+  instead of the environment variables CloudBeaver also accepts, because
+  secrets are files here ([SPEC-deployment.md](../spec/SPEC-deployment.md)).
+  `run.sh` renders it into the in-memory secrets directory at each start
+  from the environment's secrets file (an admin name and a generated admin
+  password, added to the file like the other generated secrets) and mounts
+  it read-only. The admin password must satisfy CloudBeaver's password
+  rules. Whether the server reads the file when it is mounted read-only,
+  and how the first-run data are seeded, is verified at implementation.
+- **Automatic databases:** the connections exist at the first start. They
+  are listed in `data-sources.json` of the global configuration
+  (`workspace/GlobalConfiguration/.dbeaver/`), rendered by `run.sh` at each
+  start, one per database of the environment (the application's database,
+  and a SQLite file when there is one), each using the read-only role of
+  `deploy/create-db-user.sh`, never the application's role. The password
+  for a connection goes into `credentials-config.json`, which CloudBeaver
+  encrypts with a key from its own distribution; that file is rendered at
+  start as well, into the in-memory directory, so no credential is
+  committed or kept on disk between starts. If rendering the credentials
+  proves impractical, the connections are created without a saved password
+  and the person using the tool types the read-only password; the task
+  records which way was taken. Keycloak's database stays closed to the role
+  unless `--keycloak` opened it. A connection whose role does not exist yet
+  fails to connect; the tool itself still starts.
+- **State:** what the tool keeps (its workspace) lives under
+  `deploy/data/<environment>/` or in a volume that `reset` removes. The
+  rendered configuration wins at each start, so a change made in the tool
+  to a global connection does not outlive a restart.
 - **Docs:** the same paragraph of the deployment spec and the same line of
   `AGENTS.md` cover it: how to turn it on and the address.
 
