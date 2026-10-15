@@ -27,6 +27,7 @@
         <java.version>25</java.version>
         <image.namespace>avarcorg</image.namespace>
         <image.name>${image.namespace}/${project.artifactId}</image.name>
+        <image.source>https://github.com/avarcorg/avarc-server</image.source>
         <exec-maven-plugin.version>3.6.4</exec-maven-plugin.version>
     </properties>
 
@@ -65,6 +66,8 @@
                                             <argument>${image.env}</argument>
                                             <argument>--env</argument>
                                             <argument>${image.env.extra}</argument>
+                                            <argument>--env</argument>
+                                            <argument>BP_OCI_SOURCE=${image.source}</argument>
                                             <argument>--tag</argument>
                                             <argument>${image.name}:latest</argument>
                                         </arguments>
