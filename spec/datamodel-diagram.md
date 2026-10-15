@@ -7,18 +7,18 @@ schema `avarc`, as the Flyway migrations in
 logical model is in [SPEC-locations.md](SPEC-locations.md) and
 [SPEC-users.md](SPEC-users.md). `GENERATED` marks a column the database
 computes; the application does not touch it. Current up to migration
-`V2__locations.sql`.
+`V3__user_kc_columns.sql`.
 
 ```mermaid
 erDiagram
     app_user {
         uuid id PK
-        text subject UK "Keycloak subject"
-        text username
-        text email
-        text first_name
-        text last_name
-        text display_name
+        text kc_subject UK "Keycloak subject"
+        text kc_username
+        text kc_email
+        text kc_first_name
+        text kc_last_name
+        text kc_display_name
         jsonb preferences
         timestamptz created_at
         timestamptz last_login_at
@@ -71,5 +71,5 @@ erDiagram
     tag ||--o{ location_tag : "used by"
 ```
 
-`location.created_by`, `location.updated_by` and `app_user.subject` hold the
+`location.created_by`, `location.updated_by` and `app_user.kc_subject` hold the
 same Keycloak subject but are not linked by a foreign key.
