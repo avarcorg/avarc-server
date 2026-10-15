@@ -44,3 +44,6 @@ secrets*.sh
 
 # Maven build output
 target/
+
+# Local notes, never committed
+local/*
