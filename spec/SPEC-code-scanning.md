@@ -44,6 +44,16 @@ CodeQL analysis on GitHub.
 - Branches are ignored by allow-listing: the push trigger names only
   `main`, so no analysis runs for the branches above.
 
+## Shell scripts
+
+CodeQL does not analyze shell, so the shell scripts are checked with
+ShellCheck instead, at the level of warnings and errors (notes, such as
+unquoted variables that are safe, are not reported). `tools/shellcheck.sh`
+selects the tracked files that start with a shell shebang, except the
+third-party `mvnw`, and runs ShellCheck; the workflow
+`.github/workflows/shellcheck.yml` calls it on pushes to `main` and pull
+requests that change a shell script, the hooks or the workflow itself.
+
 ## Open questions
 
 - Query suite (default versus extended).
