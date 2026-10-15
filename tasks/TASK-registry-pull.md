@@ -26,6 +26,10 @@ when it is taken up, and the tasks that wait for it point here
   project with `IMAGE_NAMESPACE=ghcr.io/avarcorg` and the four `*_VERSION`
   variables naming a published tag (`snapshot`, `sha-<commit>` or a release
   version).
+- `run.sh` already takes `IMAGE_NAMESPACE` and the `*_VERSION` variables from
+  the environment's secrets file when the environment does not set them, so a
+  host keeps its choice in a file that is never committed and needs no change
+  to the systemd unit.
 - Decide which tag stage runs (the moving `snapshot`, or a pinned
   `sha-<commit>`), and how the update procedure of
   [AVARC-27](TASK-stage-deployment.md) changes: pull, restart, check, and a
