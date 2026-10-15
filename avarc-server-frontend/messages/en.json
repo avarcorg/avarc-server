@@ -7,7 +7,11 @@
     "menu": "Menu",
     "language": "Language",
     "userMenu": "Account",
-    "logout": "Log out"
+    "logout": "Log out",
+    "devLinks": "Developer links",
+    "linkDatabase": "Database tool",
+    "linkSwagger": "Swagger UI",
+    "linkOpenapi": "JSON API"
   },
   "Nav": {
     "home": "Home"

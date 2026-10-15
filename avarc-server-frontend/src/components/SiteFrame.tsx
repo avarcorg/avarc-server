@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { Link } from "../i18n/navigation";
 import type { Me } from "../lib/session";
+import { developerLinks } from "../lib/developerLinks";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { NavMenu } from "./NavMenu";
 
@@ -19,6 +20,11 @@ export async function SiteFrame({
 }) {
   const t = await getTranslations("Frame");
   const nav = await getTranslations("Nav");
+  const devLinks = developerLinks({
+    database: t("linkDatabase"),
+    swagger: t("linkSwagger"),
+    openapi: t("linkOpenapi"),
+  });
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -75,7 +81,25 @@ export async function SiteFrame({
         {children}
       </main>
       <footer className="border-t border-line">
-        <p className="mx-auto w-full max-w-6xl px-4 py-4 text-sm text-muted">{t("tagline")}</p>
+        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-4 text-sm text-muted">
+          <p>{t("tagline")}</p>
+          {devLinks.length > 0 && (
+            <nav aria-label={t("devLinks")} className="ml-auto">
+              <ul className="flex flex-wrap gap-x-4 gap-y-1">
+                {devLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className="underline hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+        </div>
       </footer>
     </div>
   );

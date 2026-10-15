@@ -132,6 +132,15 @@ case "${ENVIRONMENT}" in
 esac
 export KEYCLOAK_ADMIN_ORIGIN=${KEYCLOAK_ADMIN_ORIGIN:-https://${NAME}-kc${TAILNET_DOMAIN:+.${TAILNET_DOMAIN}}}
 export DBTOOL_ORIGIN=${DBTOOL_ORIGIN:-https://${NAME}-dbadmin${TAILNET_DOMAIN:+.${TAILNET_DOMAIN}}}
+# Footer links of the frontend: none on prod; the database tool only if enabled.
+FOOTER_API_DOCS=false
+FOOTER_DBTOOL_URL=
+if [ "${ENVIRONMENT}" != "prod" ]
+then
+    FOOTER_API_DOCS=true
+    [ "${DBTOOL_ENABLE}" = "true" ] && FOOTER_DBTOOL_URL=${DBTOOL_ORIGIN}
+fi
+export FOOTER_API_DOCS FOOTER_DBTOOL_URL
 RUN_UID=$(id -u)
 export RUN_UID
 export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-/dev/shm/${NAME}-secrets}

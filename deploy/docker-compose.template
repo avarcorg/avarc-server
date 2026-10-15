@@ -37,6 +37,8 @@ services:
     image: ${IMAGE_NAMESPACE}/avarc-frontend:${FRONTEND_VERSION}
     environment:
       - BACKEND_URL=http://backend:8080
+      - FOOTER_API_DOCS=${FOOTER_API_DOCS}
+      - FOOTER_DBTOOL_URL=${FOOTER_DBTOOL_URL}
     restart: unless-stopped
 
   # Creates Keycloak's own database in the database server, once.
