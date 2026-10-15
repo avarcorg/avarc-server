@@ -94,7 +94,7 @@ Apache-2.0 licensed.
   created on demand at startup. Production mode is used in every
   environment; the developer deployment differs only in its plain-http
   origin.
-- **Image:** introduced in [AVARC-32](../tasks/TASK-keycloak-image.md).
+- **Image:** introduced in [AVARC-32](../tasks/finished/TASK-keycloak-image.md).
   Keycloak runs from an image of this project, built on the pinned Keycloak
   image by a `Dockerfile` in the module `avarc-server-keycloak` (see
   [SPEC-releases.md](SPEC-releases.md) for versioning and publishing). It

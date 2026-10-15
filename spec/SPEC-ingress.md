@@ -19,7 +19,7 @@ Define the web server that sits in front of the partial applications.
 Decided in [AVARC-8](../tasks/finished/TASK-ingress-decision.md).
 
 - **Product:** nginx, changed from Caddy in
-  [AVARC-33](../tasks/TASK-ingress-image.md) (which first chose Caddy,
+  [AVARC-33](../tasks/finished/TASK-ingress-image.md) (which first chose Caddy,
   [AVARC-8](../tasks/finished/TASK-ingress-decision.md)). nginx is a web
   server of the Paketo buildpacks, so the ingress image is built with
   `pack` like the backend and the frontend, through the shared build
