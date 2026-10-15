@@ -1,7 +1,7 @@
 ---
 id: AVARC-36
 type: task
-status: in-progress
+status: open
 priority: low
 area: project
 depends-on: [AVARC-27, AVARC-31, AVARC-37]
