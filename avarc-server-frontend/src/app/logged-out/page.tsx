@@ -1,11 +1,12 @@
+import { AuthCard, buttonClass } from "../../components/AuthCard";
+
 export default function LoggedOut() {
   return (
-    <main>
-      <h1>Logged out</h1>
-      <p>You are logged out.</p>
-      <p>
-        <a href="/login">Sign in again</a>
-      </p>
-    </main>
+    <AuthCard title="Logged out">
+      <p>You have been logged out. See you soon.</p>
+      <a href="/login" className={buttonClass}>
+        Sign in again
+      </a>
+    </AuthCard>
   );
 }
