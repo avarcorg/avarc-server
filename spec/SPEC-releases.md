@@ -80,6 +80,13 @@ checked out.
     image, the Keycloak base image) and the downloads inside a `pack` build (JRE, Node) are not
     cached: the cache action for Docker images that was tried no longer
     works with GitHub's cache service.
+  - **Cleaning workflow runs:** introduced in [AVARC-39](../tasks/finished/TASK-clean-action-runs.md).
+    The workflow "Clean workflow runs" (`.github/workflows/clean-runs.yml`)
+    runs weekly and on demand with the permission `actions: write` only. It
+    deletes finished runs older than 30 days, but keeps the latest 5 runs of
+    every workflow; queued and running runs are never touched. Both values
+    and a dry run (lists, deletes nothing) are inputs of the manual run.
+    Images, releases and tags are not workflow runs and are not affected.
   - **Using them:** the Compose project runs a published image when
     `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,
     `FRONTEND_VERSION`, `INGRESS_VERSION` and `KEYCLOAK_VERSION` name a tag (see
