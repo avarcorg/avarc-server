@@ -64,8 +64,10 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `DB_READONLY_PASSWORD` from the secrets file or generates and appends one);
   it reads the tables of the `avarc` database and its sessions are read-only.
   The account cannot connect to Keycloak's database (users and credential
-  hashes) unless `create-db-user.sh --keycloak` grants read access to it;
-  running the script without the option withdraws it again.
+  hashes) unless `DB_KEYCLOAK=true` in the secrets file (or the option
+  `--keycloak` of `create-db-user.sh`) asks for it and the script is run,
+  which then grants read access; running the script without either withdraws
+  it again.
   The application's own credentials are not handed out. Who may reach the
   service is decided by the tailnet's access rules.
 - **Database tool (optional):** introduced with
@@ -108,8 +110,10 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   - **Access:** the tool's own login (the admin account above) is required;
     anonymous access is switched off. The connections use the read-only
     account of `create-db-user.sh`, never the application's role, so the
-    database stays read-only whatever is typed in the tool; Keycloak's
-    database is not a connection. The map view loads its base map from a
+    database stays read-only whatever is typed in the tool. Keycloak's
+    database is a second connection, `keycloak`, with the same account, only
+    when `DB_KEYCLOAK=true` (the access itself is granted by
+    `create-db-user.sh`, see above); otherwise it is not a connection. The map view loads its base map from a
     public tile server in the browser of the person using it.
   - **State:** the tool's workspace is under `deploy/data/<environment>/`,
     which `reset` removes. The container runs as the user that started the
