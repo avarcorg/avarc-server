@@ -15,6 +15,11 @@ workflows up to date through automated pull requests from Renovate.
   operates it. It is configured by a `renovate.json` in the repository root,
   based on `config:recommended`, with the Compose template
   `deploy/docker-compose.template` added to the files it scans.
+- The Node version, which no standard manager recognises, is tracked by a
+  custom manager in `node.version` of the frontend POM and `NODE_VERSION` of
+  the CI workflow, and updated in one grouped pull request so the CI check
+  between them keeps passing. The Paketo builder images are untagged and
+  need no tracking.
 - Pull requests are neither grouped beyond the recommended presets nor
   scheduled or rate limited: they open as soon as an update appears.
 - Nothing is merged automatically; every update pull request is reviewed.
