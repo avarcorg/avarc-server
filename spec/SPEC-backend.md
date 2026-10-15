@@ -40,3 +40,17 @@ Define the API service that stores and serves locations.
   actuator endpoints.
 - **API:** REST + OpenAPI, generated from the code (springdoc). Other
   consumers, such as API keys or an MCP adapter, use the same API.
+- **API description and Swagger UI:** introduced in
+  [AVARC-34](../tasks/TASK-api-docs.md). The OpenAPI document
+  (`/api/docs/openapi.json`) and Swagger UI (`/api/docs`) are served in the
+  `dev` and `stage` environments only, enabled by their Spring profile like
+  the actuator endpoints; prod serves neither. They are under `/api/`, so
+  the ingress routes them without a rule of their own. They are readable
+  without a login, and only where springdoc is enabled: the security
+  configuration opens those paths on the same setting, so a prod
+  deployment cannot open them by mistake. The endpoints themselves are
+  unchanged and need a login; "Try it out" in Swagger UI uses the session
+  cookie of a login on the same origin and, for requests that change data,
+  the CSRF token that `GET /api/auth/me` reports, which the page describes.
+  Opening the endpoints themselves would be a change of the security model
+  and needs a decision of its own.
