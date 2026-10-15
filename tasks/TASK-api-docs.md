@@ -35,15 +35,12 @@ has neither.
 - Give the document a title, description and version, group the existing
   endpoints (hello, auth) and describe the session cookie and CSRF token
   that the API expects, so that calls from Swagger UI are explained.
-- Decided (by the maintainer, 2026-10-15), recorded in the spec: the default
-  below. Question was: does "no
-  authentication necessary" cover only reading the document and the UI, or
-  should "Try it out" calls to the other endpoints work without a login on
-  dev and stage too? Default: only the document and the UI are open; the
-  calls use the session of a login in the same browser (same origin), with
-  the CSRF token from `GET /api/auth/me`. Opening the endpoints themselves
-  would be a larger change of the security model and would need its own
-  decision.
+- Decided (by the maintainer, 2026-10-15) and recorded in the spec: "no
+  authentication necessary" covers only reading the document and the UI.
+  "Try it out" calls use the session of a login in the same browser (same
+  origin), with the CSRF token from `GET /api/auth/me`. Opening the
+  endpoints themselves would be a larger change of the security model and
+  would need its own decision.
 - Tests: in the `dev` profile the document and the UI answer without a login
   and the document lists the existing endpoints; without the profile
   (default and prod) they answer 401 or 404, and the endpoints stay
