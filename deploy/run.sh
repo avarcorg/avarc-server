@@ -2,8 +2,9 @@
 # Start, stop and reset the deployment. Without arguments, or with --help,
 # it prints the usage below and exits.
 #
-#   deploy/run.sh [--stage] up     start in the foreground (systemd runs it so;
-#                                  add -d to detach)
+#   deploy/run.sh [--stage] up     pull the images (from a registry), then start in
+#                                  the foreground (systemd runs it so; add -d to
+#                                  detach)
 #   deploy/run.sh [--stage] down   stop, keep data
 #   deploy/run.sh reset            dev only: stop, delete local data and secrets
 #   deploy/run.sh [--stage] <other>  passed to "docker compose" (logs, ps, ...)
@@ -177,6 +178,29 @@ render_compose () {
     chmod 0600 "${P}/docker-compose.yml"
 }
 
+# Pulls the images of the project when IMAGE_NAMESPACE names a registry
+# (it contains a "/"); otherwise they are built on the host and nothing is
+# pulled. Tries again after a pause if the pull fails.
+pull_images () {
+    case "${IMAGE_NAMESPACE}" in
+        */*) ;;
+        *) return 0 ;;
+    esac
+    _attempt=1
+    _attempts=${PULL_ATTEMPTS:-4}
+    until ${COMPOSE} pull
+    do
+        if [ "${_attempt}" -ge "${_attempts}" ]
+        then
+            echo "run.sh: could not pull the images from ${IMAGE_NAMESPACE} (${_attempts} attempts)" >&2
+            return 1
+        fi
+        echo "run.sh: image pull failed (attempt ${_attempt} of ${_attempts}), retrying in ${PULL_RETRY_DELAY:-15} seconds" >&2
+        _attempt=$((_attempt + 1))
+        sleep "${PULL_RETRY_DELAY:-15}"
+    done
+}
+
 if [ "${COMMAND}" = "down" ]
 then
     render_compose
@@ -207,6 +231,6 @@ mkdir -p "${P}/data/${ENVIRONMENT}/db"
 render_compose
 
 case "${COMMAND}" in
-    up) shift; ${COMPOSE} up --pull missing "$@" ;;
+    up) pull_images; shift; ${COMPOSE} up --pull missing "$@" ;;
     *)  ${COMPOSE} "$@" ;;
 esac
