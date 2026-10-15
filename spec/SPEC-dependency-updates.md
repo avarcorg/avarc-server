@@ -1,6 +1,6 @@
 # SPEC: Dependency updates with Renovate
 
-Status: draft. Part of [SPEC.md](../SPEC.md).
+Status: accepted. Part of [SPEC.md](../SPEC.md).
 
 ## Purpose
 
@@ -11,7 +11,15 @@ workflows up to date through automated pull requests from Renovate.
 
 - Renovate is the only tool opening dependency update pull requests.
   Dependabot version updates are disabled.
-- Renovate is configured by a `renovate.json` in the repository root.
+- Renovate is the hosted Renovate app, enabled for this repository; nobody
+  operates it. It is configured by a `renovate.json` in the repository root,
+  based on `config:recommended`, with the Compose template
+  `deploy/docker-compose.template` added to the files it scans.
+- Pull requests are neither grouped beyond the recommended presets nor
+  scheduled or rate limited: they open as soon as an update appears.
+- Nothing is merged automatically; every update pull request is reviewed.
+- Major updates get their own pull request, labeled `major`. Security updates
+  are raised at once, like all others.
 - Renovate only operates on the default branch (`main`). It must not use any
   other branch as a base branch.
 - Pre-existing branches that must be ignored by Renovate:
@@ -21,16 +29,8 @@ workflows up to date through automated pull requests from Renovate.
   - leftover update branches from earlier tooling: `dependabot/**` and
     `renovate/**`
 - Renovate must not be reconfigured to pick up its own or other tools'
-  update branches; stale ones are deleted from the remote instead (see
-  [TASK-renovate-setup.md](../tasks/TASK-renovate-setup.md)).
+  update branches. The stale `dependabot/**` branches are deleted from the
+  remote; `renovate/**` branches belong to Renovate, which manages them.
 - Update pull requests follow the contribution rules in
   `AI_POLICY.md` and the sign-off rule from `AGENTS.md` where the Renovate
   deployment allows it.
-
-## Open questions
-
-- Which Renovate deployment is used (hosted app or self-hosted) and who
-  operates it.
-- Grouping, scheduling, rate limits and automerge policy.
-- Handling of major updates and security updates.
-- Whether stale historic branches are deleted or merely ignored.
