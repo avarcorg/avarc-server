@@ -251,8 +251,11 @@ render_compose
 # One-shot services exit right after their job, and compose has no
 # "remove on exit". The foreground "up" blocks until the project is torn
 # down, so each one is watched from the background: wait for its container,
-# wait for it to exit, wait until the container of the service that depends
-# on it exists (earlier, compose would still check the dependency), remove it.
+# wait for it to exit, then wait until the service that depends on it has
+# been started after that exit (a container left over from an earlier run
+# does not count; removing the one-shot container before compose has seen it
+# complete makes "up" fail), and remove it. If that never happens, for
+# example because the dependent kept running, the container stays.
 remove_when_done () {
     service=$1
     dependent=$2
@@ -267,12 +270,22 @@ remove_when_done () {
         done
         [ -n "${cid}" ] || exit 0
         docker wait "${cid}" >/dev/null 2>&1 || true
-        while [ -z "$(${COMPOSE} ps -a -q "${dependent}" 2>/dev/null || true)" ] && [ "${tries}" -lt 600 ]
+        finished=$(docker inspect -f '{{.State.FinishedAt}}' "${cid}" 2>/dev/null || true)
+        [ -n "${finished}" ] || exit 0
+        while [ "${tries}" -lt 600 ]
         do
+            dcid=$(${COMPOSE} ps -a -q "${dependent}" 2>/dev/null || true)
+            started=
+            [ -z "${dcid}" ] || started=$(docker inspect -f '{{.State.StartedAt}}' "${dcid}" 2>/dev/null || true)
+            if [ -n "${started}" ] && [ "${started}" != "${finished}" ] \
+                && [ "$(printf '%s\n%s\n' "${finished}" "${started}" | sort | tail -n 1)" = "${started}" ]
+            then
+                ${COMPOSE} rm -f "${service}" >/dev/null 2>&1 || true
+                exit 0
+            fi
             sleep 1
             tries=$((tries + 1))
         done
-        ${COMPOSE} rm -f "${service}" >/dev/null 2>&1 || true
     ) &
 }
 
