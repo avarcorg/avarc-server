@@ -49,7 +49,10 @@ dev and stage environments are all actuator endpoints exposed: the Spring
 profile named after the environment is activated with
 `SPRING_PROFILES_ACTIVE` (`application-dev.properties`,
 `application-stage.properties`; `spring-boot:run` uses `dev` by default).
-Prod has no profile file and exposes `health` only. The Compose project runs
+Prod has no profile file and exposes `health` only. The same two
+environments serve the OpenAPI document at `/api/docs/openapi.json` and
+Swagger UI at `/api/docs`, readable without a login (spec:
+`spec/SPEC-backend.md`); prod serves neither. The Compose project runs
 the backend, frontend, ingress and Keycloak images (`IMAGE_NAMESPACE`, `BACKEND_VERSION`,
 `FRONTEND_VERSION`, `INGRESS_VERSION`, `KEYCLOAK_VERSION`, see `spec/SPEC-deployment.md`), so build them with `-Pwith-docker` before
 `deploy/run.sh up`.
