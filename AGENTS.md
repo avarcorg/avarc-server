@@ -137,9 +137,7 @@ the images `ghcr.io/avarcorg/avarc-backend`, `-frontend`, `-ingress` and `-keycl
 (`tools/publish-images.sh`, `--dry-run` shows what it would push). To run
 published images, start the Compose project with
 `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,
-`FRONTEND_VERSION`, `INGRESS_VERSION` and `KEYCLOAK_VERSION` set to a tag. The packages are private for now: run
-`docker login ghcr.io` with a token that has `read:packages` on the host
-first.
+`FRONTEND_VERSION`, `INGRESS_VERSION` and `KEYCLOAK_VERSION` set to a tag. The packages are public; no login is needed to pull.
 
 ## Shell scripts
 

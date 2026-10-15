@@ -21,12 +21,11 @@ registry has been postponed by the maintainer; this task is the work to do
 when it is taken up, and the tasks that wait for it point here
 ([AVARC-36](TASK-deploy-notification.md)).
 
-- The environment pulls the images from the registry: it logs in with a token
-  that may read packages (the packages are private), and runs the Compose
+- The environment pulls the images from the registry: it pulls without a login (the
+  packages are public since 2026-10-15), and runs the Compose
   project with `IMAGE_NAMESPACE=ghcr.io/avarcorg` and the four `*_VERSION`
   variables naming a published tag (`snapshot`, `sha-<commit>` or a release
-  version). Where the login and the token are kept is a private matter and
-  is not written down in this repository.
+  version).
 - Decide which tag stage runs (the moving `snapshot`, or a pinned
   `sha-<commit>`), and how the update procedure of
   [AVARC-27](TASK-stage-deployment.md) changes: pull, restart, check, and a
