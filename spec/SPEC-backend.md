@@ -49,7 +49,7 @@ Define the API service that stores and serves locations.
   columns or tables without changing existing rows. Locations carry the UUID
   as their identity and may have an internal numeric surrogate key.
   Schema changes are applied by versioned migrations.
-- **Persistence setup:** introduced in [AVARC-42](../tasks/TASK-user-entities.md).
+- **Persistence setup:** introduced in [AVARC-42](../tasks/finished/TASK-user-entities.md).
   Spring Data JPA with Hibernate, migrations by Flyway, which the backend
   runs at startup. The `public` schema of the PostGIS database is never
   empty (the extension's tables, and the schemas `tiger`, `tiger_data` and
