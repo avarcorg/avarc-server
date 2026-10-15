@@ -81,6 +81,15 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   (4 attempts, 15 seconds; `PULL_ATTEMPTS` and `PULL_RETRY_DELAY` change
   that). When the last attempt fails, `run.sh` stops with a message before
   anything is started, and the service manager's own restart tries again later.
+- **Updating stage:** stage runs the moving tag `snapshot` of the four images
+  (the latest build of `main`). An update is a restart of the service: the
+  stack stops, `run.sh up` pulls the new images and starts them, and the
+  checks are `/actuator/health` (200), `/api/hello` (401 without a login),
+  the realm endpoint (200) and the origin (307). A rollback sets the four
+  `*_VERSION` variables of the host to `sha-<commit>` of the earlier build
+  and restarts; going back to `snapshot` removes them again. Prod does not
+  follow this: it runs release tags only (see
+  [SPEC-releases.md](SPEC-releases.md)).
 - **Keycloak admin console:** the `keycloak` service carries docktail labels
   that expose it on the tailnet as `avarc-<environment>-kc` on port 443,
   where docktail terminates TLS. Admins reach the console of the `avarc`
