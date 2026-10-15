@@ -121,7 +121,14 @@ answer as on dev, also through the tailnet names, the ingress log has no
 errors, and a browser login and logout work (confirmed by the maintainer on
 2026-10-15).
 
-Open: the replacement of the headers of an untrusted hop (not testable from
-the private networks of the host).
+Untrusted hop, checked on dev with an echo service as the backend: a request
+to the ingress through the host's tailnet address (`100.x`, not a private
+range) with forged `X-Forwarded-Proto: https`, `-Host: evil.example` and
+`-For: 1.2.3.4` reached the upstream with `http`, the real `Host` and only
+the peer address; the same request through `localhost` (a private peer)
+passed the forged values on unchanged.
+
+Open: running the *published* image on stage, which waits (see
+[SPEC-releases.md](../spec/SPEC-releases.md)).
 [AVARC-24](TASK-observability-ingress-database.md) names no product, so it
 needs no change.
