@@ -15,45 +15,39 @@ Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
 
 The CI Build publishes the backend, frontend, ingress and Keycloak images to
 the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
-[AVARC-32](finished/TASK-keycloak-image.md), [AVARC-33](finished/TASK-ingress-image.md)). Stage
-does not pull them yet: it runs images built on its own host. Pulling from the
-registry has been postponed by the maintainer; this task is the work to do
-when it is taken up, and the tasks that wait for it point here
+[AVARC-32](finished/TASK-keycloak-image.md),
+[AVARC-33](finished/TASK-ingress-image.md)). Stage runs them since
+2026-10-15; the tasks that wait for the rest of this work point here
 ([AVARC-36](TASK-deploy-notification.md)).
 
-- The environment pulls the images from the registry: it pulls without a login (the
-  packages are public since 2026-10-15), and runs the Compose
-  project with `IMAGE_NAMESPACE=ghcr.io/avarcorg` and the four `*_VERSION`
-  variables naming a published tag (`snapshot`, `sha-<commit>` or a release
-  version).
-- `run.sh` already takes `IMAGE_NAMESPACE` and the `*_VERSION` variables from
-  the environment's secrets file when the environment does not set them, so a
-  host keeps its choice in a file that is never committed and needs no change
-  to the systemd unit.
-- Decide which tag stage runs (the moving `snapshot`, or a pinned
-  `sha-<commit>`), and how the update procedure of
-  [AVARC-27](TASK-stage-deployment.md) changes: pull, restart, check, and a
-  rollback to the previous tag.
-- Make sure `deploy/run.sh` and the Compose template need no change besides
-  the variables, or specify the change; a missing tag or an expired token
-  must fail with a clear message, before the old stack is stopped.
-- Update the specs (releases and deployment: the sentence that stage and prod
-  run host-built images until then goes away) and `AGENTS.md`, and remove the
-  related notes from [AVARC-32](finished/TASK-keycloak-image.md),
-  [AVARC-33](finished/TASK-ingress-image.md) and AVARC-27.
+## Done
 
-## Progress
+- The packages are public, so a host pulls without a login.
+- `run.sh up` pulls the images first when `IMAGE_NAMESPACE` names a registry,
+  with a few retries, and stops with a message when the pull fails, before
+  anything is started. It takes `IMAGE_NAMESPACE` and the `*_VERSION`
+  variables from the environment's secrets file when the environment does not
+  set them, so a host keeps its choice in a file that is never committed and
+  needs no change to the systemd unit.
+- Stage runs the four images under the tag `snapshot`. The first run found
+  that the ingress image failed without a `PORT` variable; its configuration
+  now has the port written in ([AVARC-33](finished/TASK-ingress-image.md)).
+  After a restart through the deploy job the smoke checks answer as before
+  (health 200, API 401 without a login, realm endpoint 200, origin 307), and
+  the login and logout work in a browser.
+- The specs, `AGENTS.md` and the notes of AVARC-27, 32 and 33 say that stage
+  runs the published images.
 
-- 2026-10-15: Stage runs the backend, frontend, ingress and Keycloak images
-  from the registry under the tag `snapshot`; the packages were made public
-  and `run.sh` pulls (with retries) before the start and takes the namespace
-  and versions from the secrets file. The first run found that the ingress
-  image failed without a `PORT` variable; its configuration now has the port
-  written in ([AVARC-33](finished/TASK-ingress-image.md)). After the restart through
-  the deploy job the smoke checks answer as before (health 200, API 401 without
-  a login, realm endpoint 200, origin 307). Open: the choice between
-  `snapshot` and a pinned `sha-<commit>`, the update and rollback procedure
-  with a test of going to a newer tag and back, and the login in a browser.
+## Remaining
+
+- Decide which tag stage runs: the moving `snapshot`, or a pinned
+  `sha-<commit>`. A registry mirror may keep a moving tag for a while, which
+  speaks for pinned tags.
+- Define the update procedure of [AVARC-27](TASK-stage-deployment.md): pull,
+  restart, check, and a rollback to the previous tag; write it into the
+  deployment spec.
+- Test it: go to a newer tag and back to the previous one.
+- Check that a missing tag fails with the clear message after the retries.
 
 ## Verification
 
