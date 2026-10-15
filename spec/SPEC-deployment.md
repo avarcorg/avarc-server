@@ -74,6 +74,13 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `run.sh`. This lets a host name its own registry or mirror in a file that
   is never committed, with no change to the systemd unit or this
   repository.
+- **Image pull:** `run.sh up` first pulls the images when `IMAGE_NAMESPACE`
+  names a registry (it contains a `/`, like `ghcr.io/avarcorg`); with the
+  default namespace the images are the ones built on the host and nothing is
+  pulled. A failed pull is tried again a few times with a pause in between
+  (4 attempts, 15 seconds; `PULL_ATTEMPTS` and `PULL_RETRY_DELAY` change
+  that). When the last attempt fails, `run.sh` stops with a message before
+  anything is started, and the service manager's own restart tries again later.
 - **Keycloak admin console:** the `keycloak` service carries docktail labels
   that expose it on the tailnet as `avarc-<environment>-kc` on port 443,
   where docktail terminates TLS. Admins reach the console of the `avarc`
