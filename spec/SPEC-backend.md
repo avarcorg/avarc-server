@@ -59,6 +59,24 @@ Define the API service that stores and serves locations.
   configured at runtime (address, database and user in the environment, the
   password a file secret). Tests that touch the database run against a
   PostGIS container (Testcontainers).
+- **Java format:** introduced in [AVARC-44](../tasks/TASK-java-formatter.md).
+  The Java sources (`src/main/java`, `src/test/java`) are formatted by
+  Open Java Format (MIT licensed, a drop-in for palantir-java-format, lines
+  of 120 characters), which has one style and no options, so formatting is
+  never discussed or configured. The Maven plugin
+  `dev.openjavaformat:fmt-maven-plugin` runs in the backend module with the
+  formatter version it selects; both versions are properties of the
+  module's `pom.xml`, which Renovate updates. It was checked with Java 25.
+  A normal build rewrites the sources (`format` in `process-sources`); when
+  the environment variable `CI` is set, or with `-Pformat-check`, the build
+  fails on unformatted code instead (`check`), so CI never changes what it
+  built. The pre-commit hook runs the check when Java files are staged
+  ([SPEC-work-tracking.md](SPEC-work-tracking.md)), and the check is a code
+  quality check of its own ([SPEC-code-scanning.md](SPEC-code-scanning.md)).
+  The commit that first formatted the code is listed in
+  `.git-blame-ignore-revs`. Anyone who writes Java, agents included, formats
+  it before showing a diff and before committing
+  (`tools/java-format.sh`, see `AGENTS.md`).
 - **Actuator:** only `health` is exposed by default; the `dev` and `stage`
   environments, through the Spring profile of the same name, expose all
   actuator endpoints.

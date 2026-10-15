@@ -57,3 +57,14 @@ selects the tracked files that start with a shell shebang, except the
 third-party `mvnw`, and runs ShellCheck; the workflow
 `.github/workflows/shellcheck.yml` calls it on pushes to `main` and pull
 requests that change a shell script, the hooks or the workflow itself.
+
+## Java format
+
+The formatting of the backend's Java sources is checked as a code quality
+check of its own, next to CodeQL and ShellCheck. The rule and the tool are in
+[SPEC-backend.md](SPEC-backend.md). `tools/java-format.sh check` runs the
+check without changing a file; the workflow
+`.github/workflows/java-format.yml` calls it on pushes to `main` and pull
+requests that change a Java file, a POM or the workflow itself. It reports a
+failing check, not an alert. The same check is part of the CI build and of the
+pre-commit hook when Java files are staged.
