@@ -62,7 +62,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   with a warning. Inspection uses the read-only account `avarc_ro` (created
   by `deploy/create-db-user.sh`, which takes its password
   `DB_READONLY_PASSWORD` from the secrets file or generates and appends one);
-  it reads the tables of the `avarc` database and its sessions are read-only.
+  it reads the tables of the `avarc` database, in the schemas `public` and `avarc`, and its sessions are read-only.
   The account cannot connect to Keycloak's database (users and credential
   hashes) unless `DB_KEYCLOAK=true` in the secrets file (or the option
   `--keycloak` of `create-db-user.sh`) asks for it and the script is run,
