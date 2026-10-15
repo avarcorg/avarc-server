@@ -21,6 +21,7 @@
         <node.image>node:${node.version}-alpine</node.image>
         <!-- Host port of the dev server: ./mvnw -pl avarc-server-frontend exec:exec -->
         <node.dev.port>3000</node.dev.port>
+        <image.basename>avarc-frontend</image.basename>
     </properties>
 
     <build>

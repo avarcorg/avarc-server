@@ -16,6 +16,7 @@
 
     <properties>
         <spring-boot.run.profiles>dev</spring-boot.run.profiles>
+        <image.basename>avarc-backend</image.basename>
     </properties>
 
     <dependencies>

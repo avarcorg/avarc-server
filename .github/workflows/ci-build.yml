@@ -65,7 +65,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           for name in backend frontend; do
-            docker image inspect --format '{{json .Config.Labels}}' "${NAMESPACE}/avarc-server-${name}:latest" | jq .
+            docker image inspect --format '{{json .Config.Labels}}' "${NAMESPACE}/avarc-${name}:latest" | jq .
           done
       - name: Publish the images
         if: github.event_name == 'push'

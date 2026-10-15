@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ${IMAGE_NAMESPACE}/avarc-server-backend:${BACKEND_VERSION}
+    image: ${IMAGE_NAMESPACE}/avarc-backend:${BACKEND_VERSION}
     environment:
       - SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
       - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: ${IMAGE_NAMESPACE}/avarc-server-frontend:${FRONTEND_VERSION}
+    image: ${IMAGE_NAMESPACE}/avarc-frontend:${FRONTEND_VERSION}
     environment:
       - BACKEND_URL=http://backend:8080
     restart: unless-stopped
