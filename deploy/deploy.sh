@@ -28,10 +28,17 @@ then
     exit 1
 fi
 
+# Writes a new file next to the target and renames it over it, so a shell
+# that is running the old file (run.sh, started by systemd) keeps reading the
+# old one; overwriting it in place would break that shell in the middle of
+# the script. The owner of the old file is kept.
 copy () {
     if [ "$(realpath $1)" != "$(realpath -m $2)" ]
     then
-        cp $1 $2
+        cp $1 $2.new
+        [ ! -e $2 ] || chown --reference=$2 $2.new
+        chmod $3 $2.new
+        mv -f $2.new $2
     fi
     chmod $3 $2
 }
