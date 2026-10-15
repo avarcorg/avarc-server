@@ -25,7 +25,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   user's home directory (`/home/avarc-<environment>`). On the host,
   `deploy/deploy.sh stage|prod` (root only) installs them from a checkout:
   it copies the unit to `/etc/systemd/system` and `run.sh`, the account scripts,
-  the template, the `Caddyfile`, `keycloak-start.sh` and the realm import
+  the template and the `Caddyfile`
   together into the home directory, then reloads systemd. It never starts
   the service and never touches data or secrets. It records the version of
   the checkout (`git describe --tags`) in `VERSION` next to the files and
@@ -98,6 +98,12 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   like the backend (`FRONTEND_VERSION`); it has no published port, the
   ingress reaches it as `frontend:3000`. `BACKEND_URL` (`http://backend:8080`)
   is the address at which its server side reaches the backend.
+- **Keycloak service:** runs the image of the module `avarc-server-keycloak`
+  ([SPEC-auth.md](SPEC-auth.md)), image
+  `<IMAGE_NAMESPACE>/avarc-keycloak:<KEYCLOAK_VERSION>`, versioned like the
+  backend (`KEYCLOAK_VERSION`, defaulted by `run.sh` to the version of the
+  Maven build). A host needs the image and the secrets directory only; the
+  start script and the realm import are in the image.
 - **Database image:** PostGIS, as chosen in
   [SPEC-backend.md](SPEC-backend.md).
 

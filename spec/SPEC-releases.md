@@ -43,15 +43,15 @@ checked out.
 - **Images:** introduced in [AVARC-31](../tasks/finished/TASK-image-builds.md). A
   GitHub Actions workflow "CI Build" (`.github/workflows/ci-build.yml`; a
   release build gets a workflow of its own) builds and tests
-  the project (`./mvnw -Pwith-docker verify`, which builds both images) on
+  the project (`./mvnw -Pwith-docker verify`, which builds all images) on
   every push to `main`, on release tags and on pull requests, except pushes
   and pull requests that change only Markdown files (a release tag always
   builds). Pull requests
   only build. The publishing logic is the script
   `tools/publish-images.sh`, not the workflow.
   - **Registry:** the GitHub Container Registry, namespace
-    `ghcr.io/avarcorg`, images `avarc-backend` and
-    `avarc-frontend`. The packages are private for now, so a host logs
+    `ghcr.io/avarcorg`, images `avarc-backend`,
+    `avarc-frontend` and `avarc-keycloak`. The packages are private for now, so a host logs
     in to the registry with a token that may read packages before it
     pulls; making them public is a later decision. The workflow logs in
     with its own token, which only pushes may use. The images carry the `org.opencontainers.image.source`
@@ -67,12 +67,12 @@ checked out.
     distribution (by `actions/setup-java`) and npm's downloads (the Node
     container keeps them in a host directory, see `docker-node.sh`). The
     Docker images that the build pulls (the buildpack builders, the Node
-    image) and the downloads inside a `pack` build (JRE, Node) are not
+    image, the Keycloak base image) and the downloads inside a `pack` build (JRE, Node) are not
     cached: the cache action for Docker images that was tried no longer
     works with GitHub's cache service.
   - **Using them:** the Compose project runs a published image when
-    `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION` /
-    `FRONTEND_VERSION` name a tag (see
+    `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,
+    `FRONTEND_VERSION` and `KEYCLOAK_VERSION` name a tag (see
     [SPEC-deployment.md](SPEC-deployment.md)). Deploying a host from the
     published images automatically is not decided yet.
 

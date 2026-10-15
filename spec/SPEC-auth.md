@@ -91,12 +91,28 @@ Apache-2.0 licensed.
   created on demand at startup. Production mode is used in every
   environment; the developer deployment differs only in its plain-http
   origin.
+- **Image:** introduced in [AVARC-32](../tasks/TASK-keycloak-image.md).
+  Keycloak runs from an image of this project, built on the pinned Keycloak
+  image by a `Dockerfile` in the module `avarc-server-keycloak` (see
+  [SPEC-releases.md](SPEC-releases.md) for versioning and publishing). It
+  holds the realm import file, the start script as the entrypoint, and
+  Keycloak's build-time options (database vendor, health endpoints, the
+  `/auth` relative path) applied with `kc.sh build`, so that it starts with
+  `--optimized`. Nothing environment-specific or secret is in it: hostnames,
+  the database address and every secret are runtime configuration, the
+  secrets read from `/run/secrets`. The Keycloak version is the tag in the
+  `FROM` line of the `Dockerfile`, which Renovate updates. A `Dockerfile`
+  built with `docker build` is the exception to the buildpack build of the
+  other images: no buildpack builds on top of an existing application image
+  such as Keycloak's, and a Dockerfile of a few lines is the simplest thing
+  to maintain.
 - **Configuration as code:** the realm (roles, client, login and password
   settings, locales) is kept in the repository as a realm import file
-  without secrets; secrets such as the client secret come from the
-  environment's secrets file. Keycloak imports it only when the realm does
-  not exist yet, so later changes to an existing environment are applied
-  with the admin console or its CLI.
+  without secrets, inside the image; secrets such as the client secret come
+  from the environment's secrets file. Keycloak imports it only when the
+  realm does not exist yet, so a change of the file reaches an existing
+  environment only through the admin console or its CLI; a new image version
+  carries it to new realms only.
 - **User administration:** by admins in the Keycloak admin console of the
   `avarc` realm (users, roles, disable, delete, set a temporary password
   that must be changed at the next login). The initial admin account, and
