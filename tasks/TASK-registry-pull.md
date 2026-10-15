@@ -42,6 +42,19 @@ when it is taken up, and the tasks that wait for it point here
   related notes from [AVARC-32](TASK-keycloak-image.md),
   [AVARC-33](TASK-ingress-image.md) and AVARC-27.
 
+## Progress
+
+- 2026-10-15: Stage runs the backend, frontend, ingress and Keycloak images
+  from the registry under the tag `snapshot`; the packages were made public
+  and `run.sh` pulls (with retries) before the start and takes the namespace
+  and versions from the secrets file. The first run found that the ingress
+  image failed without a `PORT` variable; its configuration now has the port
+  written in ([AVARC-33](TASK-ingress-image.md)). After the restart through
+  the deploy job the smoke checks answer as before (health 200, API 401 without
+  a login, realm endpoint 200, origin 307). Open: the choice between
+  `snapshot` and a pinned `sha-<commit>`, the update and rollback procedure
+  with a test of going to a newer tag and back, and the login in a browser.
+
 ## Verification
 
 Stage runs all four images from the registry under their published tags, the

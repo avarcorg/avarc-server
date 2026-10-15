@@ -64,8 +64,8 @@ On the developer deployment, from a fresh start (`deploy/run.sh reset`):
 Keycloak starts from the image alone, the realm is imported, the accounts
 script creates the admin, and the login and logout of
 [AVARC-29](finished/TASK-backend-login.md) work. Then the image runs on
-stage. Pulling the published image from the registry on stage has to wait,
-so stage runs the image built on its host.
+stage. Stage ran the image built on its host first, and has run the published
+one since 2026-10-15 ([AVARC-37](TASK-registry-pull.md)).
 
 ## Progress
 
@@ -98,7 +98,7 @@ maintainer on 2026-10-15).
 
 Registry (checked 2026-10-15): the CI Build of `be179d8` published
 `ghcr.io/avarcorg/avarc-keycloak` with the tags `snapshot` and
-`sha-be179d8` (private, like the other packages).
+`sha-be179d8` (the packages are public since 2026-10-15).
 
-Open: running the *published* image on stage waits, because pulling from the registry has to
-wait (see [SPEC-releases.md](../spec/SPEC-releases.md)).
+Stage runs the published `snapshot` image since 2026-10-15; the realm endpoint
+answers 200. Open: the login and logout in a browser on it.

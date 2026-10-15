@@ -79,9 +79,9 @@ without a login, `/actuator/health`, the Keycloak realm endpoints, `404`
 for the admin console, the `master` realm and traversal attempts under
 `/auth/`), the login and logout of
 [AVARC-29](finished/TASK-backend-login.md) work through the new ingress, and
-the forwarded scheme reaches Keycloak. Then the image runs on stage, built
-on its host: pulling the published image from the registry has to wait (see
-[SPEC-releases.md](../spec/SPEC-releases.md)).
+the forwarded scheme reaches Keycloak. Then the image runs on stage, first built
+on its host and since 2026-10-15 the published one
+([AVARC-37](TASK-registry-pull.md)).
 
 ## Progress
 
@@ -132,9 +132,13 @@ passed the forged values on unchanged.
 
 Registry (checked 2026-10-15): the CI Build of `be179d8` published
 `ghcr.io/avarcorg/avarc-ingress` with the tags `snapshot` and
-`sha-be179d8` (private, like the other packages).
+`sha-be179d8` (the packages are public since 2026-10-15).
 
-Open: running the *published* image on stage, which waits (see
-[SPEC-releases.md](../spec/SPEC-releases.md)).
+The published image failed on stage: the buildpack fills `{{port}}` from the
+`PORT` variable, which has no default and which the image does not set, so
+`listen` was empty (the host-built image had worked). The port 8080 is now
+written into `nginx.conf`. Stage then ran the published `snapshot` image: health
+200, API 401, realm endpoint 200, origin 307. Open: the login and logout in a
+browser on it.
 [AVARC-24](TASK-observability-ingress-database.md) names no product, so it
 needs no change.
