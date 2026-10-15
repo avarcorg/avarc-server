@@ -7,6 +7,7 @@ import java.util.Set;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -88,11 +90,23 @@ class SecurityConfig {
         };
     }
 
+    /** Announces the login to other modules, then goes to the start page. */
+    @Bean
+    AuthenticationSuccessHandler loginSuccessHandler(AuthProperties auth, ApplicationEventPublisher events) {
+        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+            if (authentication.getPrincipal() instanceof OidcUser user) {
+                events.publishEvent(new LoginSucceeded(user.getSubject(), user.getPreferredUsername(),
+                        user.getEmail(), user.getGivenName(), user.getFamilyName(), user.getFullName()));
+            }
+            response.sendRedirect(auth.publicOrigin() + "/");
+        };
+    }
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, AuthProperties auth,
             @Value("${springdoc.swagger-ui.enabled:false}") boolean apiDocsOpen,
             ClientRegistrationRepository registrations, OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService,
-            LogoutSuccessHandler logoutSuccessHandler) throws Exception {
+            LogoutSuccessHandler logoutSuccessHandler, AuthenticationSuccessHandler loginSuccessHandler) throws Exception {
         DefaultOAuth2AuthorizationRequestResolver resolver =
                 new DefaultOAuth2AuthorizationRequestResolver(registrations, "/api/auth/login");
         resolver.setAuthorizationRequestCustomizer(OAuth2AuthorizationRequestCustomizers.withPkce());
@@ -115,7 +129,7 @@ class SecurityConfig {
                         .authorizationEndpoint(endpoint -> endpoint.authorizationRequestResolver(resolver))
                         .redirectionEndpoint(endpoint -> endpoint.baseUri("/api/auth/callback"))
                         .userInfoEndpoint(endpoint -> endpoint.oidcUserService(oidcUserService))
-                        .defaultSuccessUrl(auth.publicOrigin() + "/", true)
+                        .successHandler(loginSuccessHandler)
                         .failureUrl(auth.publicOrigin() + "/login?error"))
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
