@@ -37,7 +37,8 @@ Define the API service that stores and serves locations.
   cycles; the root package holds the application class only. A test calls
   `ApplicationModules.verify()`, so `./mvnw verify` fails when a boundary is
   broken, and it writes the module diagrams to the build directory. The
-  modules today are `auth` ([SPEC-auth.md](SPEC-auth.md)), `apidocs` (the
+  modules today are `auth` ([SPEC-auth.md](SPEC-auth.md)), `user`
+  ([SPEC-users.md](SPEC-users.md)), `apidocs` (the
   API description, below) and `hello` (a placeholder endpoint); the
   locations ([SPEC-locations.md](SPEC-locations.md)) are a module of their
   own when they are implemented ([AVARC-10](../tasks/TASK-locations-crud-api.md)).
@@ -48,6 +49,16 @@ Define the API service that stores and serves locations.
   columns or tables without changing existing rows. Locations carry the UUID
   as their identity and may have an internal numeric surrogate key.
   Schema changes are applied by versioned migrations.
+- **Persistence setup:** introduced in [AVARC-42](../tasks/TASK-user-entities.md).
+  Spring Data JPA with Hibernate, migrations by Flyway, which the backend
+  runs at startup. The `public` schema of the PostGIS database is never
+  empty (the extension's tables, and the schemas `tiger`, `tiger_data` and
+  `topology`), so the application's tables live in the schema `avarc`, which
+  the first migration creates; Flyway manages that schema only. Hibernate
+  validates the mapping against it and never changes it. The connection is
+  configured at runtime (address, database and user in the environment, the
+  password a file secret). Tests that touch the database run against a
+  PostGIS container (Testcontainers).
 - **Actuator:** only `health` is exposed by default; the `dev` and `stage`
   environments, through the Spring profile of the same name, expose all
   actuator endpoints.

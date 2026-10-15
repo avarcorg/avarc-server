@@ -54,6 +54,7 @@ components and their connections.
 
 - [Locations](spec/SPEC-locations.md): data model for historical locations.
 - [Auth](spec/SPEC-auth.md): authentication, user management and authorization with Keycloak.
+- [Users](spec/SPEC-users.md): the application's record of a person, with preferences.
 - [Backend](spec/SPEC-backend.md): Java Spring Boot API service.
 - [Frontend](spec/SPEC-frontend.md): Next.js web application.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.

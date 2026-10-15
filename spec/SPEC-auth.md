@@ -88,6 +88,10 @@ Apache-2.0 licensed.
   code. The user id (`sub` claim) is what is stored as `created_by` /
   `updated_by` in [SPEC-locations.md](SPEC-locations.md). Per-location
   permissions are not part of the MVP.
+- **Application users:** Keycloak owns accounts, credentials and roles. The
+  application keeps its own `User` per Keycloak subject for preferences and
+  a copy of the profile claims, created at the login
+  ([SPEC-users.md](SPEC-users.md)).
 - **Hosting:** Keycloak runs as the service `keycloak` in the Docker Compose
   project (see [SPEC-deployment.md](SPEC-deployment.md)). Its storage is a
   database of its own (`keycloak`) in the application's database server,
