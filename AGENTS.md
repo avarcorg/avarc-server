@@ -135,7 +135,9 @@ secrets file, restart with `deploy/run.sh up`, and create the read-only
 account with `deploy/create-db-user.sh [--stage]`. Its password,
 `DB_READONLY_PASSWORD`, is taken from the secrets file or generated into it.
 Keycloak's database (users, credential hashes) is closed to the account;
-`--keycloak` opens it for reading, running the script without the option
+`export DB_KEYCLOAK=true` in the secrets file (or `--keycloak`) opens it for
+reading once the script has run, and the database tool gets a second
+connection `keycloak` after a restart. Running the script without either
 closes it again. Connect as `avarc_ro` to `avarc-<environment>-db` on port 5432, database
 `avarc`. Prod never exposes the database.
 
