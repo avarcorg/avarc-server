@@ -36,3 +36,4 @@ files. Do not edit by hand. See
 | AVARC-28 | [Simplify the architecture documentation for handover](TASK-handover-docs.md) | task | open | low | project |  |
 | AVARC-29 | [Backend login and logout](finished/TASK-backend-login.md) | task | finished | high | auth | AVARC-20, AVARC-3 |
 | AVARC-30 | [Frontend login and logout pages](finished/TASK-frontend-login.md) | task | finished | high | frontend | AVARC-29, AVARC-6 |
+| AVARC-31 | [Automated image builds and publishing](TASK-image-builds.md) | task | in-progress | normal | project | AVARC-26 |

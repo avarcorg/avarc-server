@@ -112,6 +112,17 @@ A release is a `vMAJOR.MINOR.PATCH` tag on `main` (spec:
 `--push` to push the tag too. To run a release on a host, check out its
 tag and run `deploy/deploy.sh` from there; prod accepts nothing else.
 
+The workflow "CI Build" (`.github/workflows/ci-build.yml`) builds and tests every push to
+`main`, every release tag and every pull request. Pushes to `main` publish
+the images `ghcr.io/avarcorg/avarc-server-backend` and `-frontend` as
+`snapshot` and `sha-<commit>`, release tags as `X.Y.Z` and `latest`
+(`tools/publish-images.sh`, `--dry-run` shows what it would push). To run
+published images, start the Compose project with
+`IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION` /
+`FRONTEND_VERSION` set to a tag. After the first publication, set the
+visibility of each package to public in the organization's package
+settings, if GitHub has not inherited it from the repository.
+
 ## Where things do NOT go
 
 Ad-hoc help requests (e.g. "help me ...") and decisions about how to work
