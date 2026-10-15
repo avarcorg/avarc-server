@@ -94,6 +94,16 @@ no header or footer markup of their own.
 - **Typography:** a serif face for headings, which gives the historical
   feel, and the system sans-serif font for text; both are system fonts, so
   nothing is loaded from a third party.
+- **Developer links:** introduced in [AVARC-45](../tasks/TASK-footer-dev-links.md).
+  On dev and stage the footer also links to the tools that exist there: the
+  web database tool, Swagger UI (`/api/docs`) and the JSON API document
+  (`/api/docs/openapi.json`, [SPEC-backend.md](SPEC-backend.md)). The
+  frontend learns about them at runtime, since the image is the same for
+  every environment: `FOOTER_API_DOCS=true` shows the two API links
+  (same-origin, served through the ingress) and a non-empty
+  `FOOTER_DBTOOL_URL` shows the database tool link. `run.sh` sets them
+  ([SPEC-deployment.md](SPEC-deployment.md)); unset or empty means no link,
+  so prod has none, and nothing is baked into the page bundle.
 - **Texts:** every text of the frame comes from the translations
   (Languages above), none is written into the component.
 - **Accessibility:** semantic landmarks (`header`, `nav`, `main`,

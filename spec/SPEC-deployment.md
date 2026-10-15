@@ -152,6 +152,10 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   defaults to `https://avarc-<environment>.<tailnet domain>`, the domain being
   that of the tailnet the host is in, and without a tailnet to
   `http://localhost:<ingress port>` for dev) are exported by `run.sh` and referenced in `compose.yaml`.
+- **Footer links:** on dev and stage `run.sh` passes the frontend
+  `FOOTER_API_DOCS=true` and, if the database tool is enabled,
+  `FOOTER_DBTOOL_URL` set to its address; on prod both are empty
+  ([SPEC-frontend.md](SPEC-frontend.md), AVARC-45).
 - **Host settings:** `IMAGE_NAMESPACE` and the `*_VERSION` variables (the
   images to run) are taken from the environment if set there, otherwise
   from the environment's secrets file (an exported variable of that name,
