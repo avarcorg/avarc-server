@@ -51,3 +51,5 @@ files. Do not edit by hand. See
 | AVARC-43 | [Keycloak theme](TASK-keycloak-theme.md) | task | open | low | auth | AVARC-32, AVARC-41 |
 | AVARC-44 | [Java formatter](finished/TASK-java-formatter.md) | task | finished | normal | backend |  |
 | AVARC-45 | [Developer links in the footer on non-prod](finished/TASK-footer-dev-links.md) | task | finished | normal | frontend | AVARC-41 |
+| AVARC-46 | [Externalize fixed UI strings](TASK-externalize-ui-strings.md) | task | open | normal | frontend |  |
+| AVARC-47 | [External translation service](TASK-translation-service.md) | task | open | normal | frontend | AVARC-46 |
