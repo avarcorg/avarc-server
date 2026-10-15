@@ -40,4 +40,4 @@ files. Do not edit by hand. See
 | AVARC-32 | [Custom Keycloak image](TASK-keycloak-image.md) | task | in-progress | normal | auth | AVARC-20, AVARC-31 |
 | AVARC-33 | [Custom ingress image](TASK-ingress-image.md) | task | in-progress | normal | ingress | AVARC-8, AVARC-31, AVARC-32 |
 | AVARC-34 | [Expose the API description and Swagger UI on dev and stage](finished/TASK-api-docs.md) | task | finished | normal | backend | AVARC-3, AVARC-33 |
-| AVARC-35 | [Verify the module boundaries with Spring Modulith](TASK-modulith-verification.md) | task | in-progress | normal | backend | AVARC-3 |
+| AVARC-35 | [Verify the module boundaries with Spring Modulith](finished/TASK-modulith-verification.md) | task | finished | normal | backend | AVARC-3 |

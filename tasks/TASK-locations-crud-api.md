@@ -17,4 +17,4 @@ Spec: [SPEC-backend.md](../spec/SPEC-backend.md), [SPEC-locations.md](../spec/SP
 - Cover with tests.
 - The locations code is an application module of its own under the module
   rule of [SPEC-backend.md](../spec/SPEC-backend.md)
-  ([AVARC-35](TASK-modulith-verification.md)).
+  ([AVARC-35](finished/TASK-modulith-verification.md)).

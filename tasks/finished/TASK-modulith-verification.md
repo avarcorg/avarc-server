@@ -1,7 +1,7 @@
 ---
 id: AVARC-35
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: backend
 depends-on: [AVARC-3]
@@ -10,7 +10,7 @@ created: 2026-10-15
 
 # TASK: Verify the module boundaries with Spring Modulith
 
-Spec: [SPEC-backend.md](../spec/SPEC-backend.md)
+Spec: [SPEC-backend.md](../../spec/SPEC-backend.md)
 
 The spec says the backend is a Spring Modulith monolith whose module
 boundaries Modulith verifies, but Modulith is not a dependency yet and
@@ -37,5 +37,15 @@ any module.
   reaches into the internals of another module) fails it.
 - Say in `AGENTS.md` where the rule is and that the test is part of
   `./mvnw verify`.
-- The locations module of [AVARC-10](TASK-locations-crud-api.md) is the
+- The locations module of [AVARC-10](../TASK-locations-crud-api.md) is the
   first module to which the rule really applies; mention the rule there.
+
+## Result
+
+Spring Modulith 2.1.1 (property `spring-modulith.version` of the backend
+POM, test starter only). `ModularityTests` verifies the modules and writes
+the PlantUML diagrams to `target/spring-modulith-docs/`. `ApiDocsConfig` is
+now the module `apidocs` and `HelloController` the module `hello`; the root
+package holds the application class only. A deliberate violation (a class of
+`hello` using `auth.internal.Secret`) made the test fail with "Module 'hello'
+depends on non-exposed type ...", and was removed again.
