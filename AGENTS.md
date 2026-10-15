@@ -123,6 +123,12 @@ published images, start the Compose project with
 `docker login ghcr.io` with a token that has `read:packages` on the host
 first.
 
+## Shell scripts
+
+`tools/shellcheck.sh` lints all shell scripts with ShellCheck (warnings and
+errors; it uses the installed `shellcheck` or its container image). The
+`ShellCheck` workflow runs it when a script changes; keep it clean.
+
 ## Where things do NOT go
 
 Ad-hoc help requests (e.g. "help me ...") and decisions about how to work
