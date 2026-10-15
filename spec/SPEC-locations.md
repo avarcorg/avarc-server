@@ -143,4 +143,8 @@ Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
 
 ## Open questions
 
-- None at the moment.
+- How tags are used, to be revisited. The first implementation lets any
+  editor create a tag on first use and replace its labels, keeps unused tags,
+  and has no calls of its own to list, edit or remove tags. Whether tags need
+  an owner, a controlled vocabulary, clean-up or such calls is undecided; the
+  [API](#api) rules for tags may change.
