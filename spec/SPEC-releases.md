@@ -50,8 +50,8 @@ checked out.
   only build. The publishing logic is the script
   `tools/publish-images.sh`, not the workflow.
   - **Registry:** the GitHub Container Registry, namespace
-    `ghcr.io/avarcorg`, images `avarc-server-backend` and
-    `avarc-server-frontend`. The packages are private for now, so a host logs
+    `ghcr.io/avarcorg`, images `avarc-backend` and
+    `avarc-frontend`. The packages are private for now, so a host logs
     in to the registry with a token that may read packages before it
     pulls; making them public is a later decision. The workflow logs in
     with its own token, which only pushes may use. The images carry the `org.opencontainers.image.source`

@@ -35,7 +35,7 @@ is versioned, built and published like the backend and the frontend
 - Nothing environment-specific or secret is baked in: the hostnames, the
   database address and every secret stay runtime configuration.
 - The image is built by the `-Pwith-docker` Maven build, as a module of its
-  own, tagged `<image.namespace>/avarc-server-keycloak:<version>` and
+  own, tagged `<image.namespace>/avarc-keycloak:<version>` and
   published by the CI Build workflow and `tools/publish-images.sh` with the
   other images. The Keycloak version is one property that Renovate can
   update.

@@ -56,7 +56,7 @@ Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
 - **Image:** with the `with-docker` profile, Paketo buildpacks through the
   `pack` CLI package the standalone server that `next build` wrote (with its
   static files copied next to it) into
-  `<image.namespace>/avarc-server-frontend:<version>` (and `latest`),
+  `<image.namespace>/avarc-frontend:<version>` (and `latest`),
   listening on port 3000. The `pack` invocation and the `image.namespace`
   and `image.name` properties are shared with the other modules through the
   parent POM.

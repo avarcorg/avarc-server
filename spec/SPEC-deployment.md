@@ -81,7 +81,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   the account scripts use.
 - **Backend service:** runs the image built by the backend
   ([SPEC-backend.md](SPEC-backend.md)), image
-  `<IMAGE_NAMESPACE>/avarc-server-backend:<BACKEND_VERSION>`. `run.sh`
+  `<IMAGE_NAMESPACE>/avarc-backend:<BACKEND_VERSION>`. `run.sh`
   defaults `IMAGE_NAMESPACE` to `avarcorg` and `BACKEND_VERSION` to the
   version of the Maven build (`0.1.0-SNAPSHOT`), and the environment
   overrides both (set `BACKEND_VERSION` to a release version to run a
@@ -94,7 +94,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   overrides the address at which it reaches Keycloak.
 - **Frontend service:** runs the image built by the frontend
   ([SPEC-frontend.md](SPEC-frontend.md)), image
-  `<IMAGE_NAMESPACE>/avarc-server-frontend:<FRONTEND_VERSION>`, versioned
+  `<IMAGE_NAMESPACE>/avarc-frontend:<FRONTEND_VERSION>`, versioned
   like the backend (`FRONTEND_VERSION`); it has no published port, the
   ingress reaches it as `frontend:3000`. `BACKEND_URL` (`http://backend:8080`)
   is the address at which its server side reaches the backend.
