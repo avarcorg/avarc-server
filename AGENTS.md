@@ -123,6 +123,18 @@ Keycloak and keeps the session in a cookie: the frontend pages `/login` and
 the developer deployment the origin is the one `run.sh` prints in
 `PUBLIC_ORIGIN`, not necessarily `localhost`; a login only works through it.
 
+## Database access
+
+On dev and stage the database can be served on the tailnet (spec:
+`spec/SPEC-deployment.md`): set `export DB_TAILNET=true` in the environment's
+secrets file, restart with `deploy/run.sh up`, and create the read-only
+account with `deploy/create-db-user.sh [--stage]`. Its password,
+`DB_READONLY_PASSWORD`, is taken from the secrets file or generated into it.
+Keycloak's database (users, credential hashes) is closed to the account;
+`--keycloak` opens it for reading, running the script without the option
+closes it again. Connect as `avarc_ro` to `avarc-<environment>-db` on port 5432, database
+`avarc`. Prod never exposes the database.
+
 ## Releases
 
 A release is a `vMAJOR.MINOR.PATCH` tag on `main` (spec:
