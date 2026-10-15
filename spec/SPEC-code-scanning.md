@@ -1,6 +1,6 @@
 # SPEC: Code scanning with CodeQL
 
-Status: draft. Part of [SPEC.md](../SPEC.md).
+Status: accepted. Part of [SPEC.md](../SPEC.md).
 
 ## Purpose
 
@@ -38,7 +38,11 @@ CodeQL analysis on GitHub.
   files for `actions`, `*.java`/`*.kt` for Java/Kotlin, `*.js`/`*.ts` and
   variants for JavaScript/TypeScript, `*.py` for Python) and changes in
   their area are analyzed; with none, the analysis is skipped.
-- Java/Kotlin uses build mode `none`.
+- Java/Kotlin uses build mode `none`; it needs no build step, which keeps the
+  analysis job simple and fast.
+- The default query suite is used, for the fewest false positives.
+- Findings are reported only: the analysis is not a required check and does
+  not block merging.
 - A push or pull request that changes only Markdown files does not run the
   analysis (`paths-ignore`); the weekly schedule is not affected.
 - Branches are ignored by allow-listing: the push trigger names only
@@ -53,12 +57,3 @@ selects the tracked files that start with a shell shebang, except the
 third-party `mvnw`, and runs ShellCheck; the workflow
 `.github/workflows/shellcheck.yml` calls it on pushes to `main` and pull
 requests that change a shell script, the hooks or the workflow itself.
-
-## Open questions
-
-- Query suite (default versus extended).
-- Whether findings block merging.
-- Revisit the language detection, build mode and any build steps once the
-  backend and frontend architecture is agreed
-  ([AVARC-4](../tasks/finished/TASK-backend-stack-decision.md),
-  [AVARC-7](../tasks/finished/TASK-frontend-stack-decision.md)).
