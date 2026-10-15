@@ -2,7 +2,7 @@
 id: AVARC-37
 type: task
 status: open
-priority: normal
+priority: low
 area: project
 depends-on: [AVARC-31, AVARC-32, AVARC-33]
 created: 2026-10-15

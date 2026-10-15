@@ -2,7 +2,7 @@
 id: AVARC-36
 type: task
 status: in-progress
-priority: normal
+priority: low
 area: project
 depends-on: [AVARC-27, AVARC-31, AVARC-37]
 created: 2026-10-15
