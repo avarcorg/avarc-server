@@ -20,6 +20,10 @@ workflows up to date through automated pull requests from Renovate.
   the CI workflow, and updated in one grouped pull request so the CI check
   between them keeps passing. The Paketo builder images are untagged and
   need no tracking.
+- Renovate takes the changelog of an image from the source repository named
+  in the image's labels. The Keycloak image names a release mirror there, so
+  the source of `quay.io/keycloak/keycloak` is set to
+  `https://github.com/keycloak/keycloak`, whose releases carry the notes.
 - Pull requests are neither grouped beyond the recommended presets nor
   scheduled or rate limited: they open as soon as an update appears.
 - Nothing is merged automatically; every update pull request is reviewed.
