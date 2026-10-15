@@ -42,4 +42,12 @@ class AvarcServerApplicationTests {
     void otherActuatorEndpointsAreNotExposed() throws Exception {
         mockMvc.perform(get("/actuator/env")).andExpect(status().isNotFound());
     }
+
+    @Test
+    void theApiDescriptionIsNotServed() throws Exception {
+        mockMvc.perform(get("/api/docs/openapi.json")).andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/api/docs/openapi.json").with(oidcLogin())).andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/docs")).andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/api/swagger-ui/index.html")).andExpect(status().isUnauthorized());
+    }
 }

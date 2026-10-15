@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -89,6 +90,7 @@ class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, AuthProperties auth,
+            @Value("${springdoc.swagger-ui.enabled:false}") boolean apiDocsOpen,
             ClientRegistrationRepository registrations, OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService,
             LogoutSuccessHandler logoutSuccessHandler) throws Exception {
         DefaultOAuth2AuthorizationRequestResolver resolver =
@@ -96,11 +98,16 @@ class SecurityConfig {
         resolver.setAuthorizationRequestCustomizer(OAuth2AuthorizationRequestCustomizers.withPkce());
 
         http
-                .authorizeHttpRequests(requests -> requests
-                        // which actuator endpoints exist is decided by the profile
-                        .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/api/auth/login/**", "/api/auth/callback").permitAll()
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests(requests -> {
+                    // which actuator endpoints exist is decided by the profile
+                    requests.requestMatchers("/actuator/**").permitAll();
+                    requests.requestMatchers("/api/auth/login/**", "/api/auth/callback").permitAll();
+                    // the API description and Swagger UI exist only where a profile enables them
+                    if (apiDocsOpen) {
+                        requests.requestMatchers("/api/docs", "/api/docs/**", "/api/swagger-ui/**").permitAll();
+                    }
+                    requests.anyRequest().authenticated();
+                })
                 // 401 instead of a redirect to a login page: the login page is the frontend's
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
