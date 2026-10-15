@@ -19,6 +19,8 @@ application, starting with preferences, can be attached to them.
 
 ## Data model
 
+The tables are in the [data model diagram](datamodel-diagram.md).
+
 **User**
 
 | Field | Type | Notes |

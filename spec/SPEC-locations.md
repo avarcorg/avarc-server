@@ -19,7 +19,8 @@ Define how locations of historical importance are represented and stored.
 
 ## Data model (first release)
 
-Types are logical; the storage mapping is decided with the backend.
+Types are logical; the storage mapping is decided with the backend. The tables
+are in the [data model diagram](datamodel-diagram.md).
 
 **Location**
 

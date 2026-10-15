@@ -64,6 +64,7 @@ components and their connections.
 - [Releases](spec/SPEC-releases.md): version tags and release notes.
 - [Work tracking](spec/SPEC-work-tracking.md): file-based tracking of work items.
 - [Architecture diagram](spec/SPEC-architecture-diagram.md): diagram of the system.
+- [Data model diagram](spec/SPEC-datamodel-diagram.md): diagram of the database tables.
 
 ## Open questions
 
