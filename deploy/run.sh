@@ -102,6 +102,9 @@ then
     fi
 fi
 export DB_DOCKTAIL_ENABLE
+# The web database tool goes with the exposed database: it is the Compose
+# profile "dbtool", enabled under the same conditions.
+DBTOOL_ENABLE=${DB_DOCKTAIL_ENABLE}
 # The tailnet's domain, under which docktail serves the names with a
 # certificate; empty if it cannot be determined.
 TAILNET_DOMAIN=$(tailscale status --json 2>/dev/null | jq -r '.MagicDNSSuffix // empty' 2>/dev/null || true)
@@ -125,9 +128,14 @@ case "${ENVIRONMENT}" in
     prod) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8182} ;;
 esac
 export KEYCLOAK_ADMIN_ORIGIN=${KEYCLOAK_ADMIN_ORIGIN:-https://${NAME}-kc${TAILNET_DOMAIN:+.${TAILNET_DOMAIN}}}
+export DBTOOL_ORIGIN=${DBTOOL_ORIGIN:-https://${NAME}-dbadmin${TAILNET_DOMAIN:+.${TAILNET_DOMAIN}}}
 RUN_UID=$(id -u)
 export RUN_UID
 export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-/dev/shm/${NAME}-secrets}
+# The configuration of the web database tool, rendered at each start; a
+# directory of its own, because the one above is mounted into several
+# containers.
+export DBTOOL_RUN_DIR=${DBTOOL_RUN_DIR:-/dev/shm/${NAME}-dbtool}
 
 # The secrets the deployment needs; one file each in ${SECRETS_RUN_DIR}.
 NEEDED_SECRETS="POSTGRES_PASSWORD KEYCLOAK_ADMIN_PASSWORD KEYCLOAK_CLIENT_SECRET"
@@ -189,11 +197,121 @@ build_secrets_dir () {
     fi
 }
 
+# The profile of the database tool is part of every command while the tool is
+# enabled; "down" always includes it, so that it stops the tool as well.
+if [ "${DBTOOL_ENABLE}" = "true" ] || [ "${COMMAND}" = "down" ]
+then
+    export COMPOSE_PROFILES=dbtool
+fi
+
 COMPOSE="docker compose -f ${P}/docker-compose.yml"
 
 render_compose () {
     envsubst < "${P}/docker-compose.template" > "${P}/docker-compose.yml"
     chmod 0600 "${P}/docker-compose.yml"
+}
+
+# Escapes a value for a JSON string.
+json_escape () {
+    printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+}
+
+# Prints a random password that meets the database tool's policy (at least
+# eight characters, mixed case, a digit).
+random_password () {
+    while :
+    do
+        _pw=$(head -c 256 /dev/urandom | tr -dc 'A-Za-z0-9' | head -c 24)
+        case "${_pw}" in *[A-Z]*) ;; *) continue ;; esac
+        case "${_pw}" in *[a-z]*) ;; *) continue ;; esac
+        case "${_pw}" in *[0-9]*) ;; *) continue ;; esac
+        printf '%s' "${_pw}"
+        return 0
+    done
+}
+
+# Renders the configuration of the database tool into ${DBTOOL_RUN_DIR}: the
+# server configuration (admin account, so that the first-run wizard never
+# appears) and the connections, which use the read-only account. The admin
+# password is DBTOOL_ADMIN_PASSWORD of the secrets file; if the file has none,
+# a generated one is appended to it. A missing DB_READONLY_PASSWORD (see
+# create-db-user.sh) leaves the connection without a password: the tool still
+# starts, the connection fails. Never prints a value.
+build_dbtool_dir () {
+    case "$-" in *x*) _xtrace=on ;; *) _xtrace=off ;; esac
+    set +x
+    ( umask 077; mkdir -p "${DBTOOL_RUN_DIR}" )
+    chmod 700 "${DBTOOL_RUN_DIR}"
+    find "${DBTOOL_RUN_DIR}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+    _admin_name=$(secret_value "${SECRETS_FILE}" DBTOOL_ADMIN_NAME)
+    _admin_name=${_admin_name:-dbadmin}
+    # "admin" and "user" are the names of the tool's built-in teams; an
+    # account of the same name cannot be created.
+    case "${_admin_name}" in
+        admin|user)
+            echo "run.sh: DBTOOL_ADMIN_NAME must not be '${_admin_name}' (a built-in team of the tool)" >&2
+            [ "${_xtrace}" = on ] && set -x
+            return 1 ;;
+    esac
+    _admin_password=$(secret_value "${SECRETS_FILE}" DBTOOL_ADMIN_PASSWORD)
+    if [ -z "${_admin_password}" ]
+    then
+        _admin_password=$(random_password)
+        (
+            umask 077
+            [ ! -s "${SECRETS_FILE}" ] || [ -z "$(tail -c 1 "${SECRETS_FILE}")" ] || echo >> "${SECRETS_FILE}"
+            echo "export DBTOOL_ADMIN_PASSWORD=${_admin_password}" >> "${SECRETS_FILE}"
+        )
+        echo "run.sh: generated a password and added DBTOOL_ADMIN_PASSWORD to ${SECRETS_FILE}" >&2
+    fi
+    _ro_password=$(secret_value "${SECRETS_FILE}" DB_READONLY_PASSWORD)
+    # Java properties: a backslash must be doubled.
+    _props_name=$(printf '%s' "${_admin_name}" | sed 's/\\/\\\\/g')
+    _props_password=$(printf '%s' "${_admin_password}" | sed 's/\\/\\\\/g')
+    (
+        umask 077
+        {
+            echo "CB_SERVER_NAME=${NAME} database"
+            echo "CB_SERVER_URL=${DBTOOL_ORIGIN}"
+            echo "CB_ADMIN_NAME=${_props_name}"
+            echo "CB_ADMIN_PASSWORD=${_props_password}"
+        } > "${DBTOOL_RUN_DIR}/auto.conf"
+        cat > "${DBTOOL_RUN_DIR}/data-sources.json" <<JSON
+{
+  "folders": {},
+  "connections": {
+    "avarc": {
+      "provider": "postgresql",
+      "driver": "postgres-jdbc",
+      "name": "avarc",
+      "save-password": true,
+      "read-only": true,
+      "configuration": {
+        "host": "db",
+        "port": "5432",
+        "database": "avarc",
+        "url": "jdbc:postgresql://db:5432/avarc",
+        "configurationType": "MANUAL",
+        "auth-model": "native",
+        "auth-properties": {
+          "user": "avarc_ro",
+          "password": "$(json_escape "${_ro_password}")"
+        }
+      }
+    }
+  }
+}
+JSON
+    )
+    # The container user reads them; the 0700 directory holds others back.
+    chmod 0444 "${DBTOOL_RUN_DIR}/auto.conf" "${DBTOOL_RUN_DIR}/data-sources.json"
+    # The workspace on the host, with the mount point of the connections file
+    # made by this user (the container would otherwise create it as root).
+    mkdir -p "${P}/data/${ENVIRONMENT}/dbtool/GlobalConfiguration/.dbeaver"
+    : >> "${P}/data/${ENVIRONMENT}/dbtool/GlobalConfiguration/.dbeaver/data-sources.json"
+    _admin_password=; _props_password=; _ro_password=
+    [ "${_xtrace}" = on ] && set -x
+    return 0
 }
 
 # Pulls the images of the project when IMAGE_NAMESPACE names a registry
@@ -223,7 +341,7 @@ if [ "${COMMAND}" = "down" ]
 then
     render_compose
     ${COMPOSE} down
-    rm -rf "${SECRETS_RUN_DIR}"
+    rm -rf "${SECRETS_RUN_DIR}" "${DBTOOL_RUN_DIR}"
     exit 0
 fi
 
@@ -247,6 +365,14 @@ create_dev_secrets
 build_secrets_dir
 mkdir -p "${P}/data/${ENVIRONMENT}/db"
 render_compose
+if [ "${DBTOOL_ENABLE}" = "true" ]
+then
+    build_dbtool_dir
+else
+    rm -rf "${DBTOOL_RUN_DIR}"
+    # A tool left running from a time when it was enabled is stopped and removed.
+    [ "${COMMAND}" != "up" ] || ${COMPOSE} --profile dbtool rm -sf dbtool > /dev/null 2>&1 || true
+fi
 
 # One-shot services exit right after their job, and compose has no
 # "remove on exit". The foreground "up" blocks until the project is torn
@@ -255,7 +381,10 @@ render_compose
 # been started after that exit (a container left over from an earlier run
 # does not count; removing the one-shot container before compose has seen it
 # complete makes "up" fail), and remove it. If that never happens, for
-# example because the dependent kept running, the container stays.
+# example because the dependent kept running, the container stays. The
+# watcher has no output of its own and holds no inherited descriptors: with
+# "up -d" it outlives run.sh, and a caller that reads run.sh's output would
+# otherwise wait for it.
 remove_when_done () {
     service=$1
     dependent=$2
@@ -286,7 +415,7 @@ remove_when_done () {
             sleep 1
             tries=$((tries + 1))
         done
-    ) &
+    ) < /dev/null > /dev/null 2>&1 &
 }
 
 case "${COMMAND}" in

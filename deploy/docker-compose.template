@@ -109,3 +109,29 @@ services:
       timeout: 3s
       retries: 30
     restart: unless-stopped
+
+  # The web database tool (CloudBeaver). It is in the profile "dbtool", which
+  # run.sh enables only on dev and stage and only with DB_TAILNET=true, and
+  # docktail serves it on the tailnet as ${NAME}-dbadmin. Its configuration
+  # (admin account, connections) is rendered by run.sh into a directory in
+  # memory at each start and mounted over the workspace read-only. The
+  # container runs as the user that started the project, like keycloak.
+  dbtool:
+    image: dbeaver/cloudbeaver:26.2.2
+    profiles: ["dbtool"]
+    user: "${RUN_UID}:0"
+    environment:
+      - CLOUDBEAVER_APP_ANONYMOUS_ACCESS_ENABLED=false
+    labels:
+      - "docktail.service.enable=true"
+      - "docktail.service.name=${NAME}-dbadmin"
+      - "docktail.service.port=8978"
+      - "docktail.service.service-port=443"
+    volumes:
+      - ${P}/data/${ENVIRONMENT}/dbtool:/opt/cloudbeaver/workspace
+      - ${DBTOOL_RUN_DIR}/auto.conf:/opt/cloudbeaver/conf/.cloudbeaver.auto.conf:ro
+      - ${DBTOOL_RUN_DIR}/data-sources.json:/opt/cloudbeaver/workspace/GlobalConfiguration/.dbeaver/data-sources.json:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
