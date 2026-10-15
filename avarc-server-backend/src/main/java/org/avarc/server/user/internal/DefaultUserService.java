@@ -30,8 +30,12 @@ class DefaultUserService implements UserService {
     @EventListener
     void onLogin(LoginSucceeded login) {
         try {
-            upsert(login.subject(), new UserClaims(login.username(), login.email(), login.firstName(),
-                    login.lastName(), login.displayName()), true, Map.of());
+            upsert(
+                    login.subject(),
+                    new UserClaims(
+                            login.username(), login.email(), login.firstName(), login.lastName(), login.displayName()),
+                    true,
+                    Map.of());
         } catch (RuntimeException e) {
             LOG.error("Could not store the user of a login", e);
         }
@@ -77,7 +81,13 @@ class DefaultUserService implements UserService {
             user.preferences = merged;
         }
         users.saveAndFlush(user);
-        return new User(user.id, user.username, user.email, user.firstName, user.lastName, user.displayName,
+        return new User(
+                user.id,
+                user.username,
+                user.email,
+                user.firstName,
+                user.lastName,
+                user.displayName,
                 Map.copyOf(user.preferences));
     }
 }

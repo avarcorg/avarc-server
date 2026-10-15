@@ -2,20 +2,20 @@ package org.avarc.server.auth;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -29,8 +29,8 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -95,44 +95,54 @@ class SecurityConfig {
     AuthenticationSuccessHandler loginSuccessHandler(AuthProperties auth, ApplicationEventPublisher events) {
         return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
             if (authentication.getPrincipal() instanceof OidcUser user) {
-                events.publishEvent(new LoginSucceeded(user.getSubject(), user.getPreferredUsername(),
-                        user.getEmail(), user.getGivenName(), user.getFamilyName(), user.getFullName()));
+                events.publishEvent(new LoginSucceeded(
+                        user.getSubject(),
+                        user.getPreferredUsername(),
+                        user.getEmail(),
+                        user.getGivenName(),
+                        user.getFamilyName(),
+                        user.getFullName()));
             }
             response.sendRedirect(auth.publicOrigin() + "/");
         };
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http, AuthProperties auth,
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            AuthProperties auth,
             @Value("${springdoc.swagger-ui.enabled:false}") boolean apiDocsOpen,
-            ClientRegistrationRepository registrations, OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService,
-            LogoutSuccessHandler logoutSuccessHandler, AuthenticationSuccessHandler loginSuccessHandler) throws Exception {
+            ClientRegistrationRepository registrations,
+            OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService,
+            LogoutSuccessHandler logoutSuccessHandler,
+            AuthenticationSuccessHandler loginSuccessHandler)
+            throws Exception {
         DefaultOAuth2AuthorizationRequestResolver resolver =
                 new DefaultOAuth2AuthorizationRequestResolver(registrations, "/api/auth/login");
         resolver.setAuthorizationRequestCustomizer(OAuth2AuthorizationRequestCustomizers.withPkce());
 
-        http
-                .authorizeHttpRequests(requests -> {
+        http.authorizeHttpRequests(requests -> {
                     // which actuator endpoints exist is decided by the profile
                     requests.requestMatchers("/actuator/**").permitAll();
-                    requests.requestMatchers("/api/auth/login/**", "/api/auth/callback").permitAll();
+                    requests.requestMatchers("/api/auth/login/**", "/api/auth/callback")
+                            .permitAll();
                     // the API description and Swagger UI exist only where a profile enables them
                     if (apiDocsOpen) {
-                        requests.requestMatchers("/api/docs", "/api/docs/**", "/api/swagger-ui/**").permitAll();
+                        requests.requestMatchers("/api/docs", "/api/docs/**", "/api/swagger-ui/**")
+                                .permitAll();
                     }
                     requests.anyRequest().authenticated();
                 })
                 // 401 instead of a redirect to a login page: the login page is the frontend's
-                .exceptionHandling(handling -> handling
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .oauth2Login(login -> login
-                        .authorizationEndpoint(endpoint -> endpoint.authorizationRequestResolver(resolver))
+                .exceptionHandling(handling ->
+                        handling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .oauth2Login(login -> login.authorizationEndpoint(
+                                endpoint -> endpoint.authorizationRequestResolver(resolver))
                         .redirectionEndpoint(endpoint -> endpoint.baseUri("/api/auth/callback"))
                         .userInfoEndpoint(endpoint -> endpoint.oidcUserService(oidcUserService))
                         .successHandler(loginSuccessHandler)
                         .failureUrl(auth.publicOrigin() + "/login?error"))
-                .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout")
+                .logout(logout -> logout.logoutUrl("/api/auth/logout")
                         .logoutSuccessHandler(logoutSuccessHandler)
                         .deleteCookies("AVARC_SESSION"))
                 .csrf(withDefaults());

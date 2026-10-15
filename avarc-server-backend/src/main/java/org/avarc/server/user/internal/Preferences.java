@@ -10,8 +10,7 @@ final class Preferences {
     static final String APPEARANCE = "appearance";
     private static final List<String> APPEARANCES = List.of("light", "dark", "system");
 
-    private Preferences() {
-    }
+    private Preferences() {}
 
     static void validate(Map<String, Object> changes) {
         for (Map.Entry<String, Object> change : changes.entrySet()) {

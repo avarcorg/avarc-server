@@ -43,8 +43,7 @@ class UserEntity {
     @Column(name = "last_login_at", nullable = false)
     Instant lastLoginAt;
 
-    protected UserEntity() {
-    }
+    protected UserEntity() {}
 
     UserEntity(String subject, Instant now) {
         this.id = UUID.randomUUID();

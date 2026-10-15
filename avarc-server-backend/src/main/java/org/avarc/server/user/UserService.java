@@ -12,6 +12,5 @@ public interface UserService {
     User updatePreferences(String subject, UserClaims claims, Map<String, Object> changes);
 
     /** The profile claims of the ID token; any may be missing. */
-    record UserClaims(String username, String email, String firstName, String lastName, String displayName) {
-    }
+    record UserClaims(String username, String email, String firstName, String lastName, String displayName) {}
 }

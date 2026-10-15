@@ -9,9 +9,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("avarc.auth")
 public record AuthProperties(
-        String publicOrigin,
-        String keycloakUrl,
-        String keycloakInternalUrl,
-        String clientId,
-        String clientSecret) {
-}
+        String publicOrigin, String keycloakUrl, String keycloakInternalUrl, String clientId, String clientSecret) {}

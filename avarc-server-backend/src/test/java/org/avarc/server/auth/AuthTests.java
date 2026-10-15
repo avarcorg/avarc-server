@@ -19,16 +19,14 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 @Import(org.avarc.server.TestDatabase.class)
-@SpringBootTest(properties = {
-        "avarc.auth.public-origin=https://avarc.example",
-        "avarc.auth.client-secret=test-secret"})
+@SpringBootTest(properties = {"avarc.auth.public-origin=https://avarc.example", "avarc.auth.client-secret=test-secret"})
 @AutoConfigureMockMvc
 class AuthTests {
 
@@ -46,17 +44,26 @@ class AuthTests {
                 .andExpect(status().isFound())
                 .andReturn();
         String location = result.getResponse().getHeader("Location");
-        assertThat(location).startsWith("https://avarc.example/auth/realms/avarc/protocol/openid-connect/auth?")
-                .contains("response_type=code", "client_id=avarc-web", "code_challenge_method=S256",
-                        "code_challenge=", "redirect_uri=https://avarc.example/api/auth/callback");
+        assertThat(location)
+                .startsWith("https://avarc.example/auth/realms/avarc/protocol/openid-connect/auth?")
+                .contains(
+                        "response_type=code",
+                        "client_id=avarc-web",
+                        "code_challenge_method=S256",
+                        "code_challenge=",
+                        "redirect_uri=https://avarc.example/api/auth/callback");
     }
 
     @Test
     void meReportsTheUserAndTheRoles() throws Exception {
-        mockMvc.perform(get("/api/auth/me").with(oidcLogin()
-                        .idToken(token -> token.claim("preferred_username", "ada@avarc.invalid")
-                                .claim("name", "Ada").claim("email", "ada@avarc.invalid"))
-                        .authorities(new SimpleGrantedAuthority("ROLE_viewer"), new SimpleGrantedAuthority("ROLE_editor"))))
+        mockMvc.perform(get("/api/auth/me")
+                        .with(oidcLogin()
+                                .idToken(token -> token.claim("preferred_username", "ada@avarc.invalid")
+                                        .claim("name", "Ada")
+                                        .claim("email", "ada@avarc.invalid"))
+                                .authorities(
+                                        new SimpleGrantedAuthority("ROLE_viewer"),
+                                        new SimpleGrantedAuthority("ROLE_editor"))))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Cache-Control", "no-store"))
                 .andExpect(jsonPath("$.username").value("ada@avarc.invalid"))
@@ -74,12 +81,15 @@ class AuthTests {
 
     @Test
     void logoutEndsTheKeycloakSessionAndReturnsToTheLoggedOutPage() throws Exception {
-        MvcResult result = mockMvc.perform(post("/api/auth/logout").with(oidcLogin()).with(csrf()))
+        MvcResult result = mockMvc.perform(
+                        post("/api/auth/logout").with(oidcLogin()).with(csrf()))
                 .andExpect(status().isFound())
                 .andReturn();
         assertThat(result.getResponse().getHeader("Location"))
                 .startsWith("https://avarc.example/auth/realms/avarc/protocol/openid-connect/logout?")
-                .contains("client_id=avarc-web", "id_token_hint=",
+                .contains(
+                        "client_id=avarc-web",
+                        "id_token_hint=",
                         "post_logout_redirect_uri=https://avarc.example/logged-out");
     }
 
@@ -94,7 +104,8 @@ class AuthTests {
     }
 
     private static String token(Map<String, Object> realmAccess) throws Exception {
-        SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256),
+        SignedJWT jwt = new SignedJWT(
+                new JWSHeader(JWSAlgorithm.HS256),
                 new JWTClaimsSet.Builder().claim("realm_access", realmAccess).build());
         jwt.sign(new MACSigner("0123456789abcdef0123456789abcdef"));
         return jwt.serialize();

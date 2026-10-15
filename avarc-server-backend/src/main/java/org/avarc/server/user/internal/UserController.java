@@ -48,14 +48,17 @@ class UserController {
     }
 
     private static UserClaims claims(OidcUser user) {
-        return new UserClaims(user.getPreferredUsername(), user.getEmail(), user.getGivenName(),
-                user.getFamilyName(), user.getFullName());
+        return new UserClaims(
+                user.getPreferredUsername(),
+                user.getEmail(),
+                user.getGivenName(),
+                user.getFamilyName(),
+                user.getFullName());
     }
 
     private static ResponseEntity<User> noStore(User user) {
         return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(user);
     }
 
-    record PreferencesPatch(Map<String, Object> preferences) {
-    }
+    record PreferencesPatch(Map<String, Object> preferences) {}
 }

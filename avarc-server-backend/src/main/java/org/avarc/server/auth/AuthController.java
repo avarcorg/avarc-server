@@ -20,12 +20,12 @@ class AuthController {
     @GetMapping("/api/auth/me")
     ResponseEntity<Me> me(@AuthenticationPrincipal OidcUser user, CsrfToken csrf) {
         List<String> roles = Roles.KNOWN.stream()
-                .filter(role -> user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_" + role)))
+                .filter(role -> user.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("ROLE_" + role)))
                 .toList();
         Me me = new Me(user.getPreferredUsername(), user.getFullName(), user.getEmail(), roles, csrf.getToken());
         return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(me);
     }
 
-    record Me(String username, String name, String email, List<String> roles, String csrfToken) {
-    }
+    record Me(String username, String name, String email, List<String> roles, String csrfToken) {}
 }

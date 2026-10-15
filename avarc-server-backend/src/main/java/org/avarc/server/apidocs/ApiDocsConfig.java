@@ -19,24 +19,25 @@ class ApiDocsConfig {
     @Bean
     OpenAPI avarcOpenApi(@Value("${avarc.api.version}") String version) {
         return new OpenAPI()
-                .info(new Info()
-                        .title("avarc-server API")
-                        .version(version)
-                        .description("""
-                                The API of avarc-server under `/api/`.
+                .info(new Info().title("avarc-server API").version(version).description("""
+                    The API of avarc-server under `/api/`.
 
-                                Authentication is a login at Keycloak through the backend, which keeps \
-                                the session in the cookie `AVARC_SESSION`: log in on the same origin \
-                                (`/api/auth/login/keycloak`), then calls from this page carry the cookie. \
-                                Requests that change data also need the CSRF token, which \
-                                `GET /api/auth/me` reports, in the header `X-CSRF-TOKEN` (authorize \
-                                with it above). Without a login the API answers 401. \
-                                This description and the page are served in the dev and stage \
-                                environments only."""))
-                .components(new Components().addSecuritySchemes(CSRF, new SecurityScheme()
-                        .type(SecurityScheme.Type.APIKEY)
-                        .in(SecurityScheme.In.HEADER)
-                        .name("X-CSRF-TOKEN")
-                        .description("The csrfToken of GET /api/auth/me.")));
+                    Authentication is a login at Keycloak through the backend, which keeps \
+                    the session in the cookie `AVARC_SESSION`: log in on the same origin \
+                    (`/api/auth/login/keycloak`), then calls from this page carry the cookie. \
+                    Requests that change data also need the CSRF token, which \
+                    `GET /api/auth/me` reports, in the header `X-CSRF-TOKEN` (authorize \
+                    with it above). Without a login the API answers 401. \
+                    This description and the page are served in the dev and stage \
+                    environments only.\
+                    """))
+                .components(new Components()
+                        .addSecuritySchemes(
+                                CSRF,
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.APIKEY)
+                                        .in(SecurityScheme.In.HEADER)
+                                        .name("X-CSRF-TOKEN")
+                                        .description("The csrfToken of GET /api/auth/me.")));
     }
 }

@@ -32,15 +32,21 @@ class UserTests {
 
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ApplicationEventPublisher events;
+
     @Autowired
     private JdbcTemplate jdbc;
 
     private static OidcLoginRequestPostProcessor login(String subject) {
-        return oidcLogin().idToken(token -> token.subject(subject).claim("preferred_username", subject + "@avarc.invalid")
-                .claim("email", subject + "@avarc.invalid").claim("given_name", "Ada").claim("family_name", "Lovelace")
-                .claim("name", "Ada Lovelace"));
+        return oidcLogin()
+                .idToken(token -> token.subject(subject)
+                        .claim("preferred_username", subject + "@avarc.invalid")
+                        .claim("email", subject + "@avarc.invalid")
+                        .claim("given_name", "Ada")
+                        .claim("family_name", "Lovelace")
+                        .claim("name", "Ada Lovelace"));
     }
 
     private int count(String subject) {
@@ -50,7 +56,10 @@ class UserTests {
     @Test
     void meNeedsALogin() throws Exception {
         mockMvc.perform(get("/api/users/me")).andExpect(status().isUnauthorized());
-        mockMvc.perform(patch("/api/users/me").with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}"))
+        mockMvc.perform(patch("/api/users/me")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -95,7 +104,10 @@ class UserTests {
     void preferencesAreMergedAndPerUser() throws Exception {
         String sub = "sub-" + UUID.randomUUID();
         String other = "sub-" + UUID.randomUUID();
-        mockMvc.perform(patch("/api/users/me").with(login(sub)).with(csrf()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(patch("/api/users/me")
+                        .with(login(sub))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"preferences\":{\"appearance\":\"dark\"}}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.preferences.appearance").value("dark"));
@@ -107,17 +119,22 @@ class UserTests {
 
     @Test
     void invalidPreferencesAreRejected() throws Exception {
-        for (String body : List.of("{\"preferences\":{\"appearance\":\"purple\"}}",
-                "{\"preferences\":{\"language\":\"de\"}}")) {
-            mockMvc.perform(patch("/api/users/me").with(login("sub-x")).with(csrf())
-                            .contentType(MediaType.APPLICATION_JSON).content(body))
+        for (String body :
+                List.of("{\"preferences\":{\"appearance\":\"purple\"}}", "{\"preferences\":{\"language\":\"de\"}}")) {
+            mockMvc.perform(patch("/api/users/me")
+                            .with(login("sub-x"))
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(body))
                     .andExpect(status().isBadRequest());
         }
     }
 
     @Test
     void patchNeedsTheCsrfToken() throws Exception {
-        mockMvc.perform(patch("/api/users/me").with(login("sub-x")).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(patch("/api/users/me")
+                        .with(login("sub-x"))
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"preferences\":{\"appearance\":\"dark\"}}"))
                 .andExpect(status().isForbidden());
     }

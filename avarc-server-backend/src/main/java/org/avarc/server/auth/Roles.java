@@ -10,8 +10,7 @@ final class Roles {
 
     static final List<String> KNOWN = List.of("viewer", "editor", "admin");
 
-    private Roles() {
-    }
+    private Roles() {}
 
     /**
      * The known roles named in {@code realm_access.roles} of the token. The
@@ -21,7 +20,8 @@ final class Roles {
     static List<String> fromAccessToken(String token) {
         List<?> named = List.of();
         try {
-            Map<String, Object> access = JWTParser.parse(token).getJWTClaimsSet().getJSONObjectClaim("realm_access");
+            Map<String, Object> access =
+                    JWTParser.parse(token).getJWTClaimsSet().getJSONObjectClaim("realm_access");
             if (access != null && access.get("roles") instanceof List<?> roles) {
                 named = roles;
             }
@@ -29,6 +29,8 @@ final class Roles {
             // an unreadable token grants nothing beyond viewer
         }
         List<?> granted = named;
-        return KNOWN.stream().filter(role -> role.equals("viewer") || granted.contains(role)).toList();
+        return KNOWN.stream()
+                .filter(role -> role.equals("viewer") || granted.contains(role))
+                .toList();
     }
 }
