@@ -15,3 +15,6 @@ Spec: [SPEC-backend.md](../spec/SPEC-backend.md), [SPEC-locations.md](../spec/SP
 - Implement create, read, update, delete and list for locations.
 - Persist to the chosen database.
 - Cover with tests.
+- The locations code is an application module of its own under the module
+  rule of [SPEC-backend.md](../spec/SPEC-backend.md)
+  ([AVARC-35](TASK-modulith-verification.md)).
