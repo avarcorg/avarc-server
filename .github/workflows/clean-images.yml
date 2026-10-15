@@ -1,0 +1,89 @@
+name: Clean images
+
+# Deletes old container image versions of the four images. The retention is
+# in spec/SPEC-releases.md. Releases, tags and workflow runs are not touched.
+on:
+  schedule:
+    - cron: "47 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: Delete sha-tagged versions older than this many days
+        default: "30"
+      keep:
+        description: Keep at least this many newest versions of each image
+        default: "5"
+      dry-run:
+        description: List what would be deleted and delete nothing
+        type: boolean
+        default: false
+
+permissions:
+  packages: write
+
+jobs:
+  clean-images:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      OWNER: ${{ github.repository_owner }}
+      DAYS: ${{ inputs.days || '30' }}
+      KEEP: ${{ inputs.keep || '5' }}
+      DRY_RUN: ${{ inputs.dry-run && 'true' || 'false' }}
+    steps:
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Delete old versions
+        run: |
+          set -eu
+          cutoff=$(date -u -d "${DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
+          untagged_cutoff=$(date -u -d "1 day ago" +%Y-%m-%dT%H:%M:%SZ)
+          for image in avarc-backend avarc-frontend avarc-ingress avarc-keycloak; do
+            echo "== ${image}"
+            api="orgs/${OWNER}/packages/container/${image}/versions"
+            gh api --paginate --slurp "${api}?per_page=100" \
+              | jq 'add | sort_by(.created_at) | reverse' > versions.json
+
+            # Digests of platform manifests that a remaining version points to.
+            jq -r --argjson keep "$KEEP" --arg cutoff "$cutoff" '
+                to_entries[] | .value as $v | .key as $i
+                | select(($v.metadata.container.tags | length) > 0)
+                | select($i < $keep
+                    or ($v.metadata.container.tags | any(test("^sha-") | not))
+                    or $v.created_at >= $cutoff)
+                | $v.name' versions.json > kept-tagged.txt
+            : > referenced.txt
+            while read -r digest; do
+              docker buildx imagetools inspect --raw "ghcr.io/${OWNER}/${image}@${digest}" \
+                | jq -r '.manifests[]?.digest' >> referenced.txt
+            done < kept-tagged.txt
+
+            jq -r --argjson keep "$KEEP" --arg cutoff "$cutoff" \
+                  --arg ucutoff "$untagged_cutoff" --rawfile ref referenced.txt '
+                ($ref | split("\n")) as $refs
+                | to_entries[] | .value as $v | .key as $i
+                | select($i >= $keep)
+                | ($v.metadata.container.tags) as $tags
+                | select(
+                    ($tags | length > 0
+                       and all(.[]; test("^sha-"))
+                       and $v.created_at < $cutoff)
+                    or ($tags | length == 0
+                       and $v.created_at < $ucutoff
+                       and ($refs | index($v.name) | not)))
+                | "\($v.id) \($v.name[0:19]) \($v.created_at) \($tags | join(","))"' versions.json > old-versions.txt
+            echo "Versions to delete: $(wc -l < old-versions.txt)"
+            cat old-versions.txt
+            if [ "${DRY_RUN}" = "true" ]; then
+              continue
+            fi
+            while read -r id _; do
+              gh api -X DELETE "${api}/${id}"
+            done < old-versions.txt
+          done
+          if [ "${DRY_RUN}" = "true" ]; then
+            echo "Dry run, nothing deleted."
+          fi
