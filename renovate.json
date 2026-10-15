@@ -2,5 +2,26 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "baseBranchPatterns": [
+    "main"
+  ],
+  "automerge": false,
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "docker-compose": {
+    "managerFilePatterns": [
+      "/^deploy/docker-compose\\.template$/"
+    ]
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "addLabels": [
+        "major"
+      ]
+    }
   ]
 }
