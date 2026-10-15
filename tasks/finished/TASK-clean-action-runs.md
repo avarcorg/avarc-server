@@ -1,7 +1,7 @@
 ---
 id: AVARC-39
 type: task
-status: open
+status: finished
 priority: low
 area: project
 depends-on: []
