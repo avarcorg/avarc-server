@@ -29,7 +29,7 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
-      - uses: buildpacks/github-actions/setup-pack@v5.11.0
+      - uses: buildpacks/github-actions/setup-pack@v6.2.0
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
