@@ -39,7 +39,7 @@ Maven Central.
 
 The backend image is built with Paketo buildpacks by the `pack` CLI (which needs a
 running Docker daemon), run from the `with-docker` profile. It is tagged
-`avarcorg/avarc-server-backend:<version>` and `:latest`, and listens on port
+`avarcorg/avarc-backend:<version>` and `:latest`, and listens on port
 8080. Override the `avarcorg` namespace with `-Dimage.namespace=<name>`, e.g.
 `-Dimage.namespace="$IMAGE_NAMESPACE"`.
 
@@ -114,7 +114,7 @@ tag and run `deploy/deploy.sh` from there; prod accepts nothing else.
 
 The workflow "CI Build" (`.github/workflows/ci-build.yml`) builds and tests every push to
 `main`, every release tag and every pull request. Pushes to `main` publish
-the images `ghcr.io/avarcorg/avarc-server-backend` and `-frontend` as
+the images `ghcr.io/avarcorg/avarc-backend` and `-frontend` as
 `snapshot` and `sha-<commit>`, release tags as `X.Y.Z` and `latest`
 (`tools/publish-images.sh`, `--dry-run` shows what it would push). To run
 published images, start the Compose project with
