@@ -1,7 +1,7 @@
 ---
 id: AVARC-40
 type: task
-status: open
+status: finished
 priority: low
 area: project
 depends-on: [AVARC-31]
@@ -10,11 +10,11 @@ created: 2026-10-15
 
 # TASK: Clean old container images
 
-Spec: [SPEC-releases.md](../spec/SPEC-releases.md)
+Spec: [SPEC-releases.md](../../spec/SPEC-releases.md)
 
 Every push to `main` publishes the backend, frontend, ingress and Keycloak
 images to the GitHub Container Registry as `snapshot` and `sha-<commit>`
-([AVARC-31](finished/TASK-image-builds.md)). The `sha-` versions pile up
+([AVARC-31](TASK-image-builds.md)). The `sha-` versions pile up
 without end. A scheduled workflow deletes the ones that are no longer
 useful.
 
