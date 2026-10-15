@@ -73,8 +73,8 @@ no header or footer markup of their own.
 
 - **Frame:** a top bar, the content, a footer. The top bar has the site
   name (a link home) on the left, then the navigation, and on the right the
-  language switch and the user menu with the logout action. The footer has
-  the application version and links; it stays small.
+  language switch and the user menu with the logout action. The footer is
+  small and holds the tagline of the site.
 - **Navigation:** one entry per page that exists, so the list grows with
   the pages (the locations list and the map, [AVARC-12](../tasks/TASK-locations-ui.md)).
   Editing controls are shown by role ([SPEC-auth.md](SPEC-auth.md)).
