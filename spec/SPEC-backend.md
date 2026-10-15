@@ -28,14 +28,20 @@ Define the API service that stores and serves locations.
 - **Architecture:** a monolithic application built with Spring Modulith:
   one deployable Spring Boot service holds the whole API and its business
   logic, structured into application modules whose boundaries Spring
-  Modulith verifies; there are no separate microservices. Introduced in
-  [AVARC-35](../tasks/TASK-modulith-verification.md): an application module
-  is a direct sub-package of `org.avarc.server`; the types in its top-level
-  package are its API and its sub-packages are internal; modules depend on
-  each other only through that API and without cycles; the root package
-  holds the application class only. A test calls
+  Modulith verifies; there are no separate microservices.
+- **Modules:** introduced in
+  [AVARC-35](../tasks/finished/TASK-modulith-verification.md). An
+  application module is a direct sub-package of `org.avarc.server`; the
+  types in its top-level package are its API and its sub-packages are
+  internal; modules depend on each other only through that API and without
+  cycles; the root package holds the application class only. A test calls
   `ApplicationModules.verify()`, so `./mvnw verify` fails when a boundary is
-  broken.
+  broken, and it writes the module diagrams to the build directory. The
+  modules today are `auth` ([SPEC-auth.md](SPEC-auth.md)), `apidocs` (the
+  API description, below) and `hello` (a placeholder endpoint); the
+  locations ([SPEC-locations.md](SPEC-locations.md)) are a module of their
+  own when they are implemented ([AVARC-10](../tasks/TASK-locations-crud-api.md)).
+  A new area of the backend starts as a new module.
 - **Database:** PostgreSQL with PostGIS. A `point` position is stored as a
   `geography(Point, 4326)` column (WGS 84) next to the `kind` discriminator
   column, so further kinds ([SPEC-locations.md](SPEC-locations.md)) add

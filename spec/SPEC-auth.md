@@ -53,6 +53,9 @@ Apache-2.0 licensed.
   - `admin`: additionally manage users and grant and revoke roles.
   - Every authenticated user is implicitly a `viewer`. Editor and admin are
     explicit grants.
+- **Backend module:** the backend code of this area is the application
+  module `auth` ([SPEC-backend.md](SPEC-backend.md)); other modules reach
+  it only through its top-level package.
 - **Login and logout:** the pages `/login` and `/logged-out` belong to the
   frontend ([SPEC-frontend.md](SPEC-frontend.md)); the password form is
   Keycloak's. The backend offers, under `/api/auth/`:

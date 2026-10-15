@@ -16,7 +16,7 @@ flowchart TB
     subgraph Server["avarc-server"]
         Ingress["Web server / ingress<br/>nginx"]
         Frontend["Frontend<br/>Next.js"]
-        Backend["Backend API<br/>Spring Boot"]
+        Backend["Backend API<br/>Spring Boot + Modulith"]
         Keycloak["Keycloak"]
         MapServer["Public read-only map server<br/>(post-MVP)"]
         MCP["MCP server<br/>(post-MVP)"]
