@@ -26,7 +26,7 @@ Deployment (does not need the skeletons):
 - Add the realm import file (roles with their composites, default role,
   client, English and German locales, brute-force protection,
   self-registration and password reset disabled, no secrets in it).
-- Route `/auth/` in `deploy/Caddyfile` to the realm endpoints and resources
+- Route `/auth/` in `avarc-server-ingress/nginx.conf` to the realm endpoints and resources
   only, without prefix stripping, replacing the placeholder route; never the admin console, the admin API,
   the `master` realm or the management port. Configure hostname and
   forwarded headers for the public origin.

@@ -1,7 +1,7 @@
 ---
 id: AVARC-33
 type: task
-status: open
+status: in-progress
 priority: normal
 area: ingress
 depends-on: [AVARC-8, AVARC-31, AVARC-32]
@@ -82,3 +82,42 @@ for the admin console, the `master` realm and traversal attempts under
 the forwarded scheme reaches Keycloak. Then the image runs on stage, built
 on its host: pulling the published image from the registry has to wait (see
 [SPEC-releases.md](../spec/SPEC-releases.md)).
+
+## Progress
+
+Decision (by the maintainer): switch to nginx, built with the Paketo nginx
+buildpack through the shared `pack` configuration; the module is
+`avarc-server-ingress`, the specs and `AGENTS.md` are updated, and the
+Caddyfile is gone.
+
+Findings with the buildpack (`paketobuildpacks/ubuntu-noble-builder`):
+- Do not set `BP_WEB_SERVER`: the buildpack then generates its own
+  static-file configuration over `nginx.conf` (everything answered 404).
+  The `nginx.conf` in the application directory is enough for detection.
+- Setting `BP_NGINX_VERSION` (also with a wildcard) makes its detection
+  fail, so the version is the buildpack's choice (1.31.6 at the time) and
+  follows the builder; Renovate cannot pin it.
+- The launch command already sets `pid`, and this nginx has no `uwsgi` and
+  `scgi` modules, no `mime.types` in the application directory; the
+  configuration must not use them. `{{port}}` is filled in at start
+  (default 8080); the user is unprivileged, so port 80 is out.
+- A `proxy_pass` with variables and no URI passes the request unchanged and
+  needs `resolver 127.0.0.11`; it makes the upstreams resolved per request.
+  A prefix location with `proxy_pass` redirects the bare prefix, hence the
+  exact `404` locations for `/auth/realms/avarc` and `/auth/resources`.
+
+Verified on the developer deployment from a fresh `reset` (Compose now runs
+`avarc-ingress:${INGRESS_VERSION}`, port 8080 inside): frontend 307,
+`/api/hello` 401, `/actuator/health` and `/actuator` 200, the realm
+discovery 200, 404 for the admin console, the `master` realm, `/auth/` and
+traversal attempts (plain, `%2e%2e`, `..%2f`, double slash), the backend's
+login redirecting to the realm. With an echo service in place of the
+backend, a request from a private hop passed `X-Forwarded-Proto`,
+`X-Forwarded-Host`, `X-Forwarded-For` (extended), `Host`, cookies, the
+authorization header and the path unchanged.
+
+Open: the replacement of the headers of an untrusted hop (not testable from
+the private networks of the host), a full browser login and logout through
+the new ingress, and running the image on stage (built on its host).
+[AVARC-24](TASK-observability-ingress-database.md) names no product, so it
+needs no change.

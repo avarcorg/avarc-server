@@ -24,9 +24,9 @@ database):
 - Create the user and group `avarc-stage` and its home directory
   `/home/avarc-stage`, as the systemd unit expects, with access to Docker.
 - Decide how the files of `deploy/` get to that directory (a checkout, a
-  copy, or a symlink): `run.sh` finds the Compose template, Caddyfile,
-  Keycloak start script and realm import next to itself, so all of them must
-  be there, and an update must replace them together.
+  copy, or a symlink): `run.sh` finds the Compose template
+  next to itself, so it must be there, and an update must replace them
+  together.
 - Create the stage secrets file (named in
   [SPEC-deployment.md](../spec/SPEC-deployment.md)) there from the secrets
   the deployment needs, including the initial admin account, with mode 0600
