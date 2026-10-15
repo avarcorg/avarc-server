@@ -91,6 +91,38 @@ lowest language code. The same rule applies to reference citations and tag
 labels, with the tag key as the final fallback. A fallback is reported to
 the client so that it can mark the content as not translated.
 
+## API
+
+Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
+`/api/locations`; every call needs a login and the role named in
+[SPEC-auth.md](SPEC-auth.md), otherwise the answer is `401` (no session) or
+`403` (role missing).
+
+| Call | Role | Answer |
+|------|------|--------|
+| `GET /api/locations?page=&size=` | viewer | `200` with `items`, `page` (from 0), `size` (default 20, at most 100) and `total`; newest first. |
+| `GET /api/locations/{id}` | viewer | `200` with the location, or `404`. |
+| `POST /api/locations` | editor | `201` with the location and a `Location` header. |
+| `PUT /api/locations/{id}` | editor | `200` with the location; replaces all content fields, or `404`. |
+| `DELETE /api/locations/{id}` | editor | `204`, or `404`. |
+
+- The body of `POST` and `PUT` has `position`, `confidenceLevel` (default 3),
+  `periodStart`, `periodEnd`, `translations`, `tags` and `references`; the
+  identifier and the audit fields are set by the system and ignored if sent.
+  A location is shown with all of those, in camelCase.
+- A tag is sent as `{key, labels}`; `labels` left out keeps the labels the tag
+  has, a given map replaces them. A tag key unknown so far is created.
+- A request that breaks a rule of this spec answers `400` with a problem
+  description: no translation, a language that is not supported, an empty
+  name or description, a confidence level outside 1-5, a position outside
+  the ranges or of an unknown `kind`, `periodStart` after `periodEnd`, a
+  reference without a citation, a tag key that does not follow the rule below.
+- `createdBy` and `updatedBy` are the Keycloak subject of the user.
+- Tag keys are trimmed and lower-cased, then must be 1-64 characters of
+  `a-z`, `0-9` and single hyphens inside the key.
+- The API returns every translation. The language fallback above is applied
+  by the client, which knows which language it shows.
+
 ## Decisions
 
 - The period is a free-text label plus an optional start and end timestamp.
@@ -110,6 +142,4 @@ the client so that it can mark the content as not translated.
 
 ## Open questions
 
-- The normalisation rule for tag keys (case, whitespace, allowed characters).
-- Whether the API returns all translations of a location or only the
-  requested language by default.
+- None at the moment.

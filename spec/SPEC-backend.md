@@ -39,12 +39,14 @@ Define the API service that stores and serves locations.
   broken, and it writes the module diagrams to the build directory. The
   modules today are `auth` ([SPEC-auth.md](SPEC-auth.md)), `user`
   ([SPEC-users.md](SPEC-users.md)), `apidocs` (the
-  API description, below) and `hello` (a placeholder endpoint); the
-  locations ([SPEC-locations.md](SPEC-locations.md)) are a module of their
-  own when they are implemented ([AVARC-10](../tasks/TASK-locations-crud-api.md)).
+  API description, below), `hello` (a placeholder endpoint) and `location`
+  ([SPEC-locations.md](SPEC-locations.md),
+  [AVARC-10](../tasks/TASK-locations-crud-api.md)).
   A new area of the backend starts as a new module.
 - **Database:** PostgreSQL with PostGIS. A `point` position is stored as a
-  `geography(Point, 4326)` column (WGS 84) next to the `kind` discriminator
+  `geography(Point, 4326)` column (WGS 84), generated from `latitude` and
+  `longitude` columns, which are what the application reads and writes (so
+  no spatial mapping library is needed), next to the `kind` discriminator
   column, so further kinds ([SPEC-locations.md](SPEC-locations.md)) add
   columns or tables without changing existing rows. Locations carry the UUID
   as their identity and may have an internal numeric surrogate key.
