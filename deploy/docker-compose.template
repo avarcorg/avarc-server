@@ -24,9 +24,13 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
       - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
-    # Only the client secret, not the other secrets.
+    # Only the client secret and the database password, not the other secrets.
     volumes:
       - ${SECRETS_RUN_DIR}/KEYCLOAK_CLIENT_SECRET:/run/secrets/KEYCLOAK_CLIENT_SECRET:ro
+      - ${SECRETS_RUN_DIR}/POSTGRES_PASSWORD:/run/secrets/POSTGRES_PASSWORD:ro
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
   frontend:
