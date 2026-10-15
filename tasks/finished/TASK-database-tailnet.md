@@ -1,7 +1,7 @@
 ---
 id: AVARC-38
 type: task
-status: open
+status: finished
 priority: low
 area: project
 depends-on: [AVARC-18]
@@ -10,7 +10,7 @@ created: 2026-10-15
 
 # TASK: Optionally expose the database on the tailnet (dev and stage)
 
-Spec: [SPEC-deployment.md](../spec/SPEC-deployment.md)
+Spec: [SPEC-deployment.md](../../spec/SPEC-deployment.md)
 
 For inspecting data and debugging with a SQL client, the PostGIS database of
 dev and stage can be reached from the tailnet, like the Keycloak admin
@@ -56,7 +56,7 @@ hidden), and on prod it is never started, by the same rule as the port.
 
 The wording of this task is deliberately about "the database", not about
 PostGIS: the engine may change, and an internal SQLite database may be added
-to the application ([SPEC-backend.md](../spec/SPEC-backend.md)). A SQLite
+to the application ([SPEC-backend.md](../../spec/SPEC-backend.md)). A SQLite
 file has no port, so for it the tool is the only way in, reading the file
 from a read-only mount. Keycloak's database stays a PostgreSQL database
 whatever the application uses.
@@ -76,7 +76,7 @@ whatever the application uses.
   server is configured by a generated `.cloudbeaver.auto.conf` next to
   `cloudbeaver.conf` (server name, server URL, admin name, admin password)
   instead of the environment variables CloudBeaver also accepts, because
-  secrets are files here ([SPEC-deployment.md](../spec/SPEC-deployment.md)).
+  secrets are files here ([SPEC-deployment.md](../../spec/SPEC-deployment.md)).
   `run.sh` renders it into the in-memory secrets directory at each start
   from the environment's secrets file (an admin name and a generated admin
   password, added to the file like the other generated secrets) and mounts
@@ -116,3 +116,12 @@ exposed. `tools/shellcheck.sh` stays clean.
 With the tool: on dev with `DB_TAILNET=true`, the tool opens on the tailnet,
 connects with the read-only role and reads but cannot write. Without the
 variable, and on prod with the variable set, no tool container is started.
+
+## Result
+
+Delivered on dev and stage: the database on the tailnet, the read-only
+account, optional read access to Keycloak's database (`DB_KEYCLOAK`) and the
+web database tool with its automatic admin and connection setup, including
+the map view of spatial columns. The tool does not cover a SQLite database,
+whose driver is disabled in the web build; if the application gets an
+internal SQLite database, that needs its own item.
