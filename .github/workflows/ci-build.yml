@@ -70,3 +70,31 @@ jobs:
       - name: Publish the images
         if: github.event_name == 'push'
         run: tools/publish-images.sh "${NAMESPACE}" "${GITHUB_REF}" "${GITHUB_SHA}"
+
+  # Posts the built commit to a chat channel, as a hint for the deployment
+  # side. A separate job, and best effort: without the secret it does nothing,
+  # and a failure only shows as a warning, so it never fails the workflow.
+  # See spec/SPEC-releases.md.
+  notify-chat:
+    needs: ci-build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'avarcorg/avarc-server'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions: {}
+    steps:
+      - name: Post the commit to the chat channel
+        env:
+          WEBHOOK_URL: ${{ secrets.CHAT_WEBHOOK_URL }}
+        run: |
+          # No tracing and no echo: the URL stays out of the log.
+          if [ -z "${WEBHOOK_URL}" ]; then
+            echo "::notice::CHAT_WEBHOOK_URL is not set, no notification sent"
+            exit 0
+          fi
+          if ! jq -n --arg sha "${GITHUB_SHA}" \
+              '{text: ("avarc-server main " + $sha + " built and published")}' |
+              curl --fail --silent --max-time 30 \
+                --header 'Content-Type: application/json' --data @- \
+                "${WEBHOOK_URL}" > /dev/null; then
+            echo "::warning::The notification could not be sent"
+          fi
