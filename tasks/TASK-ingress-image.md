@@ -128,6 +128,10 @@ range) with forged `X-Forwarded-Proto: https`, `-Host: evil.example` and
 the peer address; the same request through `localhost` (a private peer)
 passed the forged values on unchanged.
 
+Registry (checked 2026-10-15): the CI Build of `be179d8` published
+`ghcr.io/avarcorg/avarc-ingress` with the tags `snapshot` and
+`sha-be179d8` (private, like the other packages).
+
 Open: running the *published* image on stage, which waits (see
 [SPEC-releases.md](../spec/SPEC-releases.md)).
 [AVARC-24](TASK-observability-ingress-database.md) names no product, so it

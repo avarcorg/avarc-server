@@ -96,5 +96,9 @@ A browser login and logout on stage, with this image behind the nginx
 ingress ([AVARC-33](TASK-ingress-image.md)), work (confirmed by the
 maintainer on 2026-10-15).
 
+Registry (checked 2026-10-15): the CI Build of `be179d8` published
+`ghcr.io/avarcorg/avarc-keycloak` with the tags `snapshot` and
+`sha-be179d8` (private, like the other packages).
+
 Open: running the *published* image on stage waits, because pulling from the registry has to
 wait (see [SPEC-releases.md](../spec/SPEC-releases.md)).
