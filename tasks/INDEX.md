@@ -48,3 +48,4 @@ files. Do not edit by hand. See
 | AVARC-40 | [Clean old container images](finished/TASK-clean-images.md) | task | finished | low | project | AVARC-31 |
 | AVARC-41 | [A nicer layout for the website](finished/TASK-website-layout.md) | task | finished | normal | frontend | AVARC-6 |
 | AVARC-42 | [User entities](TASK-user-entities.md) | task | open | normal | backend | AVARC-29, AVARC-35 |
+| AVARC-43 | [Keycloak theme](TASK-keycloak-theme.md) | task | open | low | auth | AVARC-32, AVARC-41 |
