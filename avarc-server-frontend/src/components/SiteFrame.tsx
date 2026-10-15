@@ -91,6 +91,8 @@ export async function SiteFrame({
                   <li key={link.href}>
                     <a
                       href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="underline hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                     >
                       {link.label}
