@@ -30,6 +30,8 @@ CodeQL analysis on GitHub.
   for `actions`, `*.java`/`*.kt` for Java/Kotlin, `*.js`/`*.ts` and
   variants for JavaScript/TypeScript); with none, the analysis is skipped.
 - Java/Kotlin uses build mode `none`.
+- A push or pull request that changes only Markdown files does not run the
+  analysis (`paths-ignore`); the weekly schedule is not affected.
 - Branches are ignored by allow-listing: the push trigger names only
   `main`, so no analysis runs for the branches above.
 

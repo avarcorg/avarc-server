@@ -44,7 +44,9 @@ checked out.
   GitHub Actions workflow "CI Build" (`.github/workflows/ci-build.yml`; a
   release build gets a workflow of its own) builds and tests
   the project (`./mvnw -Pwith-docker verify`, which builds both images) on
-  every push to `main`, on release tags and on pull requests. Pull requests
+  every push to `main`, on release tags and on pull requests, except pushes
+  and pull requests that change only Markdown files (a release tag always
+  builds). Pull requests
   only build. The publishing logic is the script
   `tools/publish-images.sh`, not the workflow.
   - **Registry:** the GitHub Container Registry, namespace
