@@ -72,7 +72,11 @@ runs in a container, driven by the wrapper:
     ./mvnw -pl avarc-server-frontend exec:exec        # dev server, port 3000
 
 `-Pwith-docker` builds the frontend image as well, with Paketo like the
-backend.
+backend. Check every new or moved dependency with the image build
+(`./mvnw -Pwith-docker -pl avarc-server-frontend package`) before pushing:
+`verify` alone does not run `pack`, which rejects a dependency that is
+missing from the traced `node_modules` (one that Next bundles belongs in
+`devDependencies`, see `spec/SPEC-frontend.md`).
 
 For other npm commands (adding a dependency, updating the lockfile) use
 `NODE_IMAGE=<node.image> avarc-server-frontend/docker-node.sh npm ...`; the
