@@ -30,10 +30,10 @@ Deployment (does not need the skeletons):
   only, without prefix stripping, replacing the placeholder route; never the admin console, the admin API,
   the `master` realm or the management port. Configure hostname and
   forwarded headers for the public origin.
-- Add a provisioning script `deploy/accounts.sh` that creates the admin
-  account and optional editor and viewer accounts through Keycloak's admin
-  API from the environment's secrets file, guards the source line against
-  inherited `xtrace`, and is safe to repeat.
+- Add provisioning scripts, `deploy/create-admin-user.sh` for the admin
+  account and `deploy/create-user.sh` for further editors and admins,
+  through Keycloak's admin API from the environment's secrets file; they
+  guard the source line against inherited `xtrace` and are safe to repeat.
 - Verify the version of Keycloak and the options named above against its
   documentation at implementation time.
 
@@ -41,8 +41,10 @@ Application (blocked on [AVARC-3](finished/TASK-backend-skeleton.md) and
 [AVARC-6](finished/TASK-frontend-skeleton.md)):
 
 - Backend: login and logout as the OIDC client, with a session
-  ([AVARC-29](finished/TASK-backend-login.md)); map the realm roles to permissions,
-  answer 401/403; only the health endpoint and the login endpoints are
+  ([AVARC-29](finished/TASK-backend-login.md)); map the realm roles to
+  authorities (done, `ROLE_<role>`, reported by `GET /api/auth/me`), enforce
+  them per endpoint and answer 401/403 (open, waits for the endpoints of
+  [AVARC-10](TASK-locations-crud-api.md)); only the health endpoint and the login endpoints are
   public. Validating bearer tokens of API clients is left to the task that
   needs it.
 - Frontend: login and logout pages
@@ -54,7 +56,7 @@ Application (blocked on [AVARC-3](finished/TASK-backend-skeleton.md) and
 Documentation:
 
 - Add an Authentication section to `AGENTS.md` (service, provisioning
-  script, how admins reach the admin console over an SSH tunnel) and mention
+  scripts, how admins reach the admin console on the tailnet) and mention
   the accounts step in `README.md`.
 
 ## Progress
@@ -73,5 +75,10 @@ optional, otherwise accounts without them cannot log in. Stage and prod
 ([AVARC-29](finished/TASK-backend-login.md),
 [AVARC-30](finished/TASK-frontend-login.md)), which also settles the
 token-relay question of the spec: browser calls carry the session cookie.
-Open: role-based permissions on the API and the editing controls, and
-bearer-token validation for clients without a browser.
+The realm roles are mapped to `ROLE_` authorities and reported by
+`GET /api/auth/me`.
+Open: role-based permissions per API endpoint and the editing controls (both
+need the endpoints and pages of [AVARC-10](TASK-locations-crud-api.md) and
+[AVARC-12](TASK-locations-ui.md)), bearer-token validation for clients
+without a browser, and exercising stage and prod, which belongs to
+[AVARC-27](TASK-stage-deployment.md).
