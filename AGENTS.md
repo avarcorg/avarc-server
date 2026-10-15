@@ -50,8 +50,8 @@ profile named after the environment is activated with
 `SPRING_PROFILES_ACTIVE` (`application-dev.properties`,
 `application-stage.properties`; `spring-boot:run` uses `dev` by default).
 Prod has no profile file and exposes `health` only. The Compose project runs
-the backend, frontend and Keycloak images (`IMAGE_NAMESPACE`, `BACKEND_VERSION`,
-`FRONTEND_VERSION`, `KEYCLOAK_VERSION`, see `spec/SPEC-deployment.md`), so build them with `-Pwith-docker` before
+the backend, frontend, ingress and Keycloak images (`IMAGE_NAMESPACE`, `BACKEND_VERSION`,
+`FRONTEND_VERSION`, `INGRESS_VERSION`, `KEYCLOAK_VERSION`, see `spec/SPEC-deployment.md`), so build them with `-Pwith-docker` before
 `deploy/run.sh up`.
 
 ## Frontend
@@ -71,6 +71,14 @@ For other npm commands (adding a dependency, updating the lockfile) use
 image is the `node.image` property of `avarc-server-frontend/pom.xml`. Image
 naming (`image.namespace`) is the same as for the backend; the frontend is
 the `frontend` service of the Compose project (`FRONTEND_VERSION`).
+
+## Ingress
+
+The `ingress` service is nginx, run from the image of the module
+`avarc-server-ingress` (spec: `spec/SPEC-ingress.md`), built with Paketo
+from its `nginx.conf` by `-Pwith-docker` and tagged `avarc-ingress`. The
+routing is in that file; a change of it needs a new image. The container
+listens on port 8080.
 
 ## Authentication
 
@@ -116,12 +124,12 @@ tag and run `deploy/deploy.sh` from there; prod accepts nothing else.
 
 The workflow "CI Build" (`.github/workflows/ci-build.yml`) builds and tests every push to
 `main`, every release tag and every pull request. Pushes to `main` publish
-the images `ghcr.io/avarcorg/avarc-backend`, `-frontend` and `-keycloak` as
+the images `ghcr.io/avarcorg/avarc-backend`, `-frontend`, `-ingress` and `-keycloak` as
 `snapshot` and `sha-<commit>`, release tags as `X.Y.Z` and `latest`
 (`tools/publish-images.sh`, `--dry-run` shows what it would push). To run
 published images, start the Compose project with
 `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,
-`FRONTEND_VERSION` and `KEYCLOAK_VERSION` set to a tag. The packages are private for now: run
+`FRONTEND_VERSION`, `INGRESS_VERSION` and `KEYCLOAK_VERSION` set to a tag. The packages are private for now: run
 `docker login ghcr.io` with a token that has `read:packages` on the host
 first.
 
