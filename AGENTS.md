@@ -43,6 +43,13 @@ running Docker daemon), run from the `with-docker` profile. It is tagged
 8080. Override the `avarcorg` namespace with `-Dimage.namespace=<name>`, e.g.
 `-Dimage.namespace="$IMAGE_NAMESPACE"`.
 
+Java is formatted by Open Java Format (spec: `spec/SPEC-backend.md`): a
+build formats the sources, and with `CI` set it fails on unformatted code.
+Run `tools/java-format.sh` on every Java file you write or change before
+showing a diff and before committing, and `tools/java-format.sh check` to
+confirm it is clean; the pre-commit hook rejects unformatted Java. Run
+`git config blame.ignoreRevsFile .git-blame-ignore-revs` once per clone.
+
 The backend stores its data in PostgreSQL with Flyway migrations
 (`src/main/resources/db/migration`, tables in the schema `avarc`); its
 tests start a PostGIS container, so `./mvnw verify` needs a running Docker

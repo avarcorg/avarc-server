@@ -1,7 +1,7 @@
 ---
 id: AVARC-44
 type: task
-status: open
+status: finished
 priority: normal
 area: backend
 created: 2026-10-15
@@ -9,7 +9,7 @@ created: 2026-10-15
 
 # TASK: Java formatter
 
-Spec: [SPEC-backend.md](../spec/SPEC-backend.md)
+Spec: [SPEC-backend.md](../../spec/SPEC-backend.md)
 
 The backend code has no enforced format. Introduce Open Java Format
 (<https://openjavaformat.dev/>), a deterministic formatter with one style
@@ -33,7 +33,7 @@ are checked and written down.
 
 - **Build:** the plugin is declared in the root `pom.xml`
   (`pluginManagement`, versions as properties so Renovate updates them, see
-  [SPEC-dependency-updates.md](../spec/SPEC-dependency-updates.md)) and
+  [SPEC-dependency-updates.md](../../spec/SPEC-dependency-updates.md)) and
   runs in the backend module.
   - A normal local build formats the sources (`format`); the CI build and
     `./mvnw verify` with a CI flag fail on unformatted code (check) instead
@@ -47,7 +47,7 @@ are checked and written down.
   to `.git-blame-ignore-revs`).
 - **Pre-commit:** the check is added to the hook that
   `tools/install-hooks.sh` installs, next to the work-item check
-  ([SPEC-work-tracking.md](../spec/SPEC-work-tracking.md)), so unformatted
+  ([SPEC-work-tracking.md](../../spec/SPEC-work-tracking.md)), so unformatted
   Java does not get committed. The hook runs it on staged Java files only
   and stays fast.
 - **CI:** the "CI Build" workflow fails on unformatted code; it needs no
