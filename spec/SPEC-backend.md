@@ -81,6 +81,11 @@ Define the API service that stores and serves locations.
   from the POM property) from the formatter's GitHub release once, verifies
   its checksum and keeps it in the user's cache directory, so the hook, the
   workflow and agents need no Java and give the same result as the build.
+  For local development with an agent, a hook after every edit runs
+  `tools/java-format.sh file <path>`, which formats that one file and keeps
+  unused imports (an import may be added before its use); the hook is
+  personal configuration, not part of the repository, and `AGENTS.md` shows
+  it. Edits through shell commands are caught by the pre-commit hook and CI.
 - **Actuator:** only `health` is exposed by default; the `dev` and `stage`
   environments, through the Spring profile of the same name, expose all
   actuator endpoints.
