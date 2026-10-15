@@ -28,6 +28,16 @@
         "node"
       ],
       "groupName": "node version"
+    },
+    {
+      "description": "The image labels point to a release mirror; the changelog is in the project repository",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "quay.io/keycloak/keycloak"
+      ],
+      "sourceUrl": "https://github.com/keycloak/keycloak"
     }
   ],
   "customManagers": [
