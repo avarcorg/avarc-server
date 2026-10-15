@@ -125,9 +125,11 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
     `create-db-user.sh`), with the container running as the starting user and
     the configuration files mounted read-only. A second `up` over running
     containers, a start with the tool disabled (the container and its
-    in-memory configuration are removed) and `down` all work. Not verified:
-    the spatial viewer, which needs a browser, and SQLite. The SQLite driver
-    is disabled in this web build ("Driver disabled" on connecting, also with
+    in-memory configuration are removed) and `down` all work. On stage, the
+    Value panel of a geometry cell has a MAP tab that shows the point on a
+    base map, and the `keycloak` connection works once `create-db-user.sh`
+    has granted it. Not covered: SQLite. The SQLite driver is disabled in
+    this web build ("Driver disabled" on connecting, also with
     `enabledDrivers` set in the server configuration), so the tool does not
     cover a SQLite database until that is solved.
 - **Data:** bind-mounted under `deploy/data/<environment>/` (gitignored).
