@@ -40,7 +40,7 @@ checked out.
   `deploy/deploy.sh` was run (see
   [SPEC-deployment.md](SPEC-deployment.md)). Deploying a release means
   checking out its tag there first.
-- **Images:** introduced in [AVARC-31](../tasks/TASK-image-builds.md). A
+- **Images:** introduced in [AVARC-31](../tasks/finished/TASK-image-builds.md). A
   GitHub Actions workflow "CI Build" (`.github/workflows/ci-build.yml`; a
   release build gets a workflow of its own) builds and tests
   the project (`./mvnw -Pwith-docker verify`, which builds both images) on
@@ -49,9 +49,10 @@ checked out.
   `tools/publish-images.sh`, not the workflow.
   - **Registry:** the GitHub Container Registry, namespace
     `ghcr.io/avarcorg`, images `avarc-server-backend` and
-    `avarc-server-frontend`. The packages are public, so hosts pull without
-    credentials; the workflow logs in with its own token, which only
-    pushes may use. The images carry the `org.opencontainers.image.source`
+    `avarc-server-frontend`. The packages are private for now, so a host logs
+    in to the registry with a token that may read packages before it
+    pulls; making them public is a later decision. The workflow logs in
+    with its own token, which only pushes may use. The images carry the `org.opencontainers.image.source`
     label of the repository, which links the packages to it.
   - **Tags:** a push to `main` publishes the moving tag `snapshot` and the
     tag `sha-<first seven characters of the commit>`; a release tag
