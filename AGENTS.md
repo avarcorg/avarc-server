@@ -49,6 +49,11 @@ Run `tools/java-format.sh` on every Java file you write or change before
 showing a diff and before committing, and `tools/java-format.sh check` to
 confirm it is clean; the pre-commit hook rejects unformatted Java. Run
 `git config blame.ignoreRevsFile .git-blame-ignore-revs` once per clone.
+For Claude Code, `.claude/settings.json` (not committed) can format each
+edited file right away; it needs `jq`:
+
+    "hooks": {"PostToolUse": [{"matcher": "Edit|Write", "hooks": [{"type": "command",
+      "command": "jq -r '.tool_input.file_path' | xargs \"$CLAUDE_PROJECT_DIR/tools/java-format.sh\" file"}]}]}
 
 The backend stores its data in PostgreSQL with Flyway migrations
 (`src/main/resources/db/migration`, tables in the schema `avarc`); its
