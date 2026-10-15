@@ -144,7 +144,9 @@ Keycloak's database (users, credential hashes) is closed to the account;
 reading once the script has run, and the database tool gets a second
 connection `keycloak` after a restart. Running the script without either
 closes it again. Connect as `avarc_ro` to `avarc-<environment>-db` on port 5432, database
-`avarc`. Prod never exposes the database.
+`avarc`; the application's tables are in the schema `avarc` (qualify them, e.g.
+`avarc.app_user`), and the script grants the account read access to it.
+Prod never exposes the database.
 
 With `DB_TAILNET=true` the web database tool (CloudBeaver) is started as well,
 at `https://avarc-<environment>-dbadmin.<tailnet domain>`. Nothing is set up by
