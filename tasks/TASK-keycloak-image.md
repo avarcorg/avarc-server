@@ -92,6 +92,9 @@ host (`avarcorg/avarc-keycloak:0.1.0-SNAPSHOT`), is healthy, and through the
 ingress the realm discovery answers 200 and the `master` admin console 404.
 The same image therefore works on stage, without the file mounts.
 
-Open: a full browser login and logout on the new image. Running the
-*published* image on stage waits, because pulling from the registry has to
+A browser login and logout on stage, with this image behind the nginx
+ingress ([AVARC-33](TASK-ingress-image.md)), work (confirmed by the
+maintainer on 2026-10-15).
+
+Open: running the *published* image on stage waits, because pulling from the registry has to
 wait (see [SPEC-releases.md](../spec/SPEC-releases.md)).

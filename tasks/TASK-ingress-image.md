@@ -116,8 +116,12 @@ backend, a request from a private hop passed `X-Forwarded-Proto`,
 `X-Forwarded-Host`, `X-Forwarded-For` (extended), `Host`, cookies, the
 authorization header and the path unchanged.
 
+Stage (version `v0.1.0-75-g61b1094`, images built on the host): the routes
+answer as on dev, also through the tailnet names, the ingress log has no
+errors, and a browser login and logout work (confirmed by the maintainer on
+2026-10-15).
+
 Open: the replacement of the headers of an untrusted hop (not testable from
-the private networks of the host), a full browser login and logout through
-the new ingress, and running the image on stage (built on its host).
+the private networks of the host).
 [AVARC-24](TASK-observability-ingress-database.md) names no product, so it
 needs no change.
