@@ -22,6 +22,29 @@
       "addLabels": [
         "major"
       ]
+    },
+    {
+      "matchDepNames": [
+        "node"
+      ],
+      "groupName": "node version"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Node version of the frontend build, kept in step with the CI check",
+      "managerFilePatterns": [
+        "/^avarc-server-frontend/pom\\.xml$/",
+        "/^\\.github/workflows/ci-build\\.yml$/"
+      ],
+      "matchStrings": [
+        "<node\\.version>(?<currentValue>\\d+)</node\\.version>",
+        "NODE_VERSION: \"(?<currentValue>\\d+)\""
+      ],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node-version",
+      "versioningTemplate": "node"
     }
   ]
 }
