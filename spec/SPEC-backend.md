@@ -76,7 +76,11 @@ Define the API service that stores and serves locations.
   The commit that first formatted the code is listed in
   `.git-blame-ignore-revs`. Anyone who writes Java, agents included, formats
   it before showing a diff and before committing
-  (`tools/java-format.sh`, see `AGENTS.md`).
+  (`tools/java-format.sh`, see `AGENTS.md`). That script does not use Maven:
+  it downloads the precompiled binary of the same formatter version (read
+  from the POM property) from the formatter's GitHub release once, verifies
+  its checksum and keeps it in the user's cache directory, so the hook, the
+  workflow and agents need no Java and give the same result as the build.
 - **Actuator:** only `health` is exposed by default; the `dev` and `stage`
   environments, through the Spring profile of the same name, expose all
   actuator endpoints.
