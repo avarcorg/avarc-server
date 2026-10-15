@@ -19,7 +19,7 @@ case "${ENVIRONMENT}" in
 esac
 
 NAME=avarc-${ENVIRONMENT}
-P=$(dirname $(realpath $0))
+P=$(dirname "$(realpath "$0")")
 D=/home/${NAME}
 
 if ! id ${NAME} > /dev/null 2>&1

@@ -21,7 +21,7 @@ ARGS=
 for arg in "$@"
 do
     case "${arg}" in
-        --dry-run) RUN=echo ;;
+        --dry-run) RUN="echo" ;;
         --help|-h) usage; exit 0 ;;
         -*) echo "publish-images.sh: unknown option ${arg}" >&2; exit 1 ;;
         *) ARGS="${ARGS} ${arg}" ;;

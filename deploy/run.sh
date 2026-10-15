@@ -50,7 +50,8 @@ esac
 
 export ENVIRONMENT
 export NAME=avarc-${ENVIRONMENT}
-export P=$(dirname "$(realpath "$0")")
+P=$(dirname "$(realpath "$0")")
+export P
 cd "${P}"
 
 case "${ENVIRONMENT}" in
@@ -86,7 +87,8 @@ case "${ENVIRONMENT}" in
     prod) export KEYCLOAK_ADMIN_PORT=${KEYCLOAK_ADMIN_PORT:-8182} ;;
 esac
 export KEYCLOAK_ADMIN_ORIGIN=${KEYCLOAK_ADMIN_ORIGIN:-https://${NAME}-kc${TAILNET_DOMAIN:+.${TAILNET_DOMAIN}}}
-export RUN_UID=$(id -u)
+RUN_UID=$(id -u)
+export RUN_UID
 export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-/dev/shm/${NAME}-secrets}
 
 # The secrets the deployment needs; one file each in ${SECRETS_RUN_DIR}.

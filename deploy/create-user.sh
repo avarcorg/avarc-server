@@ -26,7 +26,7 @@ for arg in "$@"
 do
     case "${arg}" in
         --stage) ENVIRONMENT=stage ;;
-        --admin) ROLE=admin ;;
+        --admin) ROLE="admin" ;;
         --permanent) PERMANENT=1 ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         -*) echo "${PROG}: unknown argument '${arg}'" >&2; exit 1 ;;
