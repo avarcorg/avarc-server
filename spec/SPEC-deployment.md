@@ -80,17 +80,19 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   profile that `run.sh` enables only then). It is written for "the database",
   not for one engine: a connection is listed per database of the
   environment, so an engine change or an internal SQLite database adds or
-  replaces a connection, not the tool. A SQLite file is read from a
-  read-only mount and has no port of its own.
+  replaces a connection, not the tool. A SQLite file would be read from a
+  read-only mount and has no port of its own (but see Verified below).
   - **No setup by hand:** `run.sh` configures the tool at each start from
     files it renders into the in-memory secrets directory and mounts
     read-only, so the first-run wizard never appears. The server
     configuration is a Java properties file mounted as
     `conf/.cloudbeaver.auto.conf` (keys `CB_SERVER_NAME`, `CB_SERVER_URL`,
     `CB_ADMIN_NAME`, `CB_ADMIN_PASSWORD`); the admin name and password are
-    `DBTOOL_ADMIN_NAME` and `DBTOOL_ADMIN_PASSWORD` of the secrets file,
-    generated and appended when missing, the password meeting the tool's
-    policy (at least eight characters, mixed case, a digit). The
+    `DBTOOL_ADMIN_NAME` (default `dbadmin`; `admin` and `user` are the names
+    of the tool's built-in teams and are refused) and `DBTOOL_ADMIN_PASSWORD`
+    of the secrets file, the password generated and appended when missing and
+    meeting the tool's policy (at least eight characters, mixed case, a
+    digit). The
     connections are `GlobalConfiguration/.dbeaver/data-sources.json`, with
     `read-only` set, the user and password of the read-only account in
     `auth-properties`, and no custom connections for users. The password is
@@ -106,13 +108,18 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   - **State:** the tool's workspace is under `deploy/data/<environment>/`,
     which `reset` removes. The container runs as the user that started the
     project, like `keycloak`, to read the secrets directory.
-  - **Verified (CloudBeaver 26.2.2):** with the environment variables
-    `CB_*`, and with the properties file above, the server starts
-    configured and the admin can log in; a connection from the rendered
-    `data-sources.json` with `read-only` and plain `auth-properties`
-    connects to PostGIS. Not verified yet: the properties file together
-    with the rendered connections on a read-only mount, the SQLite
-    connection and the spatial viewer, which the implementation checks.
+  - **Verified (CloudBeaver 26.2.2):** started by `run.sh` on the
+    developer deployment, the tool comes up configured without the wizard,
+    the admin account logs in, anonymous access is off, the one connection is
+    read-only and connects to PostGIS with the read-only account (after
+    `create-db-user.sh`), with the container running as the starting user and
+    the configuration files mounted read-only. A second `up` over running
+    containers, a start with the tool disabled (the container and its
+    in-memory configuration are removed) and `down` all work. Not verified:
+    the spatial viewer, which needs a browser, and SQLite. The SQLite driver
+    is disabled in this web build ("Driver disabled" on connecting, also with
+    `enabledDrivers` set in the server configuration), so the tool does not
+    cover a SQLite database until that is solved.
 - **Data:** bind-mounted under `deploy/data/<environment>/` (gitignored).
 - **Secrets:** their values are in `deploy/secrets.dev.sh` (dev; generated
   with random values on the first start), `deploy/secrets.stage.sh` or
