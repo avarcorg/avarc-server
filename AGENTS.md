@@ -50,8 +50,8 @@ profile named after the environment is activated with
 `SPRING_PROFILES_ACTIVE` (`application-dev.properties`,
 `application-stage.properties`; `spring-boot:run` uses `dev` by default).
 Prod has no profile file and exposes `health` only. The Compose project runs
-the backend and frontend images (`IMAGE_NAMESPACE`, `BACKEND_VERSION`,
-`FRONTEND_VERSION`, see `spec/SPEC-deployment.md`), so build them with `-Pwith-docker` before
+the backend, frontend and Keycloak images (`IMAGE_NAMESPACE`, `BACKEND_VERSION`,
+`FRONTEND_VERSION`, `KEYCLOAK_VERSION`, see `spec/SPEC-deployment.md`), so build them with `-Pwith-docker` before
 `deploy/run.sh up`.
 
 ## Frontend
@@ -75,7 +75,9 @@ the `frontend` service of the Compose project (`FRONTEND_VERSION`).
 ## Authentication
 
 Keycloak runs as the `keycloak` service of the Compose project (spec:
-`spec/SPEC-auth.md`); the realm is imported from `deploy/keycloak/`. Create
+`spec/SPEC-auth.md`), run from the image of the module `avarc-server-keycloak`
+(a Dockerfile built by `-Pwith-docker`, tagged `avarc-keycloak`), which holds the realm
+import and the start script. Create
 the accounts of an environment, the initial admin included, after the project
 is up; it is safe to repeat (needs `curl` and `jq`):
 
@@ -94,7 +96,7 @@ manage users, roles and passwords in the console of the `avarc` realm at
 `https://avarc-<environment>-kc.<tailnet domain>/auth/admin/avarc/console/`
 on the tailnet
 (served by docktail, see `spec/SPEC-deployment.md`), signing in with their
-own account. The ingress does not route the console. A change of `deploy/keycloak/avarc-realm.json` does
+own account. The ingress does not route the console. A change of `avarc-server-keycloak/avarc-realm.json` does
 not reach an existing realm (Keycloak imports only when the realm is absent);
 apply it in the console, or on dev with `deploy/run.sh reset`.
 
@@ -114,12 +116,12 @@ tag and run `deploy/deploy.sh` from there; prod accepts nothing else.
 
 The workflow "CI Build" (`.github/workflows/ci-build.yml`) builds and tests every push to
 `main`, every release tag and every pull request. Pushes to `main` publish
-the images `ghcr.io/avarcorg/avarc-backend` and `-frontend` as
+the images `ghcr.io/avarcorg/avarc-backend`, `-frontend` and `-keycloak` as
 `snapshot` and `sha-<commit>`, release tags as `X.Y.Z` and `latest`
 (`tools/publish-images.sh`, `--dry-run` shows what it would push). To run
 published images, start the Compose project with
-`IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION` /
-`FRONTEND_VERSION` set to a tag. The packages are private for now: run
+`IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,
+`FRONTEND_VERSION` and `KEYCLOAK_VERSION` set to a tag. The packages are private for now: run
 `docker login ghcr.io` with a token that has `read:packages` on the host
 first.
 
