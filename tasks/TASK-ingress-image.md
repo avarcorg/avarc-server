@@ -79,5 +79,6 @@ without a login, `/actuator/health`, the Keycloak realm endpoints, `404`
 for the admin console, the `master` realm and traversal attempts under
 `/auth/`), the login and logout of
 [AVARC-29](finished/TASK-backend-login.md) work through the new ingress, and
-the forwarded scheme reaches Keycloak. Then the published image runs on
-stage.
+the forwarded scheme reaches Keycloak. Then the image runs on stage, built
+on its host: pulling the published image from the registry has to wait (see
+[SPEC-releases.md](../spec/SPEC-releases.md)).

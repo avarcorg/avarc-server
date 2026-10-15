@@ -63,8 +63,9 @@ is versioned, built and published like the backend and the frontend
 On the developer deployment, from a fresh start (`deploy/run.sh reset`):
 Keycloak starts from the image alone, the realm is imported, the accounts
 script creates the admin, and the login and logout of
-[AVARC-29](finished/TASK-backend-login.md) work. Then the published image
-runs on stage.
+[AVARC-29](finished/TASK-backend-login.md) work. Then the image runs on
+stage. Pulling the published image from the registry on stage has to wait,
+so stage runs the image built on its host.
 
 ## Progress
 
@@ -85,5 +86,12 @@ realm. The image carries the source label. Compose, `deploy.sh`, `run.sh`
 (`KEYCLOAK_VERSION`), `tools/publish-images.sh`, the CI label step and the
 docs are updated.
 
-Open: a full browser login and logout on the new image, and running the
-published image on stage (after the first CI publish).
+Stage (checked after the push of this change, version
+`v0.1.0-68-gad13425`): the `keycloak` service runs the image built on the
+host (`avarcorg/avarc-keycloak:0.1.0-SNAPSHOT`), is healthy, and through the
+ingress the realm discovery answers 200 and the `master` admin console 404.
+The same image therefore works on stage, without the file mounts.
+
+Open: a full browser login and logout on the new image. Running the
+*published* image on stage waits, because pulling from the registry has to
+wait (see [SPEC-releases.md](../spec/SPEC-releases.md)).
