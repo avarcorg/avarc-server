@@ -1,7 +1,7 @@
 ---
 id: AVARC-34
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: backend
 depends-on: [AVARC-3, AVARC-33]
@@ -10,9 +10,9 @@ created: 2026-10-15
 
 # TASK: Expose the API description and Swagger UI on dev and stage
 
-Spec: [SPEC-backend.md](../spec/SPEC-backend.md) (API: REST and OpenAPI,
+Spec: [SPEC-backend.md](../../spec/SPEC-backend.md) (API: REST and OpenAPI,
 generated from the code with springdoc),
-[SPEC-ingress.md](../spec/SPEC-ingress.md)
+[SPEC-ingress.md](../../spec/SPEC-ingress.md)
 
 The backend API is described by an OpenAPI document and browsable in
 Swagger UI, in the dev and stage environments, without authentication. Prod
@@ -51,7 +51,7 @@ has neither.
 ## Verification
 
 On the developer deployment and on stage (built on its host, see
-[SPEC-releases.md](../spec/SPEC-releases.md)): the UI loads through the
+[SPEC-releases.md](../../spec/SPEC-releases.md)): the UI loads through the
 ingress without a login, the document lists the endpoints, a call from the
 UI works after a login as decided above. With `SPRING_PROFILES_ACTIVE`
 unset or `prod`, document and UI are not served.
@@ -71,6 +71,10 @@ Verified on the developer deployment through the nginx ingress after a
 `reset`: UI, assets, document and configuration answer 200 without a login,
 `/api/hello` and `/api/auth/me` still 401.
 
-Open: a call from the UI after a login ("Try it out" with the session and
-CSRF token), to be tried in a browser; the same on stage after it is
-deployed.
+Stage (images built on its host, see
+[SPEC-releases.md](../../spec/SPEC-releases.md)): the UI, the document and
+the configuration answer without a login through the tailnet name, the
+server URL in the document is the https origin, and the endpoints still
+answer 401. After a login, "Try it out" on `GET /api/hello` works (confirmed
+by the maintainer on 2026-10-15). Without the dev or stage profile the
+document and the UI are not served (tests).
