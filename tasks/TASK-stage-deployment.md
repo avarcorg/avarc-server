@@ -43,8 +43,9 @@ database):
 
 Ongoing:
 
-- Define the update procedure (pull, restart, check) and, if wanted, a
-  rollback.
+- The update procedure (restart pulls `snapshot`, check, rollback to a
+  `sha-<commit>`) is in the deployment spec; its test is in
+  [AVARC-37](TASK-registry-pull.md).
 - Stage runs the published images since 2026-10-15; what remains of it is in
   [AVARC-37](TASK-registry-pull.md). The automatic update after a build
   ([AVARC-36](TASK-deploy-notification.md)) follows it.

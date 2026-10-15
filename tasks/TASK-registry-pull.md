@@ -29,7 +29,9 @@ the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
   variables from the environment's secrets file when the environment does not
   set them, so a host keeps its choice in a file that is never committed and
   needs no change to the systemd unit.
-- Stage runs the four images under the tag `snapshot`. The first run found
+- Stage runs the four images under the tag `snapshot` (decided by the
+  maintainer for now; a pinned `sha-<commit>` remains the way to roll back,
+  see the deployment spec). The first run found
   that the ingress image failed without a `PORT` variable; its configuration
   now has the port written in ([AVARC-33](finished/TASK-ingress-image.md)).
   After a restart through the deploy job the smoke checks answer as before
@@ -40,13 +42,9 @@ the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
 
 ## Remaining
 
-- Decide which tag stage runs: the moving `snapshot`, or a pinned
-  `sha-<commit>`. A registry mirror may keep a moving tag for a while, which
-  speaks for pinned tags.
-- Define the update procedure of [AVARC-27](TASK-stage-deployment.md): pull,
-  restart, check, and a rollback to the previous tag; write it into the
-  deployment spec.
-- Test it: go to a newer tag and back to the previous one.
+- Test the update procedure of the deployment spec on stage: a restart pulls
+  the new `snapshot`, and a rollback to `sha-<commit>` of an earlier build
+  and back to `snapshot` works.
 - Check that a missing tag fails with the clear message after the retries.
 
 ## Verification
