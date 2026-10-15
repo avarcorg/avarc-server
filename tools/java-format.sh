@@ -4,6 +4,11 @@
 # spec/SPEC-backend.md.
 #
 #   tools/java-format.sh [format|check]       (default: format)
+#   tools/java-format.sh file FILE...         (format the given Java files only)
+#
+# "file" is for an editor or agent hook after every edit: other files are
+# skipped, and unused imports are kept, as an import may be added before the
+# code that uses it; "format" and "check" remove them.
 #
 # The version is the property open-java-format.version of the backend POM.
 # The precompiled binary of that release is downloaded from GitHub once, its
@@ -15,6 +20,7 @@ PROG=java-format.sh
 case "${1:-format}" in
     format) mode=format ;;
     check) mode=check ;;
+    file) mode="file" ;;
     -h|--help) sed -n '2,/^set -eu$/p' "$0" | sed -e '/^set -eu$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "${PROG}: unknown argument '$1'" >&2; exit 1 ;;
 esac
@@ -55,6 +61,18 @@ then
     mv "${tmp}/open-java-format-${asset}" "${bin}"
     rm -rf "${tmp}"
     trap - EXIT
+fi
+
+if [ "${mode}" = file ]
+then
+    shift
+    for f in "$@"
+    do
+        case "${f}" in
+            *.java) [ -f "${f}" ] && "${bin}" --skip-removing-unused-imports --replace "${f}" ;;
+        esac
+    done
+    exit 0
 fi
 
 cd "${root}"
