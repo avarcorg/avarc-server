@@ -40,10 +40,38 @@ checked out.
   `deploy/deploy.sh` was run (see
   [SPEC-deployment.md](SPEC-deployment.md)). Deploying a release means
   checking out its tag there first.
-- **Images:** once the backend and the frontend are built as images, they
-  are tagged with the release version and the Compose project refers to
-  that version. Until then the Compose project pulls only third-party
-  images, which are pinned in the template.
+- **Images:** introduced in [AVARC-31](../tasks/TASK-image-builds.md). A
+  GitHub Actions workflow "CI Build" (`.github/workflows/ci-build.yml`; a
+  release build gets a workflow of its own) builds and tests
+  the project (`./mvnw -Pwith-docker verify`, which builds both images) on
+  every push to `main`, on release tags and on pull requests. Pull requests
+  only build. The publishing logic is the script
+  `tools/publish-images.sh`, not the workflow.
+  - **Registry:** the GitHub Container Registry, namespace
+    `ghcr.io/avarcorg`, images `avarc-server-backend` and
+    `avarc-server-frontend`. The packages are public, so hosts pull without
+    credentials; the workflow logs in with its own token, which only
+    pushes may use. The images carry the `org.opencontainers.image.source`
+    label of the repository, which links the packages to it.
+  - **Tags:** a push to `main` publishes the moving tag `snapshot` and the
+    tag `sha-<first seven characters of the commit>`; a release tag
+    `vX.Y.Z` publishes `X.Y.Z` and `latest`. The version in the POMs is not
+    the published version: the build tags the images with it locally and
+    the script retags them.
+  - **Versions and caches:** the Java and Node versions are constants in
+    the workflow's `env`; a step fails the build when they differ from the
+    POMs. Cached between runs: the Maven repository and the wrapper's Maven
+    distribution (by `actions/setup-java`) and npm's downloads (the Node
+    container keeps them in a host directory, see `docker-node.sh`). The
+    Docker images that the build pulls (the buildpack builders, the Node
+    image) and the downloads inside a `pack` build (JRE, Node) are not
+    cached: the cache action for Docker images that was tried no longer
+    works with GitHub's cache service.
+  - **Using them:** the Compose project runs a published image when
+    `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION` /
+    `FRONTEND_VERSION` name a tag (see
+    [SPEC-deployment.md](SPEC-deployment.md)). Deploying a host from the
+    published images automatically is not decided yet.
 
 ## Open questions
 

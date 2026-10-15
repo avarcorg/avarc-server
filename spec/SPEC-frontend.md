@@ -44,7 +44,11 @@ Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
 - **Module:** `avarc-server-frontend`, a module of the Maven build, which
   orchestrates installing the dependencies (`npm ci`) and `next build`
   (which also type-checks) in the `compile` lifecycle. The `package.json`
-  pins exact versions and `package-lock.json` is committed.
+  pins exact versions and `package-lock.json` is committed. Dependencies that
+  are only needed to build (Tailwind, PostCSS, the type definitions) belong in
+  `devDependencies`: the image holds the traced `node_modules` of the
+  standalone server, and the buildpack fails on a runtime dependency that
+  is missing there.
 - **No Node on the host:** every Node command runs in a container of the
   `node.image` Maven property, as the calling user, through
   `docker-node.sh`. The development server runs the same way. Node and npm

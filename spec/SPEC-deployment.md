@@ -85,7 +85,8 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   defaults `IMAGE_NAMESPACE` to `avarcorg` and `BACKEND_VERSION` to the
   version of the Maven build (`0.1.0-SNAPSHOT`), and the environment
   overrides both (set `BACKEND_VERSION` to a release version to run a
-  release). The Spring profile named after the environment is active
+  release, and `IMAGE_NAMESPACE=ghcr.io/avarcorg` to run the published
+  images, see [SPEC-releases.md](SPEC-releases.md)). The Spring profile named after the environment is active
   (`SPRING_PROFILES_ACTIVE`); it has no published port, the ingress reaches
   it by service name. It gets `PUBLIC_ORIGIN` and, mounted as a file, only
   the secret `KEYCLOAK_CLIENT_SECRET` (not the whole secrets directory);
