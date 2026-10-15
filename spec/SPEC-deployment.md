@@ -99,6 +99,12 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
     therefore in a file that exists only in the memory directory, never in
     the repository or on disk between starts. The configuration is
     regenerated at every start and wins over changes made in the tool.
+    The tool creates the admin account only when its workspace is first
+    started, so `run.sh` keeps a fingerprint (a hash) of the admin name and
+    password in the workspace; when the secrets file no longer matches it,
+    `run.sh` stops the tool and removes the tool's own database, and the
+    account is created again from the current values at that start. A
+    workspace without a fingerprint, from before this rule, is reset once.
   - **Access:** the tool's own login (the admin account above) is required;
     anonymous access is switched off. The connections use the read-only
     account of `create-db-user.sh`, never the application's role, so the
