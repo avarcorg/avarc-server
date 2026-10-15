@@ -43,6 +43,11 @@ running Docker daemon), run from the `with-docker` profile. It is tagged
 8080. Override the `avarcorg` namespace with `-Dimage.namespace=<name>`, e.g.
 `-Dimage.namespace="$IMAGE_NAMESPACE"`.
 
+The backend code is split into application modules, direct sub-packages of
+`org.avarc.server` (rule in `spec/SPEC-backend.md`); `ModularityTests`, part
+of `./mvnw verify`, fails on a broken boundary and writes the module
+diagrams to `avarc-server-backend/target/spring-modulith-docs/`.
+
 The service answers `GET /actuator/health`; everything else, such as
 `GET /api/hello`, needs a login (see Authentication). Only in the
 dev and stage environments are all actuator endpoints exposed: the Spring
