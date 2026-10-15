@@ -1,12 +1,15 @@
-import { AuthCard, buttonClass } from "../../components/AuthCard";
+import { getTranslations } from "next-intl/server";
+import { AuthCard, buttonClass } from "../../../components/AuthCard";
+import { Link } from "../../../i18n/navigation";
 
-export default function LoggedOut() {
+export default async function LoggedOut() {
+  const t = await getTranslations("LoggedOut");
   return (
-    <AuthCard title="Logged out">
-      <p>You have been logged out. See you soon.</p>
-      <a href="/login" className={buttonClass}>
-        Sign in again
-      </a>
+    <AuthCard title={t("title")}>
+      <p>{t("message")}</p>
+      <Link href="/login" className={buttonClass}>
+        {t("again")}
+      </Link>
     </AuthCard>
   );
 }

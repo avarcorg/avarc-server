@@ -1,0 +1,30 @@
+{
+  "Frame": {
+    "siteName": "avarc",
+    "tagline": "Orte von historischem Interesse",
+    "skipToContent": "Zum Inhalt springen",
+    "navigation": "Hauptnavigation",
+    "menu": "Menü",
+    "language": "Sprache",
+    "userMenu": "Konto",
+    "logout": "Abmelden"
+  },
+  "Nav": {
+    "home": "Start"
+  },
+  "Home": {
+    "title": "Hallo, avarc",
+    "signedInAs": "Angemeldet als"
+  },
+  "Login": {
+    "title": "Anmelden",
+    "intro": "Orte von historischem Interesse. Melden Sie sich mit Ihrem avarc-Konto an, um fortzufahren.",
+    "failed": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "action": "Anmelden"
+  },
+  "LoggedOut": {
+    "title": "Abgemeldet",
+    "message": "Sie wurden abgemeldet. Bis bald.",
+    "again": "Erneut anmelden"
+  }
+}

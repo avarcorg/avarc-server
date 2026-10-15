@@ -1,0 +1,30 @@
+{
+  "Frame": {
+    "siteName": "avarc",
+    "tagline": "Locations of historical interest",
+    "skipToContent": "Skip to content",
+    "navigation": "Main navigation",
+    "menu": "Menu",
+    "language": "Language",
+    "userMenu": "Account",
+    "logout": "Log out"
+  },
+  "Nav": {
+    "home": "Home"
+  },
+  "Home": {
+    "title": "Hello, avarc",
+    "signedInAs": "Signed in as"
+  },
+  "Login": {
+    "title": "Sign in",
+    "intro": "Locations of historical interest. Sign in with your avarc account to continue.",
+    "failed": "The sign-in failed. Please try again.",
+    "action": "Sign in"
+  },
+  "LoggedOut": {
+    "title": "Logged out",
+    "message": "You have been logged out. See you soon.",
+    "again": "Sign in again"
+  }
+}
