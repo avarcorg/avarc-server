@@ -91,6 +91,9 @@ export INGRESS_PORT=${INGRESS_PORT:-${DEFAULT_PORT}}
 # Exposing the database on the tailnet is an opt-in of dev and stage
 # (DB_TAILNET=true in the secrets file) and never happens on prod.
 host_setting DB_TAILNET false
+# Keycloak's database as a second connection of the database tool; the access
+# itself is granted by create-db-user.sh.
+host_setting DB_KEYCLOAK false
 DB_DOCKTAIL_ENABLE=false
 if [ "${DB_TAILNET}" = "true" ]
 then
@@ -230,6 +233,32 @@ random_password () {
     done
 }
 
+# Prints the connection of the database tool to database $1 (also its id and
+# name) with the read-only account; $2 is the escaped password.
+datasource_json () {
+    cat <<JSON
+    "$1": {
+      "provider": "postgresql",
+      "driver": "postgres-jdbc",
+      "name": "$1",
+      "save-password": true,
+      "read-only": true,
+      "configuration": {
+        "host": "db",
+        "port": "5432",
+        "database": "$1",
+        "url": "jdbc:postgresql://db:5432/$1",
+        "configurationType": "MANUAL",
+        "auth-model": "native",
+        "auth-properties": {
+          "user": "avarc_ro",
+          "password": "$2"
+        }
+      }
+    }
+JSON
+}
+
 # Renders the configuration of the database tool into ${DBTOOL_RUN_DIR}: the
 # server configuration (admin account, so that the first-run wizard never
 # appears) and the connections, which use the read-only account. The admin
@@ -284,6 +313,13 @@ build_dbtool_dir () {
     # Java properties: a backslash must be doubled.
     _props_name=$(printf '%s' "${_admin_name}" | sed 's/\\/\\\\/g')
     _props_password=$(printf '%s' "${_admin_password}" | sed 's/\\/\\\\/g')
+    _ro_json=$(json_escape "${_ro_password}")
+    _connections=$(datasource_json avarc "${_ro_json}")
+    if [ "${DB_KEYCLOAK}" = "true" ]
+    then
+        _connections="${_connections},
+$(datasource_json keycloak "${_ro_json}")"
+    fi
     (
         umask 077
         {
@@ -296,25 +332,7 @@ build_dbtool_dir () {
 {
   "folders": {},
   "connections": {
-    "avarc": {
-      "provider": "postgresql",
-      "driver": "postgres-jdbc",
-      "name": "avarc",
-      "save-password": true,
-      "read-only": true,
-      "configuration": {
-        "host": "db",
-        "port": "5432",
-        "database": "avarc",
-        "url": "jdbc:postgresql://db:5432/avarc",
-        "configurationType": "MANUAL",
-        "auth-model": "native",
-        "auth-properties": {
-          "user": "avarc_ro",
-          "password": "$(json_escape "${_ro_password}")"
-        }
-      }
-    }
+${_connections}
   }
 }
 JSON
@@ -325,7 +343,7 @@ JSON
     # made by this user (the container would otherwise create it as root).
     mkdir -p "${P}/data/${ENVIRONMENT}/dbtool/GlobalConfiguration/.dbeaver"
     : >> "${P}/data/${ENVIRONMENT}/dbtool/GlobalConfiguration/.dbeaver/data-sources.json"
-    _admin_password=; _props_password=; _ro_password=; _fingerprint=
+    _admin_password=; _props_password=; _ro_password=; _ro_json=; _fingerprint=
     [ "${_xtrace}" = on ] && set -x
     return 0
 }

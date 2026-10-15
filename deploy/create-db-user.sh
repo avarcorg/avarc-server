@@ -8,10 +8,10 @@
 #
 # The account is called avarc_ro; it may read the tables of the avarc database
 # (including tables created later) and nothing else, and its sessions are
-# read-only. With --keycloak it may also read Keycloak's database, which holds
-# users and credential hashes; without it, the account cannot even connect to
-# that database (the connect right of everyone is revoked), and an earlier
-# --keycloak is undone. Its password is DB_READONLY_PASSWORD in the environment's
+# read-only. With --keycloak, or DB_KEYCLOAK=true in the secrets file, it may
+# also read Keycloak's database, which holds users and credential hashes;
+# without either, the account cannot even connect to that database (the
+# connect right of everyone is revoked), and an earlier grant is undone. Its password is DB_READONLY_PASSWORD in the environment's
 # secrets file; if the file has none, a random one is generated and appended
 # to it. The password is never printed. Not available for prod. Needs a
 # running project; the password reaches the database on the standard input of
@@ -40,6 +40,17 @@ esac
 P=$(dirname "$(realpath "$0")")
 SECRETS_FILE=${P}/${SECRETS_FILE}
 ROLE=avarc_ro
+
+# DB_KEYCLOAK=true in the environment or the secrets file means --keycloak.
+if [ "${KEYCLOAK}" -eq 0 ]
+then
+    _keycloak=${DB_KEYCLOAK:-}
+    if [ -z "${_keycloak}" ] && [ -r "${SECRETS_FILE}" ]
+    then
+        _keycloak=$(env -i sh -c '. "$0" > /dev/null 2>&1; printenv DB_KEYCLOAK || true' "${SECRETS_FILE}")
+    fi
+    [ "${_keycloak}" != "true" ] || KEYCLOAK=1
+fi
 
 _container=$(docker compose -p "avarc-${ENVIRONMENT}" ps -q db)
 if [ -z "${_container}" ]
