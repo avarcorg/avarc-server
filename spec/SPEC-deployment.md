@@ -47,6 +47,20 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   localhost. It carries docktail labels that expose it on the tailnet as
   `avarc-<environment>` on port 443, where docktail terminates TLS; the
   ingress itself does not.
+- **Database on the tailnet (optional):** on dev and stage only, never on
+  prod, the PostGIS database can be served on the tailnet as
+  `avarc-<environment>-db`, port 5432, by docktail labels on the `db`
+  service (TCP, no published host port). It is off unless the environment's
+  secrets file sets `DB_TAILNET=true`; `run.sh` ignores the variable on prod,
+  with a warning. Inspection uses the read-only account `avarc_ro` (created
+  by `deploy/create-db-user.sh`, which takes its password
+  `DB_READONLY_PASSWORD` from the secrets file or generates and appends one);
+  it reads the tables of the `avarc` database and its sessions are read-only.
+  The account cannot connect to Keycloak's database (users and credential
+  hashes) unless `create-db-user.sh --keycloak` grants read access to it;
+  running the script without the option withdraws it again.
+  The application's own credentials are not handed out. Who may reach the
+  service is decided by the tailnet's access rules.
 - **Data:** bind-mounted under `deploy/data/<environment>/` (gitignored).
 - **Secrets:** their values are in `deploy/secrets.dev.sh` (dev; generated
   with random values on the first start), `deploy/secrets.stage.sh` or
