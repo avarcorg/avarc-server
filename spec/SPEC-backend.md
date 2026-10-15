@@ -41,7 +41,7 @@ Define the API service that stores and serves locations.
 - **API:** REST + OpenAPI, generated from the code (springdoc). Other
   consumers, such as API keys or an MCP adapter, use the same API.
 - **API description and Swagger UI:** introduced in
-  [AVARC-34](../tasks/TASK-api-docs.md). The OpenAPI document
+  [AVARC-34](../tasks/finished/TASK-api-docs.md). The OpenAPI document
   (`/api/docs/openapi.json`) and Swagger UI (`/api/docs`) are served in the
   `dev` and `stage` environments only, enabled by their Spring profile like
   the actuator endpoints; prod serves neither. They are under `/api/`, so
