@@ -96,12 +96,13 @@ no header or footer markup of their own.
   nothing is loaded from a third party.
 - **Developer links:** introduced in [AVARC-45](../tasks/finished/TASK-footer-dev-links.md).
   On dev and stage the footer also links to the tools that exist there: the
-  web database tool, Swagger UI (`/api/docs`) and the JSON API document
+  web database tool, the Keycloak admin console, Swagger UI (`/api/docs`) and the JSON API document
   (`/api/docs/openapi.json`, [SPEC-backend.md](SPEC-backend.md)). The
   frontend learns about them at runtime, since the image is the same for
   every environment: `FOOTER_API_DOCS=true` shows the two API links
   (same-origin, served through the ingress) and a non-empty
-  `FOOTER_DBTOOL_URL` shows the database tool link. `run.sh` sets them
+  `FOOTER_DBTOOL_URL` and `FOOTER_KEYCLOAK_URL` show the database tool and
+  Keycloak admin console links. `run.sh` sets them
   ([SPEC-deployment.md](SPEC-deployment.md)); unset or empty means no link,
   so prod has none, and nothing is baked into the page bundle.
 - **Texts:** every text of the frame comes from the translations

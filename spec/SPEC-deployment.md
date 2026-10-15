@@ -154,7 +154,8 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `http://localhost:<ingress port>` for dev) are exported by `run.sh` and referenced in `compose.yaml`.
 - **Footer links:** on dev and stage `run.sh` passes the frontend
   `FOOTER_API_DOCS=true` and, if the database tool is enabled,
-  `FOOTER_DBTOOL_URL` set to its address; on prod both are empty
+  `FOOTER_DBTOOL_URL` set to its address, and `FOOTER_KEYCLOAK_URL` set to the
+  address of the realm's admin console; on prod all are empty
   ([SPEC-frontend.md](SPEC-frontend.md), AVARC-45).
 - **Host settings:** `IMAGE_NAMESPACE` and the `*_VERSION` variables (the
   images to run) are taken from the environment if set there, otherwise
