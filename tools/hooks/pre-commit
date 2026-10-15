@@ -1,5 +1,13 @@
 #!/bin/sh
-# Pre-commit hook: validate work items (see spec/SPEC-work-tracking.md).
+# Pre-commit hook: validate work items (see spec/SPEC-work-tracking.md) and,
+# when Java files are staged, their format (see spec/SPEC-backend.md).
 # Install with tools/install-hooks.sh.
 root=$(git rev-parse --show-toplevel) || exit 1
-exec python3 "$root/tools/tasks.py" check
+python3 "$root/tools/tasks.py" check || exit 1
+if git diff --cached --name-only --diff-filter=ACM | grep -q '\.java$'
+then
+    "$root/tools/java-format.sh" check || {
+        echo "pre-commit: unformatted Java; run tools/java-format.sh and stage the result" >&2
+        exit 1
+    }
+fi

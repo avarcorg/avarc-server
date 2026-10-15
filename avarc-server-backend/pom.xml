@@ -19,6 +19,8 @@
         <image.basename>avarc-backend</image.basename>
         <springdoc.version>3.1.1</springdoc.version>
         <spring-modulith.version>2.1.1</spring-modulith.version>
+        <fmt-maven-plugin.version>2.27.0.1</fmt-maven-plugin.version>
+        <open-java-format.version>2.98.0.6</open-java-format.version>
     </properties>
 
     <dependencyManagement>
@@ -116,10 +118,67 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!-- Formats the sources, see spec/SPEC-backend.md; the profile
+                 format-check turns this into a check. -->
+            <plugin>
+                <groupId>dev.openjavaformat</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>${fmt-maven-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>dev.openjavaformat</groupId>
+                        <artifactId>open-java-format</artifactId>
+                        <version>${open-java-format.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>format</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <!-- Fails on unformatted code instead of rewriting it. Active when
+             the environment variable CI is set (GitHub Actions does), or
+             with -Pformat-check. -->
+        <profile>
+            <id>format-check</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>dev.openjavaformat</groupId>
+                        <artifactId>fmt-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>format</id>
+                                <configuration>
+                                    <skip>true</skip>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>check</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>with-docker</id>
             <properties>
