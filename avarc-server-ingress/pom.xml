@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.avarc</groupId>
+        <artifactId>avarc-server</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>avarc-server-ingress</artifactId>
+    <packaging>pom</packaging>
+    <name>avarc-server-ingress</name>
+    <description>The ingress web server image of avarc-server</description>
+
+    <properties>
+        <image.basename>avarc-ingress</image.basename>
+    </properties>
+
+    <profiles>
+        <!-- The image is built from nginx.conf alone with the Paketo nginx
+             buildpack, which picks the nginx version (setting
+             BP_NGINX_VERSION makes the buildpack's detection fail). Do not
+             set BP_WEB_SERVER: that makes the buildpack generate its own
+             configuration for static files over nginx.conf. See the parent
+             POM for pack. -->
+        <profile>
+            <id>with-docker</id>
+            <properties>
+                <image.builder>paketobuildpacks/ubuntu-noble-builder</image.builder>
+                <image.path>${project.build.directory}/image</image.path>
+                <image.env>BP_NGINX_CONF_LOCATION=nginx.conf</image.env>
+                <image.env.extra>BP_LOG_LEVEL=INFO</image.env.extra>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>stage-image</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${image.path}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>.</directory>
+                                            <includes>
+                                                <include>nginx.conf</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

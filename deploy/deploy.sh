@@ -56,7 +56,6 @@ copy ${P}/keycloak-lib.sh ${D}/keycloak-lib.sh 0644
 copy ${P}/create-admin-user.sh ${D}/create-admin-user.sh 0755
 copy ${P}/create-user.sh ${D}/create-user.sh 0755
 copy ${P}/docker-compose.template ${D}/docker-compose.template 0644
-copy ${P}/Caddyfile ${D}/Caddyfile 0644
 
 echo "${VERSION}" > ${D}/VERSION
 chmod 0644 ${D}/VERSION

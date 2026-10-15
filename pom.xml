@@ -21,6 +21,7 @@
     <modules>
         <module>avarc-server-backend</module>
         <module>avarc-server-frontend</module>
+        <module>avarc-server-ingress</module>
         <module>avarc-server-keycloak</module>
     </modules>
 
