@@ -143,7 +143,8 @@ With `DB_TAILNET=true` the web database tool (CloudBeaver) is started as well,
 at `https://avarc-<environment>-dbadmin.<tailnet domain>`. Nothing is set up by
 hand: sign in as `DBTOOL_ADMIN_NAME` (default `dbadmin`) with
 `DBTOOL_ADMIN_PASSWORD`, which `run.sh` generates into the secrets file when
-it is missing. The one connection, `avarc`, is read-only and uses the
+it is missing; a changed name or password takes effect at the next start
+(the tool's accounts are reset). The one connection, `avarc`, is read-only and uses the
 `avarc_ro` account, so run `deploy/create-db-user.sh [--stage]` first. The
 configuration is rendered at every start, so changes made in the tool do not
 survive a restart.
