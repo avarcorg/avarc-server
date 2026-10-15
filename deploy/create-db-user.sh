@@ -6,8 +6,8 @@
 #   deploy/create-db-user.sh [--stage] [--keycloak]
 #                                           (SECRETS=dev|stage as for run.sh)
 #
-# The account is called avarc_ro; it may read the tables of the avarc database
-# (including tables created later) and nothing else, and its sessions are
+# The account is called avarc_ro; it may read the tables of the avarc database,
+# in the schemas public and avarc (including tables created later) and nothing else, and its sessions are
 # read-only. With --keycloak, or DB_KEYCLOAK=true in the secrets file, it may
 # also read Keycloak's database, which holds users and credential hashes;
 # without either, the account cannot even connect to that database (the
@@ -99,6 +99,10 @@ GRANT CONNECT ON DATABASE avarc TO ${ROLE};
 GRANT USAGE ON SCHEMA public TO ${ROLE};
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO ${ROLE};
 ALTER DEFAULT PRIVILEGES FOR ROLE avarc IN SCHEMA public GRANT SELECT ON TABLES TO ${ROLE};
+CREATE SCHEMA IF NOT EXISTS avarc;
+GRANT USAGE ON SCHEMA avarc TO ${ROLE};
+GRANT SELECT ON ALL TABLES IN SCHEMA avarc TO ${ROLE};
+ALTER DEFAULT PRIVILEGES FOR ROLE avarc IN SCHEMA avarc GRANT SELECT ON TABLES TO ${ROLE};
 SQL
 DB_READONLY_PASSWORD=
 [ "${XTRACE_WAS_ON}" -eq 1 ] && set -x
