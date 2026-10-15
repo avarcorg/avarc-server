@@ -1,25 +1,9 @@
 # avarc-server
+
+[![CI Build](https://github.com/avarcorg/avarc-server/actions/workflows/ci-build.yml/badge.svg?branch=main)](https://github.com/avarcorg/avarc-server/actions/workflows/ci-build.yml)
+[![CodeQL](https://github.com/avarcorg/avarc-server/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/avarcorg/avarc-server/actions/workflows/codeql.yml)
+[![ShellCheck](https://github.com/avarcorg/avarc-server/actions/workflows/shellcheck.yml/badge.svg?branch=main)](https://github.com/avarcorg/avarc-server/actions/workflows/shellcheck.yml)
+
 An application to collect data of historical interest, with locations and descriptions
 
-## Running it
-
-Requires Docker with Compose and `envsubst`.
-
-    deploy/run.sh up       # dev: start in the foreground (add -d to detach);
-                           # open http://localhost:8080/
-    deploy/run.sh down     # stop, keep data
-    deploy/run.sh reset    # dev: stop and delete local data and dev secrets
-    deploy/run.sh logs -f  # any other argument goes to "docker compose"
-    deploy/run.sh --stage up  # stage (what the systemd unit runs)
-    deploy/run.sh --help   # usage (also without arguments)
-    sudo deploy/deploy.sh stage  # on the host: install the files and the
-                           # systemd unit into /home/avarc-stage (or prod)
-
-After the first start, run `deploy/create-admin-user.sh` (`--stage` for stage) to
-create the login accounts; see `AGENTS.md`.
-
-Dev secrets are generated on the first start; stage and prod need their
-secrets file (`deploy/secrets.stage.sh`, `deploy/secrets.sh`) first. Local
-data and secrets stay under `deploy/` and are gitignored. Only the ingress,
-the database and Keycloak run so far; the other services are added as their projects
-are created. Details: `spec/SPEC-deployment.md`.
+More at <https://avarc.org/>.
