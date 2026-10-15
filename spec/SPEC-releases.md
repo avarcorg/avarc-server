@@ -80,6 +80,20 @@ checked out.
     image, the Keycloak base image) and the downloads inside a `pack` build (JRE, Node) are not
     cached: the cache action for Docker images that was tried no longer
     works with GitHub's cache service.
+  - **Cleaning images:** introduced in [AVARC-40](../tasks/finished/TASK-clean-images.md).
+    The workflow "Clean images" (`.github/workflows/clean-images.yml`) runs
+    weekly and on demand with the permission `packages: write` only (the
+    four packages are linked to the repository). For each of the four
+    images it deletes the versions that carry only `sha-<commit>` tags and
+    are older than 30 days, and the untagged versions older than one day
+    that no remaining version references (the platform manifests of a
+    multi-platform image are found by reading the manifest of each remaining
+    version). The newest 5 versions of each image are never deleted. A
+    version tagged `snapshot`, `latest` or `X.Y.Z` is never deleted, so
+    every release stays pullable. Hosts name `snapshot` or a release tag in
+    their secrets file, never a bare `sha-` tag. The days, the number of
+    versions to keep and a dry run (lists, deletes nothing) are inputs of
+    the manual run.
   - **Cleaning workflow runs:** introduced in [AVARC-39](../tasks/finished/TASK-clean-action-runs.md).
     The workflow "Clean workflow runs" (`.github/workflows/clean-runs.yml`)
     runs weekly and on demand with the permission `actions: write` only. It
