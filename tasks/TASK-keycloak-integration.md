@@ -64,7 +64,8 @@ Documentation:
 Done and verified on the developer deployment: the Keycloak service and
 database, the realm import, the ingress routing (only the avarc realm and
 resources; admin console, master realm and traversal attempts answer 404),
-the provisioning script, and the documentation. Role composites, admin-console access of admins only, English and
+the provisioning scripts, and the documentation. Role composites,
+admin-console access of admins only, English and
 German login pages and redirect URI restriction were checked.
 
 Findings for the application part: the token lists only explicitly granted
