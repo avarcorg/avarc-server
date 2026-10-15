@@ -73,8 +73,11 @@ checked out.
   - **Using them:** the Compose project runs a published image when
     `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,
     `FRONTEND_VERSION` and `KEYCLOAK_VERSION` name a tag (see
-    [SPEC-deployment.md](SPEC-deployment.md)). Deploying a host from the
-    published images automatically is not decided yet.
+    [SPEC-deployment.md](SPEC-deployment.md)). Pulling the published images
+    from the registry on stage and prod has to wait: until then those hosts
+    run images built on the host itself (`-Pwith-docker`) under the default
+    names and versions. Deploying a host from the published images
+    automatically is not decided yet.
 
 ## Open questions
 
