@@ -1,0 +1,46 @@
+---
+id: AVARC-37
+type: task
+status: open
+priority: normal
+area: project
+depends-on: [AVARC-31, AVARC-32, AVARC-33]
+created: 2026-10-15
+---
+
+# TASK: Run the published images on stage
+
+Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
+[SPEC-deployment.md](../spec/SPEC-deployment.md)
+
+The CI Build publishes the backend, frontend, ingress and Keycloak images to
+the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
+[AVARC-32](TASK-keycloak-image.md), [AVARC-33](TASK-ingress-image.md)). Stage
+does not pull them yet: it runs images built on its own host. Pulling from the
+registry has been postponed by the maintainer; this task is the work to do
+when it is taken up, and the tasks that wait for it point here
+([AVARC-36](TASK-deploy-notification.md)).
+
+- The environment pulls the images from the registry: it logs in with a token
+  that may read packages (the packages are private), and runs the Compose
+  project with `IMAGE_NAMESPACE=ghcr.io/avarcorg` and the four `*_VERSION`
+  variables naming a published tag (`snapshot`, `sha-<commit>` or a release
+  version). Where the login and the token are kept is a private matter and
+  is not written down in this repository.
+- Decide which tag stage runs (the moving `snapshot`, or a pinned
+  `sha-<commit>`), and how the update procedure of
+  [AVARC-27](TASK-stage-deployment.md) changes: pull, restart, check, and a
+  rollback to the previous tag.
+- Make sure `deploy/run.sh` and the Compose template need no change besides
+  the variables, or specify the change; a missing tag or an expired token
+  must fail with a clear message, before the old stack is stopped.
+- Update the specs (releases and deployment: the sentence that stage and prod
+  run host-built images until then goes away) and `AGENTS.md`, and remove the
+  related notes from [AVARC-32](TASK-keycloak-image.md),
+  [AVARC-33](TASK-ingress-image.md) and AVARC-27.
+
+## Verification
+
+Stage runs all four images from the registry under their published tags, the
+routes and the login work as before, and an update to a newer tag and back to
+the previous one works.

@@ -1,10 +1,10 @@
 ---
 id: AVARC-36
 type: task
-status: open
+status: blocked
 priority: normal
 area: project
-depends-on: [AVARC-27, AVARC-31]
+depends-on: [AVARC-27, AVARC-31, AVARC-37]
 created: 2026-10-15
 ---
 
@@ -12,6 +12,10 @@ created: 2026-10-15
 
 Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
 [SPEC-deployment.md](../spec/SPEC-deployment.md)
+
+Postponed by the maintainer until stage pulls the published images
+([AVARC-37](TASK-registry-pull.md)): the deployment then needs no build on
+the host and only a pull, restart and check.
 
 Today stage is updated by hand ([AVARC-27](TASK-stage-deployment.md)). After
 a successful "CI Build" of `main`, the workflow tells a deployment system

@@ -45,9 +45,11 @@ Ongoing:
 
 - Define the update procedure (pull, restart, check) and, if wanted, a
   rollback.
-- Pulling the published images from the registry has to wait; until then
-  stage runs images built on the host itself (see
-  [SPEC-releases.md](../spec/SPEC-releases.md)).
+- Pulling the published images from the registry has to wait
+  ([AVARC-37](TASK-registry-pull.md)); until then stage runs images built on
+  the host itself (see [SPEC-releases.md](../spec/SPEC-releases.md)). The
+  automatic update after a build ([AVARC-36](TASK-deploy-notification.md))
+  follows it.
 - Decide how often stage is updated and from which branch or tag.
 - Back up and restore the database and the Keycloak realm; test a restore.
 - Evaluate the capacity of the host, which also informs the production

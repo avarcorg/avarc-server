@@ -41,4 +41,5 @@ files. Do not edit by hand. See
 | AVARC-33 | [Custom ingress image](TASK-ingress-image.md) | task | in-progress | normal | ingress | AVARC-8, AVARC-31, AVARC-32 |
 | AVARC-34 | [Expose the API description and Swagger UI on dev and stage](finished/TASK-api-docs.md) | task | finished | normal | backend | AVARC-3, AVARC-33 |
 | AVARC-35 | [Verify the module boundaries with Spring Modulith](finished/TASK-modulith-verification.md) | task | finished | normal | backend | AVARC-3 |
-| AVARC-36 | [Notify the deployment system after a successful build](TASK-deploy-notification.md) | task | open | normal | project | AVARC-27, AVARC-31 |
+| AVARC-36 | [Notify the deployment system after a successful build](TASK-deploy-notification.md) | task | blocked | normal | project | AVARC-27, AVARC-31, AVARC-37 |
+| AVARC-37 | [Run the published images on stage](TASK-registry-pull.md) | task | open | normal | project | AVARC-31, AVARC-32, AVARC-33 |
