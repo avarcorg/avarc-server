@@ -1,7 +1,7 @@
 ---
 id: AVARC-31
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: project
 depends-on: [AVARC-26]
@@ -10,8 +10,8 @@ created: 2026-10-15
 
 # TASK: Automated image builds and publishing
 
-Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
-[SPEC-deployment.md](../spec/SPEC-deployment.md)
+Spec: [SPEC-releases.md](../../spec/SPEC-releases.md),
+[SPEC-deployment.md](../../spec/SPEC-deployment.md)
 
 GitHub issue: [#380](https://github.com/avarcorg/avarc-server/issues/380)
 
@@ -22,8 +22,9 @@ Decisions:
 
 - The registry is the GitHub Container Registry, `ghcr.io/avarcorg`; the
   images are `avarc-server-backend` and `avarc-server-frontend` there. The
-  packages are public, so hosts pull without credentials.
-- Every push to `main` publishes a public snapshot of both images. A
+  packages stay private for now, so hosts log in to pull; making them
+  public is a later decision.
+- Every push to `main` publishes a snapshot of both images. A
   release tag (`vMAJOR.MINOR.PATCH`, see the releases spec) publishes the
   release version and `latest`.
 - Deploying stage from the published images is decided later and is not part
@@ -61,6 +62,9 @@ images published as `snapshot` and `sha-<commit>`, linked to the
 repository. The Maven, wrapper and npm caches were saved; the Docker image
 cache action failed against GitHub's cache service and was dropped.
 
-Open: a second run to see the cache hits, setting the two packages to
-public (new packages start private; the visibility cannot be changed
-through the API), and pulling a published image on a host.
+Second run (`d416188`): green, the Maven, wrapper and npm caches all hit,
+about 3.5 minutes. The packages stay private for now. The old packages of
+the earlier attempt were deleted by hand.
+
+Pulling a published image on a host (after `docker login ghcr.io`) works.
+Done.

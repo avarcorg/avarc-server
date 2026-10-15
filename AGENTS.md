@@ -119,9 +119,9 @@ the images `ghcr.io/avarcorg/avarc-server-backend` and `-frontend` as
 (`tools/publish-images.sh`, `--dry-run` shows what it would push). To run
 published images, start the Compose project with
 `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION` /
-`FRONTEND_VERSION` set to a tag. After the first publication, set the
-visibility of each package to public in the organization's package
-settings, if GitHub has not inherited it from the repository.
+`FRONTEND_VERSION` set to a tag. The packages are private for now: run
+`docker login ghcr.io` with a token that has `read:packages` on the host
+first.
 
 ## Where things do NOT go
 
