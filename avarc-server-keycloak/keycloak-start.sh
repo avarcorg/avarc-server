@@ -25,15 +25,14 @@ export AVARC_CLIENT_SECRET
 
 [ "${_xtrace}" = on ] && set -x
 
-exec /opt/keycloak/bin/kc.sh --config-file="${CONFIG}" start \
+# The build-time options (database vendor, health endpoints, relative path)
+# are part of the image.
+exec /opt/keycloak/bin/kc.sh --config-file="${CONFIG}" start --optimized \
     --import-realm \
-    --db=postgres \
     --db-url=jdbc:postgresql://db:5432/keycloak \
     --db-username=avarc \
     --bootstrap-admin-username=keycloak-admin \
     --http-enabled=true \
-    --http-relative-path=/auth \
     --hostname="${PUBLIC_ORIGIN}/auth" \
     --hostname-admin="${ADMIN_ORIGIN}/auth" \
-    --proxy-headers=xforwarded \
-    --health-enabled=true
+    --proxy-headers=xforwarded

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.avarc</groupId>
+        <artifactId>avarc-server</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>avarc-server-keycloak</artifactId>
+    <packaging>pom</packaging>
+    <name>avarc-server-keycloak</name>
+    <description>The Keycloak image of avarc-server</description>
+
+    <properties>
+        <image.basename>avarc-keycloak</image.basename>
+    </properties>
+
+    <profiles>
+        <!-- Keycloak has no buildpack, so this image is built from the
+             Dockerfile with docker build instead of pack (the parent POM
+             manages pack-build; it is switched off here). -->
+        <profile>
+            <id>with-docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>pack-build</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>docker-build</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <arguments>
+                                        <argument>build</argument>
+                                        <argument>--tag</argument>
+                                        <argument>${image.name}:${project.version}</argument>
+                                        <argument>--tag</argument>
+                                        <argument>${image.name}:latest</argument>
+                                        <argument>--label</argument>
+                                        <argument>org.opencontainers.image.source=${image.source}</argument>
+                                        <argument>${project.basedir}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

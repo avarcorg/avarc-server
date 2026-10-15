@@ -58,9 +58,8 @@ services:
   # The container runs as the user that started the project so that it can
   # read the secrets directory, which is closed to others.
   keycloak:
-    image: quay.io/keycloak/keycloak:26.8.0
+    image: ${IMAGE_NAMESPACE}/avarc-keycloak:${KEYCLOAK_VERSION}
     user: "${RUN_UID}:0"
-    entrypoint: ["/bin/bash", "/opt/avarc/keycloak-start.sh"]
     environment:
       - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
       - ADMIN_ORIGIN=${KEYCLOAK_ADMIN_ORIGIN}
@@ -72,8 +71,6 @@ services:
     ports:
       - "127.0.0.1:${KEYCLOAK_ADMIN_PORT}:8080"
     volumes:
-      - ${P}/keycloak-start.sh:/opt/avarc/keycloak-start.sh:ro
-      - ${P}/keycloak/avarc-realm.json:/opt/keycloak/data/import/avarc-realm.json:ro
       - ${SECRETS_RUN_DIR}:/run/secrets:ro
     depends_on:
       keycloak-init:

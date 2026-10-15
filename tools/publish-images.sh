@@ -57,7 +57,7 @@ esac
 cd "$(git rev-parse --show-toplevel)"
 BUILT=$(./mvnw -q help:evaluate -Dexpression=project.version -DforceStdout)
 
-for name in avarc-backend avarc-frontend
+for name in avarc-backend avarc-frontend avarc-keycloak
 do
     for tag in ${TAGS}
     do

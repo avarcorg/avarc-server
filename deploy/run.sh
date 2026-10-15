@@ -63,6 +63,7 @@ esac
 export IMAGE_NAMESPACE=${IMAGE_NAMESPACE:-avarcorg}
 export BACKEND_VERSION=${BACKEND_VERSION:-0.1.0-SNAPSHOT}
 export FRONTEND_VERSION=${FRONTEND_VERSION:-0.1.0-SNAPSHOT}
+export KEYCLOAK_VERSION=${KEYCLOAK_VERSION:-0.1.0-SNAPSHOT}
 export INGRESS_PORT=${INGRESS_PORT:-${DEFAULT_PORT}}
 # The tailnet's domain, under which docktail serves the names with a
 # certificate; empty if it cannot be determined.
