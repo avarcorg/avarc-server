@@ -265,6 +265,22 @@ build_dbtool_dir () {
         echo "run.sh: generated a password and added DBTOOL_ADMIN_PASSWORD to ${SECRETS_FILE}" >&2
     fi
     _ro_password=$(secret_value "${SECRETS_FILE}" DB_READONLY_PASSWORD)
+    # The tool creates the admin account only when its workspace is first
+    # started. A fingerprint of name and password in the workspace shows when
+    # the secrets file has changed since; the tool's own database is then
+    # removed (its connections are rendered above, nothing else is in it), so
+    # that the account is created again. No fingerprint (a workspace from
+    # before this check) counts as changed.
+    _workspace="${P}/data/${ENVIRONMENT}/dbtool"
+    _fingerprint=$(printf '%s\n%s' "${_admin_name}" "${_admin_password}" | sha256sum | cut -d' ' -f1)
+    if [ -d "${_workspace}/.data" ] && [ "$(cat "${_workspace}/.admin-fingerprint" 2>/dev/null || true)" != "${_fingerprint}" ]
+    then
+        echo "run.sh: the admin account of the database tool changed; its accounts are reset" >&2
+        ${COMPOSE} --profile dbtool rm -sf dbtool > /dev/null 2>&1 || true
+        rm -rf "${_workspace}/.data" "${_workspace}/.metadata"
+    fi
+    mkdir -p "${_workspace}"
+    ( umask 077; printf '%s\n' "${_fingerprint}" > "${_workspace}/.admin-fingerprint" )
     # Java properties: a backslash must be doubled.
     _props_name=$(printf '%s' "${_admin_name}" | sed 's/\\/\\\\/g')
     _props_password=$(printf '%s' "${_admin_password}" | sed 's/\\/\\\\/g')
@@ -309,7 +325,7 @@ JSON
     # made by this user (the container would otherwise create it as root).
     mkdir -p "${P}/data/${ENVIRONMENT}/dbtool/GlobalConfiguration/.dbeaver"
     : >> "${P}/data/${ENVIRONMENT}/dbtool/GlobalConfiguration/.dbeaver/data-sources.json"
-    _admin_password=; _props_password=; _ro_password=
+    _admin_password=; _props_password=; _ro_password=; _fingerprint=
     [ "${_xtrace}" = on ] && set -x
     return 0
 }
