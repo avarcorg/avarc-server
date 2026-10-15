@@ -40,7 +40,7 @@ jobs:
       # host directory (docker-node.sh).
       - name: Keep npm's downloads between runs
         run: echo "NPM_CACHE=${HOME}/.npm-docker" >> "${GITHUB_ENV}"
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.npm-docker
           key: npm-${{ hashFiles('avarc-server-frontend/package-lock.json') }}
