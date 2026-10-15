@@ -18,7 +18,9 @@ permissions:
 
 jobs:
   # CodeQL fails a language that has no source files, which is the case until
-  # the stacks exist. Analyze only the languages that have code.
+  # the stacks exist, and a language is only analyzed when its own area has
+  # changes (the schedule, a change of this workflow and a push or pull
+  # request whose changes cannot be determined analyze all of them).
   detect:
     runs-on: ubuntu-latest
     outputs:
@@ -26,17 +28,41 @@ jobs:
       any: ${{ steps.languages.outputs.any }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - id: languages
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
+          changed=""
+          if [ "${EVENT}" = push ] || [ "${EVENT}" = pull_request ]; then
+            if git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
+              changed="$(git diff --name-only "${BASE}" HEAD)"
+            fi
+          fi
+          all=false
+          [ -n "${changed}" ] || all=true
+          printf '%s\n' "${changed}" | grep -qx '.github/workflows/codeql.yml' && all=true
+          # touched PATTERN: the language's area has changes (extended regex)
+          touched () {
+            [ "${all}" = true ] || printf '%s\n' "${changed}" | grep -qE "$1"
+          }
           languages=()
-          if [ -n "$(git ls-files '.github/workflows/*.yml' '.github/workflows/*.yaml' | head -n 1)" ]; then
+          if [ -n "$(git ls-files '.github/workflows/*.yml' '.github/workflows/*.yaml' | head -n 1)" ] \
+              && touched '^\.github/(workflows|actions)/'; then
             languages+=(actions)
           fi
-          if [ -n "$(git ls-files '*.java' '*.kt' '*.kts' | head -n 1)" ]; then
+          if [ -n "$(git ls-files '*.java' '*.kt' '*.kts' | head -n 1)" ] \
+              && touched '^(avarc-server-backend/|pom\.xml$|\.mvn/|mvnw)'; then
             languages+=(java-kotlin)
           fi
-          if [ -n "$(git ls-files '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx' '*.mts' '*.cts' | head -n 1)" ]; then
+          if [ -n "$(git ls-files '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx' '*.mts' '*.cts' | head -n 1)" ] \
+              && touched '^avarc-server-frontend/'; then
             languages+=(javascript-typescript)
+          fi
+          if [ -n "$(git ls-files '*.py' | head -n 1)" ] && touched '\.py$'; then
+            languages+=(python)
           fi
           matrix="$(printf '%s\n' "${languages[@]}" | jq -R . | jq -sc 'map(select(. != "")) | {language: .}')"
           echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
