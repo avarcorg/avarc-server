@@ -248,7 +248,35 @@ build_secrets_dir
 mkdir -p "${P}/data/${ENVIRONMENT}/db"
 render_compose
 
+# One-shot services exit right after their job, and compose has no
+# "remove on exit". The foreground "up" blocks until the project is torn
+# down, so each one is watched from the background: wait for its container,
+# wait for it to exit, wait until the container of the service that depends
+# on it exists (earlier, compose would still check the dependency), remove it.
+remove_when_done () {
+    service=$1
+    dependent=$2
+    (
+        tries=0
+        cid=""
+        while [ -z "${cid}" ] && [ "${tries}" -lt 600 ]
+        do
+            sleep 1
+            tries=$((tries + 1))
+            cid=$(${COMPOSE} ps -a -q "${service}" 2>/dev/null || true)
+        done
+        [ -n "${cid}" ] || exit 0
+        docker wait "${cid}" >/dev/null 2>&1 || true
+        while [ -z "$(${COMPOSE} ps -a -q "${dependent}" 2>/dev/null || true)" ] && [ "${tries}" -lt 600 ]
+        do
+            sleep 1
+            tries=$((tries + 1))
+        done
+        ${COMPOSE} rm -f "${service}" >/dev/null 2>&1 || true
+    ) &
+}
+
 case "${COMMAND}" in
-    up) pull_images; shift; ${COMPOSE} up --pull missing "$@" ;;
+    up) pull_images; remove_when_done keycloak-init keycloak; shift; ${COMPOSE} up --pull missing "$@" ;;
     *)  ${COMPOSE} "$@" ;;
 esac
