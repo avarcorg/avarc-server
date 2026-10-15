@@ -273,6 +273,69 @@ class LocationTests {
     }
 
     @Test
+    void tagLabelsAreReplacedWhenGivenAndSharedBetweenLocations() throws Exception {
+        String tag = "shared-" + UUID.randomUUID().toString().substring(0, 8);
+        String withLabels = BODY.replace(
+                "\"tags\": [{\"key\": \" Roman \", \"labels\": {\"en\": \"Roman\", \"de\": \"Römisch\"}}, {\"key\":"
+                        + " \"arena\"}]",
+                "\"tags\": [{\"key\": \"" + tag + "\", \"labels\": {\"en\": \"First\"}}]");
+        String first = create(withLabels).get("id").asText();
+        String relabelled = withLabels.replace("\"en\": \"First\"", "\"de\": \"Zweite\"");
+        String second = create(relabelled).get("id").asText();
+
+        // one tag row serves both locations, with the labels of the last write
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM avarc.tag WHERE key = ?", Integer.class, tag))
+                .isEqualTo(1);
+        for (String id : new String[] {first, second}) {
+            mockMvc.perform(get("/api/locations/" + id).with(viewer()))
+                    .andExpect(jsonPath("$.tags[0].key").value(tag))
+                    .andExpect(jsonPath("$.tags[0].labels.de").value("Zweite"))
+                    .andExpect(jsonPath("$.tags[0].labels.en").doesNotExist());
+        }
+
+        // deleting a location leaves the tag
+        mockMvc.perform(delete("/api/locations/" + first).with(editor()).with(csrf()))
+                .andExpect(status().isNoContent());
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM avarc.tag WHERE key = ?", Integer.class, tag))
+                .isEqualTo(1);
+    }
+
+    @Test
+    void referencesKeepTheirOrder() throws Exception {
+        String body = BODY.substring(0, BODY.indexOf("\"references\""))
+                + "\"references\": [{\"citations\": {\"en\": \"C\"}}, {\"citations\": {\"en\": \"A\"}},"
+                + " {\"citations\": {\"en\": \"B\"}}]}";
+        String id = create(body).get("id").asText();
+        mockMvc.perform(get("/api/locations/" + id).with(viewer()))
+                .andExpect(jsonPath("$.references[0].citations.en").value("C"))
+                .andExpect(jsonPath("$.references[1].citations.en").value("A"))
+                .andExpect(jsonPath("$.references[2].citations.en").value("B"));
+    }
+
+    @Test
+    void aTagLabelInAnUnsupportedLanguageIsRejected() throws Exception {
+        send(post("/api/locations"), editor(), BODY.replace("\"de\": \"Römisch\"", "\"fr\": \"Romain\""))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void aMalformedIdAnswers400AndAPageBeyondTheEndIsEmpty() throws Exception {
+        mockMvc.perform(get("/api/locations/not-a-uuid").with(viewer())).andExpect(status().isBadRequest());
+        mockMvc.perform(get("/api/locations?page=100000").with(viewer()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()").value(0));
+    }
+
+    @Test
+    void sentIdentifierAndAuditFieldsAreIgnored() throws Exception {
+        String forged = BODY.replaceFirst(
+                "\\{", "{\"id\": \"00000000-0000-0000-0000-000000000001\", \"createdBy\": \"someone-else\", ");
+        JsonNode created = create(forged);
+        assertThat(created.get("id").asText()).isNotEqualTo("00000000-0000-0000-0000-000000000001");
+        assertThat(created.get("createdBy").asText()).isEqualTo("editor-sub");
+    }
+
+    @Test
     void writesNeedTheCsrfToken() throws Exception {
         mockMvc.perform(post("/api/locations")
                         .with(editor())
