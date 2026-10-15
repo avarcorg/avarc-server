@@ -69,7 +69,7 @@ Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
 
 ## Layout
 
-Introduced in [AVARC-41](../tasks/TASK-website-layout.md). One frame, a
+Introduced in [AVARC-41](../tasks/finished/TASK-website-layout.md). One frame, a
 single layout component of the App Router, carries every page; pages hold
 no header or footer markup of their own.
 
