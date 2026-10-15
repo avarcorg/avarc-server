@@ -18,19 +18,22 @@ class UserEntity {
     @Id
     UUID id;
 
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(name = "kc_subject", nullable = false, unique = true, updatable = false)
     String subject;
 
+    @Column(name = "kc_username")
     String username;
+
+    @Column(name = "kc_email")
     String email;
 
-    @Column(name = "first_name")
+    @Column(name = "kc_first_name")
     String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "kc_last_name")
     String lastName;
 
-    @Column(name = "display_name")
+    @Column(name = "kc_display_name")
     String displayName;
 
     @JdbcTypeCode(SqlTypes.JSON)

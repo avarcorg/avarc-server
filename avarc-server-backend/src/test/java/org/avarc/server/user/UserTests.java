@@ -50,7 +50,7 @@ class UserTests {
     }
 
     private int count(String subject) {
-        return jdbc.queryForObject("SELECT count(*) FROM avarc.app_user WHERE subject = ?", Integer.class, subject);
+        return jdbc.queryForObject("SELECT count(*) FROM avarc.app_user WHERE kc_subject = ?", Integer.class, subject);
     }
 
     @Test
@@ -69,7 +69,8 @@ class UserTests {
         events.publishEvent(new LoginSucceeded(sub, "old", "old@avarc.invalid", "A", "B", "A B"));
         events.publishEvent(new LoginSucceeded(sub, "new", "new@avarc.invalid", "Ada", "Lovelace", "Ada Lovelace"));
         assertThat(count(sub)).isEqualTo(1);
-        assertThat(jdbc.queryForObject("SELECT username FROM avarc.app_user WHERE subject = ?", String.class, sub))
+        assertThat(jdbc.queryForObject(
+                        "SELECT kc_username FROM avarc.app_user WHERE kc_subject = ?", String.class, sub))
                 .isEqualTo("new");
     }
 
