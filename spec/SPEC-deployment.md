@@ -128,6 +128,4 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
 
 ## Open questions
 
-- Where the backend and frontend images are published for stage and prod is
-  not decided.
 - Deployment target and environments beyond the developer deployment.
