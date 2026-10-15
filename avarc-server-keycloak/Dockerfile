@@ -1,7 +1,7 @@
 # The Keycloak of this project: the pinned upstream image with the realm
 # import, the start script and the build-time options. Nothing
 # environment-specific or secret is in it. See spec/SPEC-auth.md.
-FROM quay.io/keycloak/keycloak:26.8.0
+FROM quay.io/keycloak/keycloak:26.8.1
 
 # Build-time options, applied once here so that the start is --optimized.
 ENV KC_DB=postgres \
