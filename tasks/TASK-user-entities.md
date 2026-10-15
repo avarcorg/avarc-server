@@ -70,7 +70,8 @@ application keeps; `SPEC-backend.md` names the new module.
   the OpenAPI document.
 - **Database:** a versioned migration creates the table
   ([SPEC-backend.md](../spec/SPEC-backend.md)). The persistence setup
-  (JPA, migrations, test database) is shared with the locations
+  (JPA, migrations, test database, and the handling of the existing schema
+  described there) is shared with the locations
   ([AVARC-10](TASK-locations-crud-api.md)); whichever task comes first
   sets it up, the other uses it.
 - **Deleting accounts:** an account deleted in Keycloak leaves its user
