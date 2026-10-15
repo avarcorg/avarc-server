@@ -103,9 +103,10 @@ Apache-2.0 licensed.
   secrets read from `/run/secrets`. The Keycloak version is the tag in the
   `FROM` line of the `Dockerfile`, which Renovate updates. A `Dockerfile`
   built with `docker build` is the exception to the buildpack build of the
-  other images: no buildpack builds on top of an existing application image
-  such as Keycloak's, and a Dockerfile of a few lines is the simplest thing
-  to maintain.
+  other images. Paketo with a `Procfile` was tried and can run Keycloak, but
+  needs the distribution downloaded into the build, a full run image for
+  `bash`, and cannot run `kc.sh build`, which loses the optimized start; a
+  Dockerfile of a few lines avoids all of it.
 - **Configuration as code:** the realm (roles, client, login and password
   settings, locales) is kept in the repository as a realm import file
   without secrets, inside the image; secrets such as the client secret come
