@@ -138,7 +138,9 @@ the images `ghcr.io/avarcorg/avarc-backend`, `-frontend`, `-ingress` and `-keycl
 published images, start the Compose project with
 `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,
 `FRONTEND_VERSION`, `INGRESS_VERSION` and `KEYCLOAK_VERSION` set to a tag. The packages are public; no login is needed to pull. A host can
-keep these variables in its secrets file instead of the environment.
+keep these variables in its secrets file instead of the environment. With a
+registry namespace, `run.sh up` pulls the images first and retries a failed pull a
+few times.
 
 ## Shell scripts
 
