@@ -39,3 +39,4 @@ files. Do not edit by hand. See
 | AVARC-31 | [Automated image builds and publishing](finished/TASK-image-builds.md) | task | finished | normal | project | AVARC-26 |
 | AVARC-32 | [Custom Keycloak image](TASK-keycloak-image.md) | task | in-progress | normal | auth | AVARC-20, AVARC-31 |
 | AVARC-33 | [Custom ingress image](TASK-ingress-image.md) | task | in-progress | normal | ingress | AVARC-8, AVARC-31, AVARC-32 |
+| AVARC-34 | [Expose the API description and Swagger UI on dev and stage](TASK-api-docs.md) | task | open | normal | backend | AVARC-3, AVARC-33 |
