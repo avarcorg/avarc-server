@@ -56,8 +56,10 @@ Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
   listening on port 3000. The `pack` invocation and the `image.namespace`
   and `image.name` properties are shared with the other modules through the
   parent POM.
-- **Scope so far:** the skeleton renders a greeting only; the map and the
-  other decisions above are applied as the pages are built.
+- **Scope so far:** the login, logged-out and home pages
+  ([SPEC-auth.md](SPEC-auth.md)), styled with Tailwind CSS (v4, through
+  PostCSS) with a light and a dark appearance following the browser; the
+  map and the other decisions above are applied as the pages are built.
 
 ## Open questions
 
