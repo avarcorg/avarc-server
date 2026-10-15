@@ -33,10 +33,9 @@ database):
   and never committed.
 - Install and enable `deploy/systemd/avarc-stage.service`; check that it starts at
   boot, restarts on failure and stops cleanly.
-- Check the addresses: the host must be in the tailnet, docktail must run,
-  and the public origin and the admin console address derived from the
-  tailnet domain must serve the application (`avarc-stage`) and the Keycloak
-  console (`avarc-stage-kc`).
+- Check the addresses: the public origin and the admin console address
+  (see [SPEC-deployment.md](../spec/SPEC-deployment.md)) must serve the
+  application and the Keycloak console.
 - Run `deploy/create-admin-user.sh --stage` for the first accounts and sign in at the
   console to confirm.
 - Verify the ingress rules on the real addresses: realm endpoints answer,
@@ -44,7 +43,6 @@ database):
 
 Ongoing:
 
-- Add the backend and the frontend to stage when their services exist.
 - Define the update procedure (pull, restart, check) and, if wanted, a
   rollback.
 - Pulling the published images from the registry has to wait; until then
@@ -59,6 +57,17 @@ Ongoing:
 
 ## Progress
 
+- 2026-10-15: Stage runs the complete application: ingress, backend,
+  frontend, Keycloak and database, all from images built on the host (the
+  registry pull waits, see above). Checked on the real addresses: the
+  application page, the API (401 without a login), the health endpoint, the
+  realm endpoints (answer), and the admin console and the `master` realm
+  through the ingress (404); login and logout work; the API description and
+  Swagger UI are served ([AVARC-34](finished/TASK-api-docs.md)). Still open
+  from the lists above: boot, restart and stop behaviour of the unit, the
+  update procedure and cadence, backup and restore, capacity,
+  observability. After an update the file `VERSION` on the host shows the
+  version of the last `deploy/deploy.sh` run, not of the images.
 - 2026-10-12: Initial setup done on the staging host. The old deployment
   was archived to `/home/avarc-stage/legacy/`; `deploy/deploy.sh stage`
   installs the files and `deploy/systemd/avarc-stage.service`; the stage
