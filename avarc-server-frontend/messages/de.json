@@ -16,7 +16,8 @@
   },
   "Nav": {
     "home": "Start",
-    "locations": "Orte"
+    "locations": "Orte",
+    "tags": "Schlagwörter"
   },
   "Home": {
     "title": "Hallo, avarc",
@@ -49,6 +50,60 @@
     "confidenceValue": "{level} von 5",
     "position": "Position",
     "bce": "{year} v. Chr.",
-    "ce": "{year} n. Chr."
+    "ce": "{year} n. Chr.",
+    "new": "Neuer Ort",
+    "edit": "Bearbeiten"
+  },
+  "Form": {
+    "newTitle": "Neuer Ort",
+    "editTitle": "Ort bearbeiten",
+    "position": "Position",
+    "positionHint": "Klicken Sie auf die Karte, um den Punkt zu setzen, oder geben Sie die Koordinaten ein (Dezimalgrad, WGS 84).",
+    "pickerLabel": "Karte zum Setzen des Ortes",
+    "latitude": "Breitengrad",
+    "longitude": "Längengrad",
+    "textIn": "Text auf {language}",
+    "name": "Name",
+    "description": "Beschreibung",
+    "periodLabel": "Zeitraum (Text)",
+    "periodLabelHint": "Zum Beispiel „Römisch, 2. Jahrhundert“.",
+    "confidenceText": "Verlässlichkeit dieses Textes (1 bis 5)",
+    "details": "Einzelheiten",
+    "confidence": "Verlässlichkeit des Ortes (1 bis 5)",
+    "periodStart": "Beginn des Zeitraums (Jahr)",
+    "periodEnd": "Ende des Zeitraums (Jahr)",
+    "yearHint": "Ein negatives Jahr liegt vor unserer Zeitrechnung.",
+    "tags": "Schlagwörter",
+    "newTags": "Neue Schlagwörter",
+    "newTagsHint": "Schlüssel, durch Kommas getrennt: a–z, 0–9 und Bindestriche. Die Bezeichnungen ergänzt ein Admin.",
+    "references": "Quellen",
+    "url": "Link (https)",
+    "citationIn": "Quellenangabe auf {language}",
+    "addReference": "Quelle hinzufügen",
+    "removeReference": "Diese Quelle entfernen",
+    "save": "Speichern",
+    "create": "Ort anlegen",
+    "delete": "Ort löschen",
+    "confirmDelete": "Diesen Ort endgültig löschen?",
+    "error": {
+      "position": "Geben Sie Breiten- und Längengrad als Zahlen ein.",
+      "year": "Ein Jahr ist eine ganze Zahl, negativ vor unserer Zeitrechnung.",
+      "text": "Geben Sie Name und Beschreibung in mindestens einer Sprache an."
+    },
+    "sessionEnded": "Ihre Sitzung ist beendet. Bitte melden Sie sich erneut an.",
+    "forbidden": "Sie dürfen Orte nicht ändern.",
+    "failed": "Der Server antwortete mit {status}.",
+    "unreachable": "Der Server ist nicht erreichbar."
+  },
+  "Tags": {
+    "title": "Schlagwörter",
+    "intro": "Redakteure legen Schlagwörter an, indem sie einen neuen Schlüssel verwenden. Hier setzt ein Admin die Bezeichnungen, die statt des Schlüssels angezeigt werden.",
+    "empty": "Es gibt noch keine Schlagwörter.",
+    "used": "{count, plural, =0 {nicht verwendet} one {von # Ort verwendet} other {von # Orten verwendet}}",
+    "labelIn": "Bezeichnung auf {language}",
+    "save": "Speichern",
+    "saved": "Gespeichert.",
+    "failed": "Der Server antwortete mit {status}.",
+    "unreachable": "Der Server ist nicht erreichbar."
   }
 }

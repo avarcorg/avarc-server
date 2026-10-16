@@ -26,3 +26,13 @@ export async function currentUser(): Promise<Me | null> {
   }
   return (await response.json()) as Me;
 }
+
+// Editors, and admins who include them, may change locations; only admins
+// set tag labels. The backend enforces both; this decides what is shown.
+export function canEdit(user: Me | null): boolean {
+  return !!user && (user.roles.includes("editor") || user.roles.includes("admin"));
+}
+
+export function isAdmin(user: Me | null): boolean {
+  return !!user && user.roles.includes("admin");
+}

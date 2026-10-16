@@ -11,7 +11,7 @@ import {
   yearOf,
   type Location,
 } from "../../../../lib/locations";
-import { currentUser } from "../../../../lib/session";
+import { canEdit, currentUser } from "../../../../lib/session";
 
 export default async function LocationPage({
   params,
@@ -19,7 +19,8 @@ export default async function LocationPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  if (!(await currentUser())) {
+  const user = await currentUser();
+  if (!user) {
     redirect({ href: "/login", locale });
   }
   let location: Location;
@@ -48,11 +49,19 @@ export default async function LocationPage({
 
   return (
     <article className="space-y-6">
-      <p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Link href="/locations" className="text-sm text-muted underline hover:text-accent">
           {t("back")}
         </Link>
-      </p>
+        {canEdit(user) && (
+          <Link
+            href={`/locations/${id}/edit`}
+            className="rounded-lg px-4 py-2 text-sm font-medium ring-1 ring-line transition hover:bg-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          >
+            {t("edit")}
+          </Link>
+        )}
+      </div>
       <header>
         <h1 className="font-heading text-3xl font-semibold">{name}</h1>
         {text?.fallback && (

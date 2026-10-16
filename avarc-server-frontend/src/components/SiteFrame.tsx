@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { Link } from "../i18n/navigation";
-import type { Me } from "../lib/session";
+import { isAdmin, type Me } from "../lib/session";
 import { developerLinks } from "../lib/developerLinks";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { NavMenu } from "./NavMenu";
@@ -49,6 +49,7 @@ export async function SiteFrame({
               items={[
                 { href: "/", label: nav("home") },
                 { href: "/locations", label: nav("locations") },
+                ...(isAdmin(user) ? [{ href: "/tags", label: nav("tags") }] : []),
               ]}
             />
           )}

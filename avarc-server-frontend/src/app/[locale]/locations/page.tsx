@@ -3,11 +3,12 @@ import { Link, redirect } from "../../../i18n/navigation";
 import { LocationMapLoader } from "../../../components/LocationMapLoader";
 import type { MapPoint } from "../../../components/LocationMap";
 import { allLocations, NotLoggedIn, pick, tagLabel, type Location } from "../../../lib/locations";
-import { currentUser } from "../../../lib/session";
+import { canEdit, currentUser } from "../../../lib/session";
 
 export default async function Locations({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  if (!(await currentUser())) {
+  const user = await currentUser();
+  if (!user) {
     redirect({ href: "/login", locale });
   }
   let locations: Location[] = [];
@@ -43,7 +44,17 @@ export default async function Locations({ params }: { params: Promise<{ locale: 
 
   return (
     <div className="space-y-4">
-      <h1 className="font-heading text-2xl font-semibold">{t("title")}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-heading text-2xl font-semibold">{t("title")}</h1>
+        {canEdit(user) && (
+          <Link
+            href="/locations/new"
+            className="rounded-lg bg-accent px-4 py-2 font-medium text-accent-ink transition hover:bg-accent-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          >
+            {t("new")}
+          </Link>
+        )}
+      </div>
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <LocationMapLoader points={points} label={t("mapLabel")} />

@@ -16,7 +16,8 @@
   },
   "Nav": {
     "home": "Home",
-    "locations": "Locations"
+    "locations": "Locations",
+    "tags": "Tags"
   },
   "Home": {
     "title": "Hello, avarc",
@@ -49,6 +50,60 @@
     "confidenceValue": "{level} of 5",
     "position": "Position",
     "bce": "{year} BCE",
-    "ce": "{year} CE"
+    "ce": "{year} CE",
+    "new": "New location",
+    "edit": "Edit"
+  },
+  "Form": {
+    "newTitle": "New location",
+    "editTitle": "Edit location",
+    "position": "Position",
+    "positionHint": "Click on the map to place the point, or type the coordinates (decimal degrees, WGS 84).",
+    "pickerLabel": "Map to place the location",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "textIn": "Text in {language}",
+    "name": "Name",
+    "description": "Description",
+    "periodLabel": "Period (text)",
+    "periodLabelHint": "For example “Roman, 2nd century”.",
+    "confidenceText": "Confidence of this text (1 to 5)",
+    "details": "Details",
+    "confidence": "Confidence of the location (1 to 5)",
+    "periodStart": "Period start (year)",
+    "periodEnd": "Period end (year)",
+    "yearHint": "A negative year is before the common era.",
+    "tags": "Tags",
+    "newTags": "New tags",
+    "newTagsHint": "Keys separated by commas: a–z, 0–9 and hyphens. An admin adds the labels.",
+    "references": "References",
+    "url": "Link (https)",
+    "citationIn": "Citation in {language}",
+    "addReference": "Add a reference",
+    "removeReference": "Remove this reference",
+    "save": "Save",
+    "create": "Create location",
+    "delete": "Delete location",
+    "confirmDelete": "Delete this location for good?",
+    "error": {
+      "position": "Enter the latitude and the longitude as numbers.",
+      "year": "A year is a whole number, negative before the common era.",
+      "text": "Give the name and the description in at least one language."
+    },
+    "sessionEnded": "Your session has ended. Sign in again.",
+    "forbidden": "You may not change locations.",
+    "failed": "The server answered {status}.",
+    "unreachable": "The server could not be reached."
+  },
+  "Tags": {
+    "title": "Tags",
+    "intro": "Editors create tags by using a new key. Here an admin sets the labels that are shown instead of the key.",
+    "empty": "There are no tags yet.",
+    "used": "{count, plural, =0 {not used} one {used by # location} other {used by # locations}}",
+    "labelIn": "Label in {language}",
+    "save": "Save",
+    "saved": "Saved.",
+    "failed": "The server answered {status}.",
+    "unreachable": "The server could not be reached."
   }
 }
