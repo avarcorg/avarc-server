@@ -211,10 +211,13 @@ A release is a `vMAJOR.MINOR.PATCH` tag on `main` (spec:
 `--push` to push the tag too. To run a release on a host, check out its
 tag and run `deploy/deploy.sh` from there; prod accepts nothing else.
 
-The workflow "CI Build" (`.github/workflows/ci-build.yml`) builds and tests every push to
-`main`, every release tag and every pull request. Pushes to `main` publish
-the images `ghcr.io/avarcorg/avarc-backend`, `-frontend`, `-ingress` and `-keycloak` as
-`snapshot` and `sha-<commit>`, release tags as `X.Y.Z` and `latest`
+Each module has its own workflow (`ci-backend.yml`, `ci-frontend.yml`,
+`ci-ingress.yml`, `ci-keycloak.yml`, steps in `build-module.yml`): it builds and
+tests the module on pushes to `main` and pull requests that change its
+paths, and a push to `main` publishes only that module's image
+(`ghcr.io/avarcorg/avarc-backend`, `-frontend`, `-ingress` or `-keycloak`) as
+`snapshot` and `sha-<commit>`. A release tag runs `ci-release.yml`, which builds
+and publishes all four as `X.Y.Z` and `latest`
 (`tools/publish-images.sh`, `--dry-run` shows what it would push). To run
 published images, start the Compose project with
 `IMAGE_NAMESPACE=ghcr.io/avarcorg` and `BACKEND_VERSION`,

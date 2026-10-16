@@ -15,7 +15,7 @@ Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
 
 Today stage is updated by hand ([AVARC-27](TASK-stage-deployment.md)); since
 stage pulls the published images ([AVARC-37](TASK-registry-pull.md)), an
-update needs only a pull, restart and check. After a successful "CI Build" of
+update needs only a pull, restart and check. After a successful module build of
 `main`, the workflow posts the commit to a chat channel, and the deployment
 side, which listens there, updates stage. This repository holds only the
 post and its description in generic terms; the chat server, the listener,
@@ -28,7 +28,7 @@ makes outbound connections only.
 
 Done in the repository:
 
-- Job `notify-chat` in `.github/workflows/ci-build.yml`: runs only for a
+- Job `notify-chat` in `.github/workflows/build-module.yml`: runs only for a
   push to `main` of this repository (not for pull requests, forks or release
   tags), after the build and publishing job succeeded, with no token
   permissions. It posts one message with the commit SHA to the webhook in

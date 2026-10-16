@@ -1,7 +1,7 @@
 ---
 id: AVARC-52
 type: task
-status: open
+status: in-progress
 priority: normal
 area: project
 depends-on: [AVARC-31]
@@ -64,7 +64,19 @@ what its changed paths belong to.
   constant); the work item check, formatting, ShellCheck and CodeQL keep
   their own workflows.
 
-## Remaining
+## Progress
+
+Decided as proposed: one post per module build (the message names the module
+after the commit), one `ci-release.yml` that runs the reusable workflow four
+times for a release tag. The cleaning rules need no change: a version tagged
+`snapshot`, `latest` or `X.Y.Z` is never deleted, so the image of a rarely
+changed module stays pullable. Written: `build-module.yml` (reusable, was
+`ci-build.yml`), the four module workflows, `ci-release.yml`, the `--module`
+option of `tools/publish-images.sh`, the Renovate file match, the specs and
+`AGENTS.md`. The workflows pass `actionlint`. Still to check on GitHub: see
+Verification.
+
+## Remaining (as planned originally)
 
 - Write the reusable workflow and the four caller workflows (or the release
   variant), remove `ci-build.yml`, and update the badge in `README.md`, the

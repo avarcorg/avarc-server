@@ -13,7 +13,7 @@ created: 2026-10-15
 Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
 [SPEC-deployment.md](../spec/SPEC-deployment.md)
 
-The CI Build publishes the backend, frontend, ingress and Keycloak images to
+The module builds publish the backend, frontend, ingress and Keycloak images to
 the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
 [AVARC-32](finished/TASK-keycloak-image.md),
 [AVARC-33](finished/TASK-ingress-image.md)). Stage runs them since
