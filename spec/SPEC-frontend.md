@@ -39,6 +39,19 @@ Define the web user interface for browsing and managing locations.
 - **Languages:** next-intl provides the translations and the language in the
   route; English and German first, further languages without code changes
   to the routing ([SPEC.md](../SPEC.md)).
+- **Fixed texts:** introduced in [AVARC-46](../tasks/finished/TASK-externalize-ui-strings.md).
+  Every fixed text of the interface (labels, buttons, hints, page titles,
+  messages, the error and not-found pages, the word in the map attribution)
+  is a key in `messages/<language>.json`, and none is written into a
+  component or page. All language files have the same keys, no empty text and
+  the same `{placeholders}` per key; `tools/check-messages.py` checks that,
+  and the frontend workflow runs it before the build. A text that comes from the backend, the
+  `detail` of a rejected request, is shown after a translated lead-in
+  (`rejected`), since the backend describes problems in English only.
+  Product names (OpenStreetMap, Keycloak, Swagger UI) are keys as well
+  (`Products`), so that a language can write or inflect them as it needs; the
+  texts that name a product take it as a `{product}` placeholder. Dates, numbers and the wording of data (locations, tags)
+  are not fixed texts: data comes from the backend in its own languages.
 
 ## Build
 
