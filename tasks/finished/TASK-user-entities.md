@@ -72,7 +72,7 @@ application keeps; `SPEC-backend.md` names the new module.
   ([SPEC-backend.md](../../spec/SPEC-backend.md)). The persistence setup
   (JPA, migrations, test database, and the handling of the existing schema
   described there) is shared with the locations
-  ([AVARC-10](../TASK-locations-crud-api.md)); whichever task comes first
+  ([AVARC-10](TASK-locations-crud-api.md)); whichever task comes first
   sets it up, the other uses it.
 - **Deleting accounts:** an account deleted in Keycloak leaves its user
   record behind; what happens to it is decided in the specification phase

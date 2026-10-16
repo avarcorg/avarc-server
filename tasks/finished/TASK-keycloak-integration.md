@@ -43,8 +43,8 @@ Application (blocked on [AVARC-3](TASK-backend-skeleton.md) and
 - Backend: login and logout as the OIDC client, with a session
   ([AVARC-29](TASK-backend-login.md)); map the realm roles to
   authorities (done, `ROLE_<role>`, reported by `GET /api/auth/me`), enforce
-  them per endpoint and answer 401/403 (open, waits for the endpoints of
-  [AVARC-10](../TASK-locations-crud-api.md)); only the health endpoint and the login endpoints are
+  them per endpoint and answer 401/403 (done in
+  [AVARC-10](TASK-locations-crud-api.md)); only the health endpoint and the login endpoints are
   public. Validating bearer tokens of API clients is left to the task that
   needs it.
 - Frontend: login and logout pages
@@ -79,7 +79,7 @@ token-relay question of the spec: browser calls carry the session cookie.
 The realm roles are mapped to `ROLE_` authorities and reported by
 `GET /api/auth/me`.
 Closed. The remaining items moved on: role-based permissions per API
-endpoint (401/403) to [AVARC-10](../TASK-locations-crud-api.md), the editing
+endpoint (401/403) to [AVARC-10](TASK-locations-crud-api.md), the editing
 controls shown by role to [AVARC-12](../TASK-locations-ui.md), and exercising
 stage and prod to [AVARC-27](../TASK-stage-deployment.md). Validating bearer
 tokens of clients without a browser is left to the task that needs it.

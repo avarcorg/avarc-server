@@ -37,7 +37,7 @@ any module.
   reaches into the internals of another module) fails it.
 - Say in `AGENTS.md` where the rule is and that the test is part of
   `./mvnw verify`.
-- The locations module of [AVARC-10](../TASK-locations-crud-api.md) is the
+- The locations module of [AVARC-10](TASK-locations-crud-api.md) is the
   first module to which the rule really applies; mention the rule there.
 
 ## Result
