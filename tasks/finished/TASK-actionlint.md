@@ -1,7 +1,7 @@
 ---
 id: AVARC-53
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: project
 created: 2026-10-16
@@ -9,13 +9,13 @@ created: 2026-10-16
 
 # TASK: Lint the workflows with actionlint
 
-Spec: [SPEC-code-scanning.md](../spec/SPEC-code-scanning.md)
+Spec: [SPEC-code-scanning.md](../../spec/SPEC-code-scanning.md)
 
 CodeQL analyzes the workflow files for security problems only, not for
 mistakes such as a wrong input of an action, a `needs:` that names no job, or
 a reusable workflow called with the wrong inputs. actionlint finds those; so
 far it was run by hand while writing the per-module workflows
-([AVARC-52](finished/TASK-per-module-builds.md)). Run it on GitHub and locally
+([AVARC-52](TASK-per-module-builds.md)). Run it on GitHub and locally
 like ShellCheck.
 
 ## To do
@@ -32,3 +32,7 @@ like ShellCheck.
 The workflow passes on `main`, and fails on a pull request with a deliberate
 mistake (checked locally with a copy of a workflow that has a `needs:` on a
 missing job).
+
+Done: the workflow passes on `main` (the push that added it). The deliberate
+mistake (a `needs:` on a missing job, in a copy of a workflow) fails the script
+with `job-needs`.
