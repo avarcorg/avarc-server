@@ -68,8 +68,24 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `--keycloak` of `create-db-user.sh`) asks for it and the script is run,
   which then grants read access; running the script without either withdraws
   it again.
+  The same holds for the schema `legacy` of an imported legacy export (see
+  below), which holds personal data: `avarc_ro` may read it only when
+  `DB_LEGACY=true` in the secrets file (or the option `--legacy`) asks for it
+  and the script is run once the schema exists; it is a schema of the `avarc`
+  database, so the database tool shows it in its `avarc` connection and no
+  connection of its own is added. Running the script without either
+  withdraws the access again.
   The application's own credentials are not handed out. Who may reach the
   service is decided by the tailnet's access rules.
+- **Importing a SQL file:** `deploy/import-sql.sh [--stage] [--schema NAME]
+  FILE.sql`, on dev and stage only, loads a plain SQL file, such as the export
+  of a legacy system, into the `avarc` database. The objects go into a schema
+  of their own (default `legacy`, never `public` or `avarc`) unless the file
+  names a schema itself, and the load is one transaction, so a failing file
+  leaves nothing behind. It is run on the host of the environment and uses the
+  database's own account inside the `db` container, like `create-db-user.sh`;
+  it reads no password. Mapping the imported tables onto the application's
+  tables is a separate step.
 - **Database tool (optional):** introduced with
   [AVARC-38](../tasks/TASK-database-tailnet.md). With `DB_TAILNET=true`, the
   `dbtool` service is started as well: CloudBeaver (Community edition, image
