@@ -40,18 +40,25 @@ checked out.
   `deploy/deploy.sh` was run (see
   [SPEC-deployment.md](SPEC-deployment.md)). Deploying a release means
   checking out its tag there first.
-- **Images:** introduced in [AVARC-31](../tasks/finished/TASK-image-builds.md). A
-  GitHub Actions workflow "CI Build" (`.github/workflows/ci-build.yml`; a
-  release build gets a workflow of its own) builds and tests
-  the project (`./mvnw -Pwith-docker verify`, which builds all images) on
-  every push to `main`, on release tags and on pull requests, except pushes
-  and pull requests that change only Markdown files (a release tag always
-  builds). Pull requests
-  only build. The publishing logic is the script
+- **Images:** introduced in [AVARC-31](../tasks/finished/TASK-image-builds.md),
+  split by module in [AVARC-52](../tasks/TASK-per-module-builds.md). One
+  GitHub Actions workflow per module (`ci-backend.yml`, `ci-frontend.yml`,
+  `ci-ingress.yml`, `ci-keycloak.yml`) builds and tests that module
+  (`./mvnw -Pwith-docker -pl avarc-server-<module> verify`, which builds its
+  image) on pushes to `main` and on pull requests that change its directory
+  or the shared build files (the root `pom.xml`, the Maven wrapper,
+  `tools/publish-images.sh` and the workflow files involved), except
+  changes of Markdown files only. The modules do not depend on each other.
+  All of them call the reusable workflow `build-module.yml`, which holds the
+  steps. A push publishes only the image of the module it built; pull
+  requests only build. A release tag is built by the workflow `ci-release.yml`,
+  which runs the same steps for all four modules, so a release names a
+  consistent set. The publishing logic is the script
   `tools/publish-images.sh`, not the workflow.
   - **Notification:** after a successful build and publishing of a push to
     `main` of this repository (not a pull request, fork or release tag), a
-    separate job of the workflow posts one message with the commit to a chat
+    separate job of the module workflow posts one message with the commit
+    and the module name to a chat
     channel through an incoming webhook, the only thing it needs being one
     secret. A listener of the deployment side reads the message as a hint
     only: it checks the registry for new `snapshot` images before it updates
@@ -67,12 +74,13 @@ checked out.
     with its own token, which only pushes may use. The images carry the `org.opencontainers.image.source`
     label of the repository, which links the packages to it.
   - **Tags:** a push to `main` publishes the moving tag `snapshot` and the
-    tag `sha-<first seven characters of the commit>`; a release tag
-    `vX.Y.Z` publishes `X.Y.Z` and `latest`. The version in the POMs is not
+    tag `sha-<first seven characters of the commit>` of the images built
+    from that commit; the others keep their own latest `snapshot`. A release
+    tag `vX.Y.Z` publishes `X.Y.Z` and `latest` of all four. The version in the POMs is not
     the published version: the build tags the images with it locally and
     the script retags them.
   - **Versions and caches:** the Java and Node versions are constants in
-    the workflow's `env`; a step fails the build when they differ from the
+    the reusable workflow's `env`; a step fails the build when they differ from the
     POMs. Cached between runs: the Maven repository and the wrapper's Maven
     distribution (by `actions/setup-java`) and npm's downloads (the Node
     container keeps them in a host directory, see `docker-node.sh`). The
