@@ -108,7 +108,14 @@ missing from the traced `node_modules` (one that Next bundles belongs in
 `tools/check-messages.py` checks that all translation files in
 `avarc-server-frontend/messages` have the same keys and placeholders (the
 frontend workflow runs it before the build); every fixed text, product names
-included, belongs there, none in a component.
+included, belongs there, none in a component. `messages/en.json` is the
+source; the translations are kept in the translation service (spec:
+`spec/SPEC-frontend.md`, "Translation service"). A new key goes into `en.json`
+only: pushing it uploads it, and the weekly pull request `l10n/crowdin` brings
+the translations back; until then the English text shows. The script also scans
+`src/` and fails on a key that is used but missing from `en.json`, and on one
+that is used nowhere; a key built at run time needs its prefix in the script's
+`DYNAMIC`. The release workflow runs `tools/check-messages.py --complete`.
 
 For other npm commands (adding a dependency, updating the lockfile) use
 `NODE_IMAGE=<node.image> avarc-server-frontend/docker-node.sh npm ...`; the

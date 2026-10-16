@@ -52,7 +52,7 @@ files. Do not edit by hand. See
 | AVARC-44 | [Java formatter](finished/TASK-java-formatter.md) | task | finished | normal | backend |  |
 | AVARC-45 | [Developer links in the footer on non-prod](finished/TASK-footer-dev-links.md) | task | finished | normal | frontend | AVARC-41 |
 | AVARC-46 | [Externalize fixed UI strings](finished/TASK-externalize-ui-strings.md) | task | finished | normal | frontend |  |
-| AVARC-47 | [External translation service](TASK-translation-service.md) | task | open | normal | frontend | AVARC-46 |
+| AVARC-47 | [External translation service](TASK-translation-service.md) | task | in-progress | normal | frontend | AVARC-46 |
 | AVARC-48 | [Back up the database](TASK-database-backup.md) | task | in-progress | normal | project | AVARC-18 |
 | AVARC-49 | [Browser tests in a container](TASK-browser-tests.md) | task | open | normal | frontend | AVARC-30, AVARC-31 |
 | AVARC-50 | [Import the legacy places as locations](TASK-legacy-import.md) | task | open | normal | backend | AVARC-10 |
