@@ -13,6 +13,11 @@ locations and descriptions.
   architecture, or a new or changed Flyway migration, updates the matching
   diagram in the same change set (`spec/SPEC-architecture-diagram.md`,
   `spec/SPEC-datamodel-diagram.md`).
+- The legacy import (`deploy/import-legacy.sql`, AVARC-50) writes into the
+  application's tables, so a change of the data model or of the rules in
+  `spec/SPEC-locations.md` is followed by a check of the import and its dry
+  run (`deploy/import-legacy.sh --dry-run`) in the same change set, until the
+  import has been used for good.
 
 ## Tasks
 
@@ -113,6 +118,14 @@ The `ingress` service is nginx, run from the image of the module
 from its `nginx.conf` by `-Pwith-docker` and tagged `avarc-ingress`. The
 routing is in that file; a change of it needs a new image. The container
 listens on port 8080.
+
+## Legacy import
+
+`deploy/import-legacy.sh [--stage] [--dry-run]` synchronises the locations
+with the schema `legacy` loaded by `deploy/import-sql.sh`; it is idempotent
+and prints a report of the places it could not import (spec:
+`spec/SPEC-locations.md`, source tables: `spec/legacy-datamodel.md`). Run it
+on the host of the environment; `--dry-run` rolls back.
 
 ## Backups
 

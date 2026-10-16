@@ -117,7 +117,14 @@ part of such a change and not a separate task; the mapping spec says so, and
 dry run on a copy of the legacy data is the check, and a test with invented
 rows keeps it from rotting.
 
-## Remaining
+## Status
+
+Decided and specified in `SPEC-locations.md` ("Legacy import"); the import
+(`deploy/import-legacy.sql` and `.sh`, migration V4 with the link table) and
+its tests are written. The task stays open: the import is revisited after
+data model changes, and it has not been run on dev or stage for good yet.
+
+## Remaining (as planned originally)
 
 - Specify the mapping in `SPEC-locations.md` (or a spec of its own) once the
   decisions are taken, and show the link table in the data model diagram. Add
