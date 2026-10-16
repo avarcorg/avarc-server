@@ -72,7 +72,7 @@ Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
 
 ## Locations
 
-Introduced in [AVARC-12](../tasks/TASK-locations-ui.md), in two steps: the
+Introduced in [AVARC-12](../tasks/finished/TASK-locations-ui.md), in two steps: the
 read-only pages first, then the forms. All pages need a session and ask the
 backend's `/api/locations` ([SPEC-locations.md](SPEC-locations.md)) on the
 server, forwarding the session cookie.
@@ -128,7 +128,7 @@ no header or footer markup of their own.
   language switch and the user menu with the logout action. The footer is
   small and holds the tagline of the site.
 - **Navigation:** one entry per page that exists, so the list grows with
-  the pages (the locations list and the map, [AVARC-12](../tasks/TASK-locations-ui.md)).
+  the pages (the locations list and the map, [AVARC-12](../tasks/finished/TASK-locations-ui.md)).
   Editing controls are shown by role ([SPEC-auth.md](SPEC-auth.md)).
 - **Content width:** text and form pages sit in a centred column of limited
   width; a page may opt out and take the full width, which the map does.
