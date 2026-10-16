@@ -93,7 +93,7 @@ the client so that it can mark the content as not translated.
 
 ## API
 
-Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
+Introduced in [AVARC-10](../tasks/finished/TASK-locations-crud-api.md). JSON under
 `/api/locations` and `/api/tags`; every call needs a login and the role named in
 [SPEC-auth.md](SPEC-auth.md), otherwise the answer is `401` (no session) or
 `403` (role missing).
@@ -141,7 +141,7 @@ Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
   numeric database key may be added internally for optimisation.
 - Tags are many-to-many and language-neutral, with per-language labels;
   there is no fixed taxonomy.
-- Tag usage ([AVARC-10](../tasks/TASK-locations-crud-api.md)): editors
+- Tag usage ([AVARC-10](../tasks/finished/TASK-locations-crud-api.md)): editors
   create tags by using a new key, admins own the labels, a tag that no
   location carries any more is kept (so its labels survive and it can be used
   again), and there is no call to delete a tag. The API lists tags for a

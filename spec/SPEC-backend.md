@@ -41,7 +41,7 @@ Define the API service that stores and serves locations.
   ([SPEC-users.md](SPEC-users.md)), `apidocs` (the
   API description, below), `hello` (a placeholder endpoint) and `location`
   ([SPEC-locations.md](SPEC-locations.md),
-  [AVARC-10](../tasks/TASK-locations-crud-api.md)).
+  [AVARC-10](../tasks/finished/TASK-locations-crud-api.md)).
   A new area of the backend starts as a new module.
 - **Database:** PostgreSQL with PostGIS. A `point` position is stored as a
   `geography(Point, 4326)` column (WGS 84), generated from `latitude` and
