@@ -6,6 +6,7 @@
 [![CI Keycloak](https://github.com/avarcorg/avarc-server/actions/workflows/ci-keycloak.yml/badge.svg?branch=main)](https://github.com/avarcorg/avarc-server/actions/workflows/ci-keycloak.yml)
 [![CodeQL](https://github.com/avarcorg/avarc-server/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/avarcorg/avarc-server/actions/workflows/codeql.yml)
 [![ShellCheck](https://github.com/avarcorg/avarc-server/actions/workflows/shellcheck.yml/badge.svg?branch=main)](https://github.com/avarcorg/avarc-server/actions/workflows/shellcheck.yml)
+[![actionlint](https://github.com/avarcorg/avarc-server/actions/workflows/actionlint.yml/badge.svg?branch=main)](https://github.com/avarcorg/avarc-server/actions/workflows/actionlint.yml)
 
 An application to collect data of historical interest, with locations and descriptions
 

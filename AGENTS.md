@@ -236,6 +236,9 @@ few times.
 `tools/shellcheck.sh` lints all shell scripts with ShellCheck (warnings and
 errors; it uses the installed `shellcheck` or its container image). The
 `ShellCheck` workflow runs it when a script changes; keep it clean.
+`tools/actionlint.sh` lints the GitHub Actions workflows the same way (the
+`actionlint` workflow runs it when a workflow changes); run it after editing
+one.
 
 ## Where things do NOT go
 
