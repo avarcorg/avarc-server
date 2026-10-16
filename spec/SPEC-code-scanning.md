@@ -58,6 +58,17 @@ third-party `mvnw`, and runs ShellCheck; the workflow
 `.github/workflows/shellcheck.yml` calls it on pushes to `main` and pull
 requests that change a shell script, the hooks or the workflow itself.
 
+## Workflow lint
+
+CodeQL looks at the workflows for security problems only. Their syntax and
+wiring (inputs of actions, `needs:` references, the inputs of reusable
+workflows, expressions) are checked with actionlint, introduced in
+[AVARC-53](../tasks/TASK-actionlint.md). `tools/actionlint.sh` runs the
+installed actionlint or else its container image, whose version is pinned in
+the script; the workflow `.github/workflows/actionlint.yml` calls it on pushes
+to `main` and pull requests that change a workflow or the script. Any finding
+fails the check.
+
 ## Java format
 
 The formatting of the backend's Java sources is checked as a code quality
