@@ -31,6 +31,11 @@
         <image.name>${image.namespace}/${image.basename}</image.name>
         <image.source>https://github.com/avarcorg/avarc-server</image.source>
         <exec-maven-plugin.version>3.6.4</exec-maven-plugin.version>
+        <!-- Security fixes newer than the Spring Boot BOM manages
+             (spec/SPEC-backend.md); remove once Boot catches up. -->
+        <tomcat.version>11.0.27</tomcat.version>
+        <jackson-bom.version>3.1.7</jackson-bom.version>
+        <jackson-2-bom.version>2.21.7</jackson-2-bom.version>
     </properties>
 
     <profiles>
