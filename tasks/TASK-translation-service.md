@@ -60,9 +60,11 @@ action does by default.
 
 ## Remaining
 
-- Check on GitHub: the upload workflow after a change of `en.json`, and the
-  download workflow run by hand (a first run proposes nothing, since the
-  German texts already match), then a text translated in Crowdin.
+- Checked on GitHub: the upload, the download without changes (no pull
+  request), and a text translated in Crowdin (a pull request on
+  `l10n/crowdin` that changed only `de.json`). The pull request needs the
+  repository setting "Allow GitHub Actions to create and approve pull
+  requests", which is on.
 - The first release tag runs `--complete`; check that it passes.
 
 ## Acceptance
