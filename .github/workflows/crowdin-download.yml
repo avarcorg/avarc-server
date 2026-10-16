@@ -25,6 +25,8 @@ jobs:
       - uses: crowdin/github-action@v3
         with:
           config: crowdin.yml
+          # The action uploads the sources by default; this job only downloads.
+          upload_sources: false
           download_translations: true
           download_language: de
           skip_untranslated_strings: true
