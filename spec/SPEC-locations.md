@@ -134,6 +134,57 @@ Introduced in [AVARC-10](../tasks/finished/TASK-locations-crud-api.md). JSON und
 - The API returns every translation. The language fallback above is applied
   by the client, which knows which language it shows.
 
+## Legacy import
+
+Introduced in [AVARC-50](../tasks/TASK-legacy-import.md). The places of the
+legacy export (schema `legacy`, diagram in
+[legacy-datamodel.md](legacy-datamodel.md)) are brought into the tables of
+the application by `deploy/import-legacy.sh [--stage] [--dry-run]`, run on the
+host of the environment.
+
+- **Runner:** one SQL transaction inside the db container, with the database's
+  own account like `deploy/import-sql.sh`; the API needs a login and one call
+  per location, which does not suit thousands of rows or idempotence. The
+  constraints of the tables enforce the ranges the API checks.
+- **Link:** the table `location_legacy` (`legacy_id` primary key, `location_id`
+  unique foreign key, cascading on delete) finds a place again on a rerun.
+  It is dropped with the legacy system.
+- **Texts:** a row of `payload_poh` per language, `DE` as `de` and `GB` as
+  `en`. A place without a `DE` payload name or description takes `poh.name`
+  and `poh.description` for `de`. An empty description is stored as an empty
+  text; a place without a name in any language is reported.
+- **Coordinates:** trimmed, one trailing `.` removed, then they must be plain
+  decimals within the ranges and `srid` 4326. Everything else is reported and
+  not imported. A latitude below 30 with a longitude of 40 to 60 is taken as
+  swapped in the legacy data (Austria and Hungary appear as 16, 47) and is
+  swapped back, tagged `coordinates-swapped` (labels "Koordinaten vertauscht"
+  and "Coordinates swapped") so they can be checked, and counted in the report.
+- **Tags:** the description of `pohtype` and each keyword become tags. The key
+  is the lower-cased text with umlauts transliterated and other characters
+  turned into single hyphens; the German text is the `de` label, set only when
+  the tag is created (an admin owns the labels afterwards). `ToDo` and
+  `maincategory` are not imported.
+- **References:** each row of `sources_poh` becomes a reference with the
+  source as url when it is an http or https address (else no url) and the
+  description, or the source, as the `de` citation, ordered by legacy id.
+- **Period:** the timeline tables are not imported (one row in the export);
+  `period_*` stay empty. Confidence is 3.
+- **Audit:** `created_by` and `updated_by` are the fixed subject
+  `legacy-import`; the contributor is not read, so no personal data reaches
+  the application. `created_at` is the creation time of the coordinates, or
+  the first run when there is none, and never changes; `updated_at` changes
+  only when the content does.
+- **Reruns:** the import wins. A rerun brings every imported location to the
+  legacy state and writes only what differs, so unchanged data changes
+  nothing. A legacy place that has disappeared keeps its location and is
+  listed in the report.
+- **Report and dry run:** every place not imported is listed with its reason.
+  `--dry-run` rolls the transaction back and prints the report and the counts
+  of rows it would insert, update and leave alone.
+- **Keeping it current:** every change of the data model (a new or changed
+  migration) or of the rules above must be followed by a check of the import
+  and its dry run until the import has been used for good.
+
 ## Decisions
 
 - The period is a free-text label plus an optional start and end timestamp.
