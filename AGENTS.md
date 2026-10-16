@@ -165,6 +165,14 @@ closes it again. Connect as `avarc_ro` to `avarc-<environment>-db` on port 5432,
 `avarc.app_user`), and the script grants the account read access to it.
 Prod never exposes the database.
 
+A SQL file, such as the export of a legacy system, is loaded into a schema of
+its own (default `legacy`) with `deploy/import-sql.sh [--stage] [--schema NAME]
+FILE.sql`, run on the host of the environment (spec:
+`spec/SPEC-deployment.md`). It holds personal data, so the read-only account
+and the database tool see the schema `legacy` only with `export DB_LEGACY=true`
+in the secrets file (or `--legacy`), after the import, when
+`deploy/create-db-user.sh` is run again.
+
 With `DB_TAILNET=true` the web database tool (CloudBeaver) is started as well,
 at `https://avarc-<environment>-dbadmin.<tailnet domain>`. Nothing is set up by
 hand: sign in as `DBTOOL_ADMIN_NAME` (default `dbadmin`) with
