@@ -130,6 +130,55 @@ server, forwarding the session cookie.
   `PUT /api/tags/{key}`.
 - **Texts:** all fixed texts come from the translations, as above.
 
+## Translation service
+
+Introduced in [AVARC-47](../tasks/TASK-translation-service.md). The fixed
+texts ([AVARC-46](../tasks/finished/TASK-externalize-ui-strings.md)) are
+translated in Crowdin, an external translation service; the repository stays
+the source of the keys and the place the application reads from.
+
+- **Source and targets:** `messages/en.json` is the source language. Every
+  other `messages/<language>.json` is a target; a new language is a target
+  language in the Crowdin project plus an entry in `routing.ts`. The mapping
+  of files is in `crowdin.yml` at the repository root.
+- **Repository to service:** the workflow `crowdin-upload.yml` uploads
+  `messages/en.json` on a push to `main` that changes it (or `crowdin.yml`),
+  and on demand. New keys appear in the service and keys that left the source
+  are removed there. The existing translations are uploaded once by hand
+  (the on-demand run has an input for it), so that the German texts written
+  so far are not lost.
+- **Service to repository:** the workflow `crowdin-download.yml` runs weekly
+  and on demand, downloads the translated texts and opens a pull request on
+  the branch `l10n/crowdin` that changes only the target files; a person
+  reviews and merges it, nothing is pushed to `main` directly. The job runs
+  `tools/check-messages.py` on the downloaded files before it proposes them,
+  because a pull request opened with the workflow's own token does not start
+  the other workflows. Untranslated
+  strings are left out of the target files, never filled with the source
+  text.
+- **Completeness:** `tools/check-messages.py` keeps its rules for every
+  language (no empty text, the same `{placeholders}` as the source, no key
+  that the source lacks), but a target may lack keys that are not translated
+  yet. At runtime a missing text is taken from the English file, so a page is
+  never blank. `tools/check-messages.py --complete` fails on any missing key;
+  the release workflow runs it, so a release does not ship an untranslated
+  text.
+- **Keys and code:** keys are written by hand into `messages/en.json`;
+  nothing is extracted from the code. `tools/check-messages.py` scans
+  `src/` for the keys asked for through `useTranslations` and
+  `getTranslations` and fails when a used key is not in `en.json` or a key of
+  `en.json` is used nowhere, so the file and the components cannot drift
+  apart. A key built at run time (a template string) is accepted only for the
+  prefixes listed in the script (`DYNAMIC`), which count as used.
+- **Secrets:** the project id and a personal access token are the GitHub
+  secrets `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN`, read only by the
+  two workflows above, which have no other secret and the least permissions
+  (`contents: read` for the upload, `contents: write` and `pull-requests:
+  write` for the download). No token is stored in the repository, in a
+  script or in the Compose project; a developer machine never needs one.
+- **Not translated by the service:** the texts of locations, tags and
+  references; they are data and are edited in the application.
+
 ## Layout
 
 Introduced in [AVARC-41](../tasks/finished/TASK-website-layout.md). One frame, a
