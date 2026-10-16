@@ -41,7 +41,7 @@ checked out.
   [SPEC-deployment.md](SPEC-deployment.md)). Deploying a release means
   checking out its tag there first.
 - **Images:** introduced in [AVARC-31](../tasks/finished/TASK-image-builds.md),
-  split by module in [AVARC-52](../tasks/TASK-per-module-builds.md). One
+  split by module in [AVARC-52](../tasks/finished/TASK-per-module-builds.md). One
   GitHub Actions workflow per module (`ci-backend.yml`, `ci-frontend.yml`,
   `ci-ingress.yml`, `ci-keycloak.yml`) builds and tests that module
   (`./mvnw -Pwith-docker -pl avarc-server-<module> verify`, which builds its
