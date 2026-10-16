@@ -1,17 +1,17 @@
-name: CI Build
+name: Build module
 
-# Builds and tests on every push to main and on pull requests; the images are
-# built as well, but only pushes to main and release tags publish them. The
-# logic is in the Maven build and tools/publish-images.sh. See
-# spec/SPEC-releases.md.
+# Reusable workflow: builds and tests one module and, on a push, publishes the
+# image of that module only. Called by ci-backend.yml, ci-frontend.yml,
+# ci-ingress.yml and ci-keycloak.yml (their own paths) and by ci-release.yml
+# (release tags, all modules). The logic is in the Maven build and
+# tools/publish-images.sh. See spec/SPEC-releases.md.
 on:
-  push:
-    branches: [main]
-    paths-ignore: ["**.md"]
-    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
-  pull_request:
-    branches: [main]
-    paths-ignore: ["**.md"]
+  workflow_call:
+    inputs:
+      module:
+        description: backend, frontend, ingress or keycloak
+        required: true
+        type: string
 
 env:
   # Must match java.version and node.version in the POMs (checked below).
@@ -19,12 +19,13 @@ env:
   NODE_VERSION: "24"
   REGISTRY: ghcr.io
   NAMESPACE: ghcr.io/avarcorg
+  MODULE: ${{ inputs.module }}
 
 permissions:
   contents: read
 
 jobs:
-  ci-build:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -32,6 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: buildpacks/github-actions/setup-pack@v6.2.0
+        if: inputs.module != 'keycloak'
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
@@ -41,19 +43,24 @@ jobs:
       # distribution. npm's downloads are kept by the Node container in a
       # host directory (docker-node.sh).
       - name: Keep npm's downloads between runs
+        if: inputs.module == 'frontend'
         run: echo "NPM_CACHE=${HOME}/.npm-docker" >> "${GITHUB_ENV}"
       - uses: actions/cache@v6
+        if: inputs.module == 'frontend'
         with:
           path: ~/.npm-docker
           key: npm-${{ hashFiles('avarc-server-frontend/package-lock.json') }}
           restore-keys: npm-
-      - name: Check the versions against the POMs
+      - name: Check the Java version against the POM
+        if: inputs.module == 'backend'
         run: |
           # maven.compiler.release is java.version of the POM; java.version itself
           # would be the running JDK's own property.
           test "$(./mvnw -q -pl avarc-server-backend help:evaluate -Dexpression=maven.compiler.release -DforceStdout)" = "${JAVA_VERSION}"
-          test "$(./mvnw -q -pl avarc-server-frontend help:evaluate -Dexpression=node.version -DforceStdout)" = "${NODE_VERSION}"
-      - run: ./mvnw -B -Pwith-docker -Dimage.namespace="${NAMESPACE}" verify
+      - name: Check the Node version against the POM
+        if: inputs.module == 'frontend'
+        run: test "$(./mvnw -q -pl avarc-server-frontend help:evaluate -Dexpression=node.version -DforceStdout)" = "${NODE_VERSION}"
+      - run: ./mvnw -B -Pwith-docker -Dimage.namespace="${NAMESPACE}" -pl "avarc-server-${MODULE}" verify
       - name: Log in to the registry
         if: github.event_name == 'push'
         uses: docker/login-action@v4
@@ -63,20 +70,17 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Show the image labels
         if: github.event_name == 'push'
-        run: |
-          for name in backend frontend ingress keycloak; do
-            docker image inspect --format '{{json .Config.Labels}}' "${NAMESPACE}/avarc-${name}:latest" | jq .
-          done
-      - name: Publish the images
+        run: docker image inspect --format '{{json .Config.Labels}}' "${NAMESPACE}/avarc-${MODULE}:latest" | jq .
+      - name: Publish the image
         if: github.event_name == 'push'
-        run: tools/publish-images.sh "${NAMESPACE}" "${GITHUB_REF}" "${GITHUB_SHA}"
+        run: tools/publish-images.sh --module "${MODULE}" "${NAMESPACE}" "${GITHUB_REF}" "${GITHUB_SHA}"
 
   # Posts the built commit to a chat channel, as a hint for the deployment
   # side. A separate job, and best effort: without the secret it does nothing,
   # and a failure only shows as a warning, so it never fails the workflow.
   # See spec/SPEC-releases.md.
   notify-chat:
-    needs: ci-build
+    needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'avarcorg/avarc-server'
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -91,8 +95,8 @@ jobs:
             echo "::notice::CHAT_WEBHOOK_URL is not set, no notification sent"
             exit 0
           fi
-          if ! jq -n --arg sha "${GITHUB_SHA}" \
-              '{text: ("avarc-server main " + $sha + " built and published")}' |
+          if ! jq -n --arg sha "${GITHUB_SHA}" --arg module "${MODULE}" \
+              '{text: ("avarc-server main " + $sha + " built and published (" + $module + ")")}' |
               curl --fail --silent --max-time 30 \
                 --header 'Content-Type: application/json' --data @- \
                 "${WEBHOOK_URL}" > /dev/null; then

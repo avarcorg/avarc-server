@@ -2,7 +2,11 @@
 # Tags the images built by `./mvnw -Pwith-docker package` for the registry
 # and pushes them. See spec/SPEC-releases.md.
 #
-#   tools/publish-images.sh [--dry-run] <namespace> <git-ref> <commit>
+#   tools/publish-images.sh [--dry-run] [--module <name>]... <namespace> <git-ref> <commit>
+#
+# --module names an image to publish (backend, frontend, ingress or keycloak,
+# repeatable); without it all four are published. A module build publishes
+# only the image it built.
 #
 # <namespace> is the registry namespace the images were built with
 # (-Dimage.namespace), for example ghcr.io/avarcorg. The tags follow from the
@@ -17,23 +21,32 @@ usage () {
 }
 
 RUN=
-ARGS=
-for arg in "$@"
+MODULES=
+POSITIONAL=
+while [ $# -gt 0 ]
 do
-    case "${arg}" in
+    case "$1" in
         --dry-run) RUN="echo" ;;
+        --module)
+            shift
+            case "${1:-}" in
+                backend|frontend|ingress|keycloak) MODULES="${MODULES} ${1}" ;;
+                *) echo "publish-images.sh: --module needs backend, frontend, ingress or keycloak" >&2; exit 1 ;;
+            esac ;;
         --help|-h) usage; exit 0 ;;
-        -*) echo "publish-images.sh: unknown option ${arg}" >&2; exit 1 ;;
-        *) ARGS="${ARGS} ${arg}" ;;
+        -*) echo "publish-images.sh: unknown option $1" >&2; exit 1 ;;
+        *) POSITIONAL="${POSITIONAL} $1" ;;
     esac
+    shift
 done
 # shellcheck disable=SC2086
-set -- ${ARGS}
+set -- ${POSITIONAL}
 if [ $# -ne 3 ]
 then
     usage
     exit 1
 fi
+[ -n "${MODULES}" ] || MODULES=" backend frontend ingress keycloak"
 NAMESPACE=$1
 REF=$2
 COMMIT=$3
@@ -57,8 +70,9 @@ esac
 cd "$(git rev-parse --show-toplevel)"
 BUILT=$(./mvnw -q help:evaluate -Dexpression=project.version -DforceStdout)
 
-for name in avarc-backend avarc-frontend avarc-ingress avarc-keycloak
+for module in ${MODULES}
 do
+    name=avarc-${module}
     for tag in ${TAGS}
     do
         ${RUN} docker tag "${NAMESPACE}/${name}:${BUILT}" "${NAMESPACE}/${name}:${tag}"

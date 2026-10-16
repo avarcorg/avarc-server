@@ -1,0 +1,43 @@
+name: CI Ingress
+
+# Builds and tests the ingress module on pushes to main and pull requests that
+# change it (or the shared build files); a push to main also publishes its
+# image. See build-module.yml and spec/SPEC-releases.md.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "avarc-server-ingress/**"
+      - "pom.xml"
+      - "mvnw"
+      - "mvnw.cmd"
+      - ".mvn/**"
+      - "tools/publish-images.sh"
+      - ".github/workflows/build-module.yml"
+      - ".github/workflows/ci-ingress.yml"
+      - "!**.md"
+  pull_request:
+    branches: [main]
+    paths:
+      - "avarc-server-ingress/**"
+      - "pom.xml"
+      - "mvnw"
+      - "mvnw.cmd"
+      - ".mvn/**"
+      - "tools/publish-images.sh"
+      - ".github/workflows/build-module.yml"
+      - ".github/workflows/ci-ingress.yml"
+      - "!**.md"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/build-module.yml
+    with:
+      module: ingress
+    secrets: inherit

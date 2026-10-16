@@ -46,7 +46,7 @@
       "description": "Node version of the frontend build, kept in step with the CI check",
       "managerFilePatterns": [
         "/^avarc-server-frontend/pom\\.xml$/",
-        "/^\\.github/workflows/ci-build\\.yml$/"
+        "/^\\.github/workflows/build-module\\.yml$/"
       ],
       "matchStrings": [
         "<node\\.version>(?<currentValue>\\d+)</node\\.version>",
