@@ -30,5 +30,8 @@ latitude and longitude fields. Details in
       backend (list, detail, fallback, 404, redirect without a session, both
       languages). Not yet seen in a browser: the Leaflet map itself is drawn
       client-side.
-- [ ] Step 2: create, edit and delete forms for editors, tag labels for
-      admins, controls shown by role.
+- [x] Step 2: create, edit and delete forms for editors, tag labels for
+      admins, controls shown by role. Built and checked against a stand-in
+      backend for each role (the controls shown, the guarded pages, the
+      prefilled edit form, the tags page) and the request logic of the form
+      on its own; not yet used with the real backend in a browser.
