@@ -11,7 +11,15 @@ permissions:
   contents: read
 
 jobs:
+  # A release does not ship a text that is not translated yet.
+  messages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: tools/check-messages.py --complete
+
   build:
+    needs: messages
     strategy:
       fail-fast: false
       matrix:

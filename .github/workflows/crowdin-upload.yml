@@ -1,0 +1,40 @@
+name: Crowdin upload
+
+# Sends the source texts (messages/en.json) to the translation service when
+# they change, and on demand. New keys appear there and removed keys go. The
+# input also uploads the existing translations of the repository, once, to
+# start a project. Only the two Crowdin secrets are used. See
+# spec/SPEC-frontend.md, "Translation service".
+on:
+  push:
+    branches: [main]
+    paths:
+      - "avarc-server-frontend/messages/en.json"
+      - "crowdin.yml"
+      - ".github/workflows/crowdin-upload.yml"
+  workflow_dispatch:
+    inputs:
+      translations:
+        description: Also upload the existing translations of the repository
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    if: github.repository == 'avarcorg/avarc-server'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: crowdin/github-action@v3
+        with:
+          config: crowdin.yml
+          upload_sources: true
+          upload_translations: ${{ inputs.translations == true }}
+          # Keep translations equal to the source text (names, loan words).
+          upload_translations_args: --import-eq-suggestions
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

@@ -1,0 +1,60 @@
+name: Crowdin download
+
+# Fetches the finished translations weekly and on demand and proposes them as
+# a pull request on the branch l10n/crowdin; nothing is pushed to main. Only
+# the target files change, and untranslated strings are left out. See
+# spec/SPEC-frontend.md, "Translation service".
+on:
+  schedule:
+    - cron: "41 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  BRANCH: l10n/crowdin
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    if: github.repository == 'avarcorg/avarc-server'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: crowdin/github-action@v3
+        with:
+          config: crowdin.yml
+          download_translations: true
+          download_language: de
+          skip_untranslated_strings: true
+          push_translations: false
+          create_pull_request: false
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+      - name: Check the downloaded files
+        run: |
+          # Only target language files may have changed, never the source.
+          changed="$(git status --porcelain | awk '{print $2}')"
+          [ -n "${changed}" ] || { echo "No new translations"; exit 0; }
+          printf '%s\n' "${changed}" | grep -Ev '^avarc-server-frontend/messages/[a-z]{2}\.json$' && exit 1
+          printf '%s\n' "${changed}" | grep -qx 'avarc-server-frontend/messages/en.json' && exit 1
+          tools/check-messages.py
+          exit 0
+      - name: Open or update the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -n "$(git status --porcelain)" ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "${BRANCH}"
+          git add avarc-server-frontend/messages
+          git commit -m "Update the translations from Crowdin (AVARC-47)"
+          git push --force origin "${BRANCH}"
+          if [ -z "$(gh pr list --head "${BRANCH}" --state open --json number --jq '.[0].number')" ]; then
+            gh pr create --base main --head "${BRANCH}" \
+              --title "Update the translations from Crowdin (AVARC-47)" \
+              --body "Translations downloaded from the translation service. Only the target language files change; review and merge."
+          fi

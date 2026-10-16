@@ -1,0 +1,10 @@
+# Maps the translation files to the Crowdin project; read by the workflows
+# crowdin-upload.yml and crowdin-download.yml. See spec/SPEC-frontend.md,
+# "Translation service". The project id and the token are GitHub secrets.
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+# The project holds the source as /en.json, without directories.
+preserve_hierarchy: false
+files:
+  - source: /avarc-server-frontend/messages/en.json
+    translation: /avarc-server-frontend/messages/%two_letters_code%.json
