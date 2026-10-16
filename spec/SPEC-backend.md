@@ -107,3 +107,9 @@ Define the API service that stores and serves locations.
   the CSRF token that `GET /api/auth/me` reports, which the page describes.
   Opening the endpoints themselves would be a change of the security model
   and needs a decision of its own.
+- **Security fixes ahead of Spring Boot.** Dependabot alerts for libraries that
+  Spring Boot manages (Tomcat, Jackson) are fixed by overriding the version
+  properties of the Boot BOM (`tomcat.version`, `jackson-bom.version`,
+  `jackson-2-bom.version`) in the parent `pom.xml`, as soon as a patched
+  release exists. The override is removed once Boot manages a version at least
+  as new.
