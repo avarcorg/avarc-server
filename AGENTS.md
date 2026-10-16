@@ -105,6 +105,11 @@ backend. Check every new or moved dependency with the image build
 missing from the traced `node_modules` (one that Next bundles belongs in
 `devDependencies`, see `spec/SPEC-frontend.md`).
 
+`tools/check-messages.py` checks that all translation files in
+`avarc-server-frontend/messages` have the same keys and placeholders (the
+frontend workflow runs it before the build); every fixed text, product names
+included, belongs there, none in a component.
+
 For other npm commands (adding a dependency, updating the lockfile) use
 `NODE_IMAGE=<node.image> avarc-server-frontend/docker-node.sh npm ...`; the
 image is the `node.image` property of `avarc-server-frontend/pom.xml`. Image
