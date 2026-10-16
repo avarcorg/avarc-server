@@ -28,10 +28,13 @@ Define the web user interface for browsing and managing locations.
 - **Map:** Leaflet through react-leaflet, with markers for `point`
   positions. Further position kinds ([SPEC-locations.md](SPEC-locations.md))
   are drawn as they are added.
-- **Tiles:** raster tiles from a hosted provider with a free tier. The
-  provider's API key is a secret of the environment, not committed, and the
-  required attribution is shown on the map. The concrete provider is chosen
-  with the map implementation.
+- **Tiles:** the standard OpenStreetMap raster tiles
+  (`https://tile.openstreetmap.org/{z}/{x}/{y}.png`), with the required
+  attribution shown on the map. They need no account or key, and their usage
+  policy allows the light use of an internal tool; a hosted provider with a
+  key (a secret of the environment, not committed) replaces them if the use
+  outgrows that policy. The browser of the person using the map loads the
+  tiles.
 - **Styling:** Tailwind CSS.
 - **Languages:** next-intl provides the translations and the language in the
   route; English and German first, further languages without code changes
@@ -66,6 +69,38 @@ Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
   the route (`/en/...`, `/de/...`; a path without a language goes to the
   language of the browser, the backend's redirects need no language); the
   map and the other decisions above are applied as the pages are built.
+
+## Locations
+
+Introduced in [AVARC-12](../tasks/TASK-locations-ui.md), in two steps: the
+read-only pages first, then the forms. All pages need a session and ask the
+backend's `/api/locations` ([SPEC-locations.md](SPEC-locations.md)) on the
+server, forwarding the session cookie.
+
+- **Map and list page** (`/locations`, entry "Locations" in the navigation):
+  a Leaflet map with a marker for every `point` position and the same
+  locations as a list beside or, on a phone, below it. A marker opens a
+  popup with the name and a link to the location; the list shows the name,
+  the period label and the tags. The map is drawn in the browser (Leaflet needs it), the list on the
+  server. All locations are loaded for the map, a page at a time of the
+  maximum size; a bounding-box query of the API is the later answer when the
+  number outgrows that.
+- **Detail page** (`/locations/<id>`): name, description, period (label, and
+  the bounds when given), confidence levels, tags, references (the url as a link
+  that opens in a new tab, and the citation) and a small map with the
+  position.
+- **Language:** the texts of a location are shown in the language of the page.
+  When there is none, the English one is used, else the one with the lowest
+  language code, as in the language fallback of
+  [SPEC-locations.md](SPEC-locations.md); the page then says that the text
+  is not translated. The same rule picks a reference citation and a tag
+  label, with the tag key as the final fallback.
+- **Forms (second step):** create, edit and delete for `editor` and `admin`,
+  with the controls shown only for those roles (the role comes from
+  `GET /api/auth/me`; the backend enforces it). The position is set by
+  clicking or dragging a marker on a map, with latitude and longitude fields
+  that stay editable and in sync. Tag labels are edited by admins.
+- **Texts:** all fixed texts come from the translations, as above.
 
 ## Layout
 
@@ -114,5 +149,4 @@ no header or footer markup of their own.
 
 ## Open questions
 
-- The concrete tile provider.
 - Accessibility requirements.
