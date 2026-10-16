@@ -94,7 +94,7 @@ the client so that it can mark the content as not translated.
 ## API
 
 Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
-`/api/locations`; every call needs a login and the role named in
+`/api/locations` and `/api/tags`; every call needs a login and the role named in
 [SPEC-auth.md](SPEC-auth.md), otherwise the answer is `401` (no session) or
 `403` (role missing).
 
@@ -105,22 +105,32 @@ Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
 | `POST /api/locations` | editor | `201` with the location and a `Location` header. |
 | `PUT /api/locations/{id}` | editor | `200` with the location; replaces all content fields, or `404`. |
 | `DELETE /api/locations/{id}` | editor | `204`, or `404`. |
+| `GET /api/tags` | viewer | `200` with a list of `{key, labels, locations}`, ordered by key; `locations` is the number of locations that carry the tag. |
+| `PUT /api/tags/{key}` | admin | `200` with the tag; creates it or replaces its labels. |
 
 - The body of `POST` and `PUT` has `position`, `confidenceLevel` (default 3),
   `periodStart`, `periodEnd`, `translations`, `tags` and `references`; the
   identifier and the audit fields are set by the system and ignored if sent.
   A location is shown with all of those, in camelCase.
-- A tag is sent as `{key, labels}`; `labels` left out keeps the labels the tag
-  has, a given map replaces them. A tag key unknown so far is created.
+- The `tags` of a location are sent as a list of keys and shown as a list of
+  `{key, labels}`. An editor may use any existing tag and may use a key that
+  is unknown so far, which creates the tag without labels (they are shown by
+  their key until an admin sets labels). Only an admin sets or changes the
+  labels of a tag, with `PUT /api/tags/{key}`, whose body is
+  `{"labels": {"<language>": "<text>"}}`; the given map replaces the labels
+  (an empty map clears them). Labels are in supported languages and not
+  empty. A request for a location cannot change labels.
 - A request that breaks a rule of this spec answers `400` with a problem
   description: no translation, a language that is not supported, an empty
   name or description, a confidence level outside 1-5, a position outside
   the ranges or of an unknown `kind`, `periodStart` after `periodEnd`, a
   reference without a citation or with a url that is not an absolute http or
-  https address, a tag key that does not follow the rule below.
+  https address, a tag key that does not follow the rule below, a tag label
+  in an unsupported language or an empty one.
 - `createdBy` and `updatedBy` are the Keycloak subject of the user.
 - Tag keys are trimmed and lower-cased, then must be 1-64 characters of
-  `a-z`, `0-9` and single hyphens inside the key.
+  `a-z`, `0-9` and single hyphens inside the key. The key in the path of
+  `PUT /api/tags/{key}` follows the same rule.
 - The API returns every translation. The language fallback above is applied
   by the client, which knows which language it shows.
 
@@ -131,6 +141,11 @@ Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
   numeric database key may be added internally for optimisation.
 - Tags are many-to-many and language-neutral, with per-language labels;
   there is no fixed taxonomy.
+- Tag usage ([AVARC-10](../tasks/TASK-locations-crud-api.md)): editors
+  create tags by using a new key, admins own the labels, a tag that no
+  location carries any more is kept (so its labels survive and it can be used
+  again), and there is no call to delete a tag. The API lists tags for a
+  picker; there is no read or delete call of a single tag.
 - Sources are a list of references with per-language citations and an
   optional URL.
 - Translatable fields: `name`, `description`, `period_label`, reference
@@ -143,8 +158,4 @@ Introduced in [AVARC-10](../tasks/TASK-locations-crud-api.md). JSON under
 
 ## Open questions
 
-- How tags are used, to be revisited. The first implementation lets any
-  editor create a tag on first use and replace its labels, keeps unused tags,
-  and has no calls of its own to list, edit or remove tags. Whether tags need
-  an owner, a controlled vocabulary, clean-up or such calls is undecided; the
-  [API](#api) rules for tags may change.
+- None at the moment.
