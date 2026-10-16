@@ -15,7 +15,7 @@ written first)
 
 The pages are only checked by building them and by fetching their HTML. What a
 browser does with them is not tested: the Leaflet map is drawn in the browser
-only ([AVARC-12](TASK-locations-ui.md)), the login is a chain of redirects
+only ([AVARC-12](finished/TASK-locations-ui.md)), the login is a chain of redirects
 through Keycloak, and layout problems on a phone do not show in HTML. This
 task adds browser tests that run in a container, so no browser is needed on a
 developer machine or on the build host (nothing but Docker is, as for Node).
@@ -60,7 +60,7 @@ developer machine or on the build host (nothing but Docker is, as for Node).
   new tab, the small map.
 - A phone, a tablet and a desktop viewport: the navigation menu, nothing
   scrolls horizontally.
-- Once the forms exist (step 2 of [AVARC-12](TASK-locations-ui.md)): create,
+- The forms ([AVARC-12](finished/TASK-locations-ui.md), now in use): create,
   edit and delete as an editor, the controls hidden for a viewer, tag labels
   only for an admin.
 

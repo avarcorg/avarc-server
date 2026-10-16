@@ -16,7 +16,7 @@ The frontend so far has the plain pages of the skeleton: login, logged out
 and a home page, styled with Tailwind CSS
 ([AVARC-6](TASK-frontend-skeleton.md)). The website needs a
 layout that looks cared for and that the later pages, the locations list
-and map ([AVARC-12](../TASK-locations-ui.md)), can sit in without a redesign.
+and map ([AVARC-12](TASK-locations-ui.md)), can sit in without a redesign.
 
 ## Specification phase
 

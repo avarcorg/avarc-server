@@ -18,4 +18,4 @@ Spec: [SPEC-frontend.md](../../spec/SPEC-frontend.md)
 - Document how to build and run it in `AGENTS.md`.
 
 Scope: a hello world page. The map is part of
-[AVARC-12](../TASK-locations-ui.md).
+[AVARC-12](TASK-locations-ui.md).
