@@ -41,7 +41,7 @@ export function TagLabelsForm({
         router.refresh();
       } else {
         const detail = (await response.json().catch(() => null))?.detail;
-        setState((current) => ({ ...current, [key]: detail ?? t("failed", { status: response.status }) }));
+        setState((current) => ({ ...current, [key]: detail ? t("rejected", { detail }) : t("failed", { status: response.status }) }));
       }
     } catch {
       setState((current) => ({ ...current, [key]: t("unreachable") }));

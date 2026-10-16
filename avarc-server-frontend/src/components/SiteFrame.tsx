@@ -20,10 +20,11 @@ export async function SiteFrame({
 }) {
   const t = await getTranslations("Frame");
   const nav = await getTranslations("Nav");
+  const products = await getTranslations("Products");
   const devLinks = developerLinks({
     database: t("linkDatabase"),
-    keycloak: t("linkKeycloak"),
-    swagger: t("linkSwagger"),
+    keycloak: t("linkKeycloak", { product: products("keycloak") }),
+    swagger: t("linkSwagger", { product: products("swaggerUi") }),
     openapi: t("linkOpenapi"),
   });
   return (

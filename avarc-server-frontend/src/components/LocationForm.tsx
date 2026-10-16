@@ -108,7 +108,7 @@ export function LocationForm({
         setProblem(t("forbidden"));
       } else {
         const detail = (await response.json().catch(() => null))?.detail;
-        setProblem(detail ?? t("failed", { status: response.status }));
+        setProblem(detail ? t("rejected", { detail }) : t("failed", { status: response.status }));
       }
     } catch {
       setProblem(t("unreachable"));

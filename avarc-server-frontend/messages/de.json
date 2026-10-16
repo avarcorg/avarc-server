@@ -10,8 +10,8 @@
     "logout": "Abmelden",
     "devLinks": "Entwicklerlinks",
     "linkDatabase": "Datenbank-Werkzeug",
-    "linkKeycloak": "Keycloak-Verwaltung",
-    "linkSwagger": "Swagger UI",
+    "linkKeycloak": "{product}-Verwaltung",
+    "linkSwagger": "{product}",
     "linkOpenapi": "JSON-API"
   },
   "Nav": {
@@ -93,7 +93,8 @@
     "sessionEnded": "Ihre Sitzung ist beendet. Bitte melden Sie sich erneut an.",
     "forbidden": "Sie dürfen Orte nicht ändern.",
     "failed": "Der Server antwortete mit {status}.",
-    "unreachable": "Der Server ist nicht erreichbar."
+    "unreachable": "Der Server ist nicht erreichbar.",
+    "rejected": "Der Server hat die Eingabe abgelehnt: {detail}"
   },
   "Tags": {
     "title": "Schlagwörter",
@@ -104,6 +105,23 @@
     "save": "Speichern",
     "saved": "Gespeichert.",
     "failed": "Der Server antwortete mit {status}.",
-    "unreachable": "Der Server ist nicht erreichbar."
+    "unreachable": "Der Server ist nicht erreichbar.",
+    "rejected": "Der Server hat die Eingabe abgelehnt: {detail}"
+  },
+  "Map": {
+    "contributors": "Mitwirkende"
+  },
+  "Errors": {
+    "title": "Etwas ist schiefgelaufen",
+    "message": "Die Seite konnte nicht angezeigt werden. Versuchen Sie es erneut; wenn es weiter fehlschlägt, ist der Server möglicherweise nicht verfügbar.",
+    "retry": "Erneut versuchen",
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFoundMessage": "Unter dieser Adresse gibt es nichts.",
+    "home": "Zur Startseite"
+  },
+  "Products": {
+    "openStreetMap": "OpenStreetMap",
+    "keycloak": "Keycloak",
+    "swaggerUi": "Swagger UI"
   }
 }

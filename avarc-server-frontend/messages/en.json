@@ -10,8 +10,8 @@
     "logout": "Log out",
     "devLinks": "Developer links",
     "linkDatabase": "Database tool",
-    "linkKeycloak": "Keycloak admin",
-    "linkSwagger": "Swagger UI",
+    "linkKeycloak": "{product} admin",
+    "linkSwagger": "{product}",
     "linkOpenapi": "JSON API"
   },
   "Nav": {
@@ -93,7 +93,8 @@
     "sessionEnded": "Your session has ended. Sign in again.",
     "forbidden": "You may not change locations.",
     "failed": "The server answered {status}.",
-    "unreachable": "The server could not be reached."
+    "unreachable": "The server could not be reached.",
+    "rejected": "The server rejected the input: {detail}"
   },
   "Tags": {
     "title": "Tags",
@@ -104,6 +105,23 @@
     "save": "Save",
     "saved": "Saved.",
     "failed": "The server answered {status}.",
-    "unreachable": "The server could not be reached."
+    "unreachable": "The server could not be reached.",
+    "rejected": "The server rejected the input: {detail}"
+  },
+  "Map": {
+    "contributors": "contributors"
+  },
+  "Errors": {
+    "title": "Something went wrong",
+    "message": "The page could not be shown. Try again; if it keeps failing, the server may be unavailable.",
+    "retry": "Try again",
+    "notFoundTitle": "Page not found",
+    "notFoundMessage": "There is nothing at this address.",
+    "home": "To the start page"
+  },
+  "Products": {
+    "openStreetMap": "OpenStreetMap",
+    "keycloak": "Keycloak",
+    "swaggerUi": "Swagger UI"
   }
 }

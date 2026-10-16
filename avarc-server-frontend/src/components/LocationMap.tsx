@@ -3,14 +3,14 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { CircleMarker, MapContainer, Popup, TileLayer, useMap } from "react-leaflet";
 import { Link } from "../i18n/navigation";
+import { mapAttribution } from "../lib/mapAttribution";
 
 export type MapPoint = { id: string; latitude: number; longitude: number; name: string };
 
 const TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-const ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors';
 
 // Keeps every point in view; a single point gets a fixed zoom.
 function Fit({ points }: { points: MapPoint[] }) {
@@ -38,6 +38,8 @@ export default function LocationMap({
   linked?: boolean;
   className?: string;
 }) {
+  const t = useTranslations("Map");
+  const products = useTranslations("Products");
   return (
     <MapContainer
       center={[48, 10]}
@@ -46,7 +48,7 @@ export default function LocationMap({
       aria-label={label}
       className={`z-0 w-full rounded-lg ring-1 ring-line ${className}`}
     >
-      <TileLayer url={TILES} attribution={ATTRIBUTION} maxZoom={19} />
+      <TileLayer url={TILES} attribution={mapAttribution(products("openStreetMap"), t("contributors"))} maxZoom={19} />
       <Fit points={points} />
       {points.map((point) => (
         <CircleMarker

@@ -2,11 +2,11 @@
 
 import "leaflet/dist/leaflet.css";
 import { CircleMarker, MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import { useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { mapAttribution } from "../lib/mapAttribution";
 
 const TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-const ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors';
 
 function Clicks({ onPick }: { onPick: (latitude: number, longitude: number) => void }) {
   useMapEvents({ click: (event) => onPick(event.latlng.lat, event.latlng.lng) });
@@ -35,6 +35,8 @@ export default function PositionPicker({
   onPick: (latitude: number, longitude: number) => void;
   label: string;
 }) {
+  const t = useTranslations("Map");
+  const products = useTranslations("Products");
   return (
     <MapContainer
       center={latitude !== null && longitude !== null ? [latitude, longitude] : [48, 10]}
@@ -43,7 +45,7 @@ export default function PositionPicker({
       aria-label={label}
       className="z-0 h-72 w-full cursor-crosshair rounded-lg ring-1 ring-line"
     >
-      <TileLayer url={TILES} attribution={ATTRIBUTION} maxZoom={19} />
+      <TileLayer url={TILES} attribution={mapAttribution(products("openStreetMap"), t("contributors"))} maxZoom={19} />
       <Clicks onPick={onPick} />
       {latitude !== null && longitude !== null && (
         <>
