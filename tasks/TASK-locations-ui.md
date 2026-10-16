@@ -25,7 +25,10 @@ first, then the forms; the position in the form by clicking on the map plus
 latitude and longitude fields. Details in
 [SPEC-frontend.md](../spec/SPEC-frontend.md).
 
-- [ ] Step 1: map and list page, detail page, navigation entry, English and
-      German texts, language fallback.
+- [x] Step 1: map and list page, detail page, navigation entry, English and
+      German texts, language fallback. Built and rendered against a stand-in
+      backend (list, detail, fallback, 404, redirect without a session, both
+      languages). Not yet seen in a browser: the Leaflet map itself is drawn
+      client-side.
 - [ ] Step 2: create, edit and delete forms for editors, tag labels for
       admins, controls shown by role.
