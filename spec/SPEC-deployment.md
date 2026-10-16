@@ -86,6 +86,39 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   database's own account inside the `db` container, like `create-db-user.sh`;
   it reads no password. Mapping the imported tables onto the application's
   tables is a separate step.
+- **Backups:** introduced with
+  [AVARC-48](../tasks/TASK-database-backup.md). `deploy/backup-db.sh
+  [--stage]` takes a logical backup of the databases of an environment: a
+  `pg_dump -Fc` of `avarc` (the schemas `avarc` and, when imported, `legacy`)
+  and of `keycloak` when it exists, and `pg_dumpall --globals-only` for the
+  roles. It runs inside the `db` container as the database's own account, like
+  `create-db-user.sh`, so the dump matches the running PostgreSQL version and
+  no password is read. The files `<database>-<yyyymmdd-hhmmss>.dump` and
+  `globals-<yyyymmdd-hhmmss>.sql` go to `data/<environment>/backups/` next to
+  the script (gitignored), mode 0600, because they hold personal data and
+  credential hashes; a file appears under its final name only when complete.
+  Files older than `BACKUP_KEEP_DAYS` (default 7) are removed. On stage and
+  prod, `systemd/avarc-<environment>-backup.service` (oneshot, after the
+  project's service, run by the same user) and `.timer` (every night at 03:00,
+  `Persistent=true`) run it; `deploy.sh` installs both but does not enable the
+  timer: `systemctl enable --now avarc-<environment>-backup.timer` is a step on
+  the host. The service does not start the project: with the `db` service down
+  the run fails with a message in the journal. Copying the dumps off the host
+  is outside this repository; the backups directory is the interface.
+  - **Restore:** stop what uses the database (`run.sh [--stage] stop backend
+    keycloak`, and `dbtool` if it runs), then, from the backups directory,
+    restore the roles only on a new cluster (errors for roles that exist are
+    harmless): `docker compose -p avarc-<environment> exec -T db psql -U avarc
+    -d postgres < globals-<stamp>.sql`; then each database with `docker compose
+    -p avarc-<environment> exec -T db pg_restore -U avarc -d postgres --clean
+    --if-exists --create < <database>-<stamp>.dump`, which drops and recreates
+    the database from the dump. Start the services again and check the
+    migration history (`avarc.flyway_schema_history`) and a row count. A
+    restore into a scratch PostgreSQL/PostGIS container is the way to try a
+    dump first. Verified with a dump of a database holding data in the
+    schema `avarc`, a role and a second database: the restore into a new
+    cluster, and over an existing database, both succeed and the data and the
+    roles are back.
 - **Database tool (optional):** introduced with
   [AVARC-38](../tasks/TASK-database-tailnet.md). With `DB_TAILNET=true`, the
   `dbtool` service is started as well: CloudBeaver (Community edition, image
