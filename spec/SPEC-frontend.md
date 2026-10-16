@@ -95,11 +95,26 @@ server, forwarding the session cookie.
   [SPEC-locations.md](SPEC-locations.md); the page then says that the text
   is not translated. The same rule picks a reference citation and a tag
   label, with the tag key as the final fallback.
-- **Forms (second step):** create, edit and delete for `editor` and `admin`,
-  with the controls shown only for those roles (the role comes from
-  `GET /api/auth/me`; the backend enforces it). The position is set by
-  clicking or dragging a marker on a map, with latitude and longitude fields
-  that stay editable and in sync. Tag labels are edited by admins.
+- **Forms (second step):** `/locations/new` and `/locations/<id>/edit`, for
+  `editor` and `admin`; everyone else is sent back to the locations. The
+  controls ("New location", "Edit", and "Tags" for admins in the
+  navigation) are shown only for those roles (the roles come from
+  `GET /api/auth/me`; the backend enforces them). The form has the position,
+  a text block per language (name, description, period label, confidence of
+  the text; a language left empty is not sent, and at least one is needed),
+  the confidence of the location, the period as years (the first day of the
+  start year and the last day of the end year; negative before the common
+  era), the tags and the references with a citation per language. The
+  position is set by clicking on a map, with latitude and longitude fields
+  that stay editable and in sync. Tags are chosen from the existing ones;
+  new keys are typed, separated by commas. Saving, and deleting after a
+  confirmation, are requests from the browser to `/api/locations` with the
+  session cookie and the CSRF token that `GET /api/auth/me` reports; the
+  answer of the backend (a rule that was broken, or `401` and `403`) is shown
+  on the form.
+- **Tag labels:** `/tags`, for admins only, lists the tags with the number of
+  locations that carry them and saves the labels of a tag, per language, with
+  `PUT /api/tags/{key}`.
 - **Texts:** all fixed texts come from the translations, as above.
 
 ## Layout
