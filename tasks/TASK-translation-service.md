@@ -50,6 +50,14 @@ Keys are not extracted from the code: `tools/check-messages.py` scans `src/`
 and fails on a used key that `en.json` lacks and on an unused key, with an
 allow-list for keys built at run time.
 
+The first download run failed: the CLI could not match the translated file
+the service built (named `en.json`, like the source) to `crowdin.yml`. The
+file's export pattern in the project is now
+`/avarc-server-frontend/messages/%two_letters_code%.json` (set through the
+API, as the file was created by hand); without it the download cannot place
+the file. The download job also no longer uploads the sources, which the
+action does by default.
+
 ## Remaining
 
 - Check on GitHub: the upload workflow after a change of `en.json`, and the
