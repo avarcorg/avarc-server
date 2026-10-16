@@ -114,6 +114,14 @@ from its `nginx.conf` by `-Pwith-docker` and tagged `avarc-ingress`. The
 routing is in that file; a change of it needs a new image. The container
 listens on port 8080.
 
+## Backups
+
+`deploy/backup-db.sh [--stage]` dumps the databases (and the roles) into
+`deploy/data/<environment>/backups/`, nightly through the systemd timer
+`avarc-<environment>-backup.timer` that `deploy/deploy.sh` installs but does
+not enable (spec, with the restore: `spec/SPEC-deployment.md`). The files hold
+personal data; they are gitignored and mode 0600.
+
 ## Authentication
 
 Keycloak runs as the `keycloak` service of the Compose project (spec:
