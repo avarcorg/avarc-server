@@ -53,7 +53,9 @@ export default function LocationMap({
           key={point.id}
           center={[point.latitude, point.longitude]}
           radius={8}
-          pathOptions={{ className: "location-marker" }}
+          // Leaflet adds the class when it creates the marker; through
+          // pathOptions it would be set too late and ignored.
+          className="location-marker"
         >
           <Popup>
             {linked ? (
