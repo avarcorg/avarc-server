@@ -57,4 +57,4 @@ files. Do not edit by hand. See
 | AVARC-49 | [Browser tests in a container](TASK-browser-tests.md) | task | open | normal | frontend | AVARC-30, AVARC-31 |
 | AVARC-50 | [Import the legacy places as locations](TASK-legacy-import.md) | task | open | normal | backend | AVARC-10 |
 | AVARC-51 | [Home location preference](TASK-home-location.md) | task | open | low | frontend | AVARC-12, AVARC-42 |
-| AVARC-52 | [Build and publish per module](TASK-per-module-builds.md) | task | in-progress | normal | project | AVARC-31 |
+| AVARC-52 | [Build and publish per module](finished/TASK-per-module-builds.md) | task | finished | normal | project | AVARC-31 |

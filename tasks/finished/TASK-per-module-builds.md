@@ -1,7 +1,7 @@
 ---
 id: AVARC-52
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: project
 depends-on: [AVARC-31]
@@ -10,9 +10,9 @@ created: 2026-10-16
 
 # TASK: Build and publish per module
 
-Spec: [SPEC-releases.md](../spec/SPEC-releases.md)
+Spec: [SPEC-releases.md](../../spec/SPEC-releases.md)
 
-The workflow "CI Build" ([AVARC-31](finished/TASK-image-builds.md)) builds
+The workflow "CI Build" ([AVARC-31](TASK-image-builds.md)) builds
 and tests all four modules and publishes all four images on every push to
 `main` that changes anything but Markdown, so a change of the ingress
 configuration rebuilds the backend, runs its tests and republishes images that
@@ -73,8 +73,12 @@ times for a release tag. The cleaning rules need no change: a version tagged
 changed module stays pullable. Written: `build-module.yml` (reusable, was
 `ci-build.yml`), the four module workflows, `ci-release.yml`, the `--module`
 option of `tools/publish-images.sh`, the Renovate file match, the specs and
-`AGENTS.md`. The workflows pass `actionlint`. Still to check on GitHub: see
-Verification.
+`AGENTS.md`. The workflows pass `actionlint`. Checked on GitHub: the push of the
+workflows (shared files changed) built and published all four images; a push
+that changed only `avarc-server-ingress/nginx.conf` (`8d89827`) ran only
+"CI Ingress" and published only `avarc-ingress:sha-8d89827`, none of the
+other three images. The release workflow has not run yet; it first runs on the
+next release tag.
 
 ## Remaining (as planned originally)
 
@@ -83,7 +87,7 @@ Verification.
   Renovate file match and every reference to "CI Build" in the specs and
   `AGENTS.md`.
 - Change `tools/publish-images.sh` and its dry run.
-- Update [SPEC-releases.md](../spec/SPEC-releases.md) (the "Images",
+- Update [SPEC-releases.md](../../spec/SPEC-releases.md) (the "Images",
   "Notification" and "Tags" decisions) and `AGENTS.md`.
 - Check on GitHub: a push that changes only the ingress builds and publishes
   only the ingress; a change of the root `pom.xml` builds all four; a release
