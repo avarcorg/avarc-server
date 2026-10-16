@@ -1,0 +1,10 @@
+[Unit]
+Description=Avarc (stage) database backup
+After=avarc-stage.service docker.service
+
+[Service]
+Type=oneshot
+User=avarc-stage
+Group=avarc-stage
+WorkingDirectory=/home/avarc-stage
+ExecStart=/home/avarc-stage/backup-db.sh --stage

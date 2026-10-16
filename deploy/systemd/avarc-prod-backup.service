@@ -1,0 +1,11 @@
+[Unit]
+Description=Avarc (prod) database backup
+After=avarc-prod.service docker.service
+
+[Service]
+Type=oneshot
+User=avarc-prod
+Group=avarc-prod
+Environment=SECRETS=prod
+WorkingDirectory=/home/avarc-prod
+ExecStart=/home/avarc-prod/backup-db.sh

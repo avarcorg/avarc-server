@@ -1,8 +1,10 @@
 #!/bin/sh -e
 # Install the deployment of an environment on its host: the files of this
-# directory go to /home/avarc-<environment>, the systemd unit to
+# directory go to /home/avarc-<environment>, the systemd units (the service,
+# and the service and timer of the nightly database backup) to
 # /etc/systemd/system. Run as root, from a checkout, to update; it does not
-# start or restart the service and never touches data or secrets.
+# start or restart the service, does not enable the backup timer, and never
+# touches data or secrets.
 #
 #   deploy/deploy.sh stage|prod
 
@@ -58,7 +60,10 @@ then
 fi
 
 copy ${P}/systemd/${NAME}.service /etc/systemd/system/${NAME}.service 0644
+copy ${P}/systemd/${NAME}-backup.service /etc/systemd/system/${NAME}-backup.service 0644
+copy ${P}/systemd/${NAME}-backup.timer /etc/systemd/system/${NAME}-backup.timer 0644
 copy ${P}/run.sh ${D}/run.sh 0755
+copy ${P}/backup-db.sh ${D}/backup-db.sh 0755
 copy ${P}/keycloak-lib.sh ${D}/keycloak-lib.sh 0644
 copy ${P}/create-admin-user.sh ${D}/create-admin-user.sh 0755
 copy ${P}/create-user.sh ${D}/create-user.sh 0755
@@ -69,6 +74,7 @@ chmod 0644 ${D}/VERSION
 
 systemctl daemon-reload
 echo "installed ${VERSION} for ${ENVIRONMENT}; restart ${NAME} to run it"
+echo "the backup timer is not enabled by this script: systemctl enable --now ${NAME}-backup.timer"
 
 #
 # Fini...

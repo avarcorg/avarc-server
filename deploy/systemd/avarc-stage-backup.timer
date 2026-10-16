@@ -1,0 +1,9 @@
+[Unit]
+Description=Runs the avarc (stage) database backup every night
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
