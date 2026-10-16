@@ -1,7 +1,7 @@
 ---
 id: AVARC-12
 type: task
-status: open
+status: in-progress
 priority: normal
 area: frontend
 depends-on: [AVARC-6, AVARC-10]
@@ -17,3 +17,15 @@ Spec: [SPEC-frontend.md](../spec/SPEC-frontend.md)
 - Show or hide the editing controls based on the role reported by
   `GET /api/auth/me` (carried over from
   [AVARC-20](finished/TASK-keycloak-integration.md)).
+
+## Plan
+
+Decided with the maintainer: OpenStreetMap standard tiles; read-only pages
+first, then the forms; the position in the form by clicking on the map plus
+latitude and longitude fields. Details in
+[SPEC-frontend.md](../spec/SPEC-frontend.md).
+
+- [ ] Step 1: map and list page, detail page, navigation entry, English and
+      German texts, language fallback.
+- [ ] Step 2: create, edit and delete forms for editors, tag labels for
+      admins, controls shown by role.

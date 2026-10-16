@@ -17,7 +17,7 @@ files. Do not edit by hand. See
 | AVARC-9 | [Licensing decision](TASK-licensing-decision.md) | decision | open | normal | project |  |
 | AVARC-10 | [Locations CRUD API](finished/TASK-locations-crud-api.md) | task | finished | normal | backend | AVARC-3, AVARC-11 |
 | AVARC-11 | [Locations data model](finished/TASK-locations-data-model.md) | task | finished | normal | locations |  |
-| AVARC-12 | [Locations UI](TASK-locations-ui.md) | task | open | normal | frontend | AVARC-6, AVARC-10 |
+| AVARC-12 | [Locations UI](TASK-locations-ui.md) | task | in-progress | normal | frontend | AVARC-6, AVARC-10 |
 | AVARC-13 | [Ory authentication and authorization design](finished/TASK-ory-auth-design.md) | decision | finished | normal | auth |  |
 | AVARC-14 | [Ory integration](finished/TASK-ory-integration.md) | task | finished | normal | auth | AVARC-13, AVARC-8, AVARC-3, AVARC-6 |
 | AVARC-15 | [Set up Renovate](finished/TASK-renovate-setup.md) | task | finished | normal | dependency-updates | AVARC-4, AVARC-7 |
