@@ -15,7 +15,8 @@
     "linkOpenapi": "JSON API"
   },
   "Nav": {
-    "home": "Home"
+    "home": "Home",
+    "locations": "Locations"
   },
   "Home": {
     "title": "Hello, avarc",
@@ -31,5 +32,23 @@
     "title": "Logged out",
     "message": "You have been logged out. See you soon.",
     "again": "Sign in again"
+  },
+  "Locations": {
+    "title": "Locations",
+    "mapLabel": "Map of the locations",
+    "count": "{count, plural, =0 {No locations} one {# location} other {# locations}}",
+    "empty": "There are no locations yet.",
+    "notTranslated": "not translated",
+    "notTranslatedIn": "Not available in this language; shown in {language}.",
+    "back": "← All locations",
+    "tags": "Tags",
+    "references": "References",
+    "period": "Period",
+    "confidence": "Confidence of the location",
+    "confidenceText": "Confidence of this text",
+    "confidenceValue": "{level} of 5",
+    "position": "Position",
+    "bce": "{year} BCE",
+    "ce": "{year} CE"
   }
 }

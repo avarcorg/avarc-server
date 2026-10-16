@@ -15,7 +15,8 @@
     "linkOpenapi": "JSON-API"
   },
   "Nav": {
-    "home": "Start"
+    "home": "Start",
+    "locations": "Orte"
   },
   "Home": {
     "title": "Hallo, avarc",
@@ -31,5 +32,23 @@
     "title": "Abgemeldet",
     "message": "Sie wurden abgemeldet. Bis bald.",
     "again": "Erneut anmelden"
+  },
+  "Locations": {
+    "title": "Orte",
+    "mapLabel": "Karte der Orte",
+    "count": "{count, plural, =0 {Keine Orte} one {# Ort} other {# Orte}}",
+    "empty": "Es gibt noch keine Orte.",
+    "notTranslated": "nicht übersetzt",
+    "notTranslatedIn": "In dieser Sprache nicht vorhanden; angezeigt auf {language}.",
+    "back": "← Alle Orte",
+    "tags": "Schlagwörter",
+    "references": "Quellen",
+    "period": "Zeitraum",
+    "confidence": "Verlässlichkeit des Ortes",
+    "confidenceText": "Verlässlichkeit dieses Textes",
+    "confidenceValue": "{level} von 5",
+    "position": "Position",
+    "bce": "{year} v. Chr.",
+    "ce": "{year} n. Chr."
   }
 }

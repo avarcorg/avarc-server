@@ -55,3 +55,11 @@
   --color-danger-line: var(--danger-line);
   --font-heading: ui-serif, Georgia, Cambria, "Times New Roman", serif;
 }
+
+/* The markers of the locations map: Leaflet sets the colours as attributes,
+   so the theme colours are applied by a rule. */
+path.location-marker {
+  stroke: var(--accent-strong);
+  fill: var(--accent);
+  fill-opacity: 0.75;
+}

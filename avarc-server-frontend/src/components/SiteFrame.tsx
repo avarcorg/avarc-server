@@ -46,7 +46,10 @@ export async function SiteFrame({
             <NavMenu
               label={t("navigation")}
               menuLabel={t("menu")}
-              items={[{ href: "/", label: nav("home") }]}
+              items={[
+                { href: "/", label: nav("home") },
+                { href: "/locations", label: nav("locations") },
+              ]}
             />
           )}
           <div className="ml-auto flex items-center gap-3">
