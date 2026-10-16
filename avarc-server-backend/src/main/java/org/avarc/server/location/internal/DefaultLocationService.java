@@ -7,13 +7,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import org.avarc.server.location.InvalidLocationException;
 import org.avarc.server.location.Location;
 import org.avarc.server.location.LocationInput;
@@ -36,19 +36,20 @@ import org.springframework.transaction.annotation.Transactional;
 class DefaultLocationService implements LocationService {
 
     private static final int DEFAULT_CONFIDENCE = 3;
-    private static final Pattern TAG_KEY = Pattern.compile("[a-z0-9]+(-[a-z0-9]+)*");
-    private static final int TAG_KEY_MAX = 64;
 
     private final LocationRepository locations;
     private final TagRepository tags;
+    private final TagRules rules;
     private final Set<String> languages;
 
     DefaultLocationService(
             LocationRepository locations,
             TagRepository tags,
+            TagRules rules,
             @Value("${avarc.locations.languages:en,de}") Set<String> languages) {
         this.locations = locations;
         this.tags = tags;
+        this.rules = rules;
         this.languages = languages;
     }
 
@@ -200,35 +201,21 @@ class DefaultLocationService implements LocationService {
         }
     }
 
-    private Set<TagEntity> resolveTags(List<Tag> given) {
-        Map<String, Tag> byKey = new LinkedHashMap<>();
-        for (Tag tag : given == null ? List.<Tag>of() : given) {
-            String key =
-                    tag == null || tag.key() == null ? "" : tag.key().trim().toLowerCase(Locale.ROOT);
-            if (key.length() > TAG_KEY_MAX || !TAG_KEY.matcher(key).matches()) {
-                throw new InvalidLocationException(
-                        "a tag key is 1 to " + TAG_KEY_MAX + " characters of a-z, 0-9 and single hyphens");
-            }
-            if (tag.labels() != null) {
-                checkTexts(tag.labels(), "tag label");
-            }
-            if (byKey.put(key, tag) != null) {
+    /** Existing tags are used as they are; a key not known yet creates a tag without labels. */
+    private Set<TagEntity> resolveTags(List<String> given) {
+        Set<String> keys = new LinkedHashSet<>();
+        for (String raw : given == null ? List.<String>of() : given) {
+            String key = rules.key(raw);
+            if (!keys.add(key)) {
                 throw new InvalidLocationException("tag " + key + " is given twice");
             }
         }
         Map<String, TagEntity> existing = new LinkedHashMap<>();
-        tags.findAllById(byKey.keySet()).forEach(t -> existing.put(t.key, t));
-        Set<TagEntity> result = new java.util.LinkedHashSet<>();
-        byKey.forEach((key, tag) -> {
-            TagEntity entity = existing.get(key);
-            if (entity == null) {
-                entity = new TagEntity(key);
-            }
-            if (tag.labels() != null) {
-                entity.labels = new LinkedHashMap<>(tag.labels());
-            }
-            result.add(tags.save(entity));
-        });
+        tags.findAllById(keys).forEach(t -> existing.put(t.key, t));
+        Set<TagEntity> result = new LinkedHashSet<>();
+        for (String key : keys) {
+            result.add(existing.containsKey(key) ? existing.get(key) : tags.save(new TagEntity(key)));
+        }
         return result;
     }
 

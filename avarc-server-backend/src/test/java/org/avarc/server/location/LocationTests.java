@@ -39,7 +39,7 @@ class LocationTests {
          "translations": {
            "en": {"name": "Colosseum", "description": "An amphitheatre.", "periodLabel": "Roman, 1st century"},
            "de": {"name": "Kolosseum", "description": "Ein Amphitheater.", "confidenceLevel": 2}},
-         "tags": [{"key": " Roman ", "labels": {"en": "Roman", "de": "Römisch"}}, {"key": "arena"}],
+         "tags": [" Roman ", "arena"],
          "references": [{"url": "https://example.org/a", "citations": {"en": "Smith 1999"}},
                         {"citations": {"de": "Müller 2001"}}]}
         """;
@@ -138,7 +138,7 @@ class LocationTests {
                 .andExpect(jsonPath("$.translations.de.confidenceLevel").value(2))
                 .andExpect(jsonPath("$.tags[0].key").value("arena"))
                 .andExpect(jsonPath("$.tags[1].key").value("roman"))
-                .andExpect(jsonPath("$.tags[1].labels.de").value("Römisch"))
+                .andExpect(jsonPath("$.tags[1].labels").isEmpty())
                 .andExpect(jsonPath("$.references[0].url").value("https://example.org/a"))
                 .andExpect(jsonPath("$.references[1].citations.de").value("Müller 2001"))
                 .andExpect(jsonPath("$.createdBy").value("editor-sub"))
@@ -177,7 +177,7 @@ class LocationTests {
         String changed = """
             {"position": {"kind": "point", "latitude": 1, "longitude": 2},
              "translations": {"en": {"name": "Rome", "description": "A city."}},
-             "tags": [{"key": "roman"}]}
+             "tags": ["roman"]}
             """;
         send(put("/api/locations/" + id), as("other-sub", "editor"), changed)
                 .andExpect(status().isOk())
@@ -188,8 +188,7 @@ class LocationTests {
                 .andExpect(jsonPath("$.translations.de").doesNotExist())
                 .andExpect(jsonPath("$.references.length()").value(0))
                 .andExpect(jsonPath("$.tags.length()").value(1))
-                // no labels given: the tag keeps the ones it has
-                .andExpect(jsonPath("$.tags[0].labels.de").value("Römisch"))
+                .andExpect(jsonPath("$.tags[0].key").value("roman"))
                 .andExpect(jsonPath("$.createdBy").value("editor-sub"))
                 .andExpect(jsonPath("$.updatedBy").value("other-sub"))
                 .andExpect(
@@ -248,8 +247,8 @@ class LocationTests {
             BODY.replace("\"en\": {\"name\": \"Colosseum\"", "\"fr\": {\"name\": \"Colosseum\""),
             BODY.replace("Colosseum", " "),
             BODY.replace("An amphitheatre.", ""),
-            BODY.replace("\"key\": \"arena\"", "\"key\": \"Bad Key\""),
-            BODY.replace("\"key\": \"arena\"", "\"key\": \"roman\""),
+            BODY.replace("\"arena\"", "\"Bad Key\""),
+            BODY.replace("\"arena\"", "\"roman\""),
             BODY.replace("https://example.org/a", "javascript:alert(1)"),
             BODY.replace("{\"en\": \"Smith 1999\"}", "{}"),
             "{\"position\": {\"kind\": \"point\", \"latitude\": 1, \"longitude\": 2}, \"translations\": {}}",
@@ -273,31 +272,73 @@ class LocationTests {
     }
 
     @Test
-    void tagLabelsAreReplacedWhenGivenAndSharedBetweenLocations() throws Exception {
+    void aTagIsSharedBetweenLocationsAndKeptWhenUnused() throws Exception {
         String tag = "shared-" + UUID.randomUUID().toString().substring(0, 8);
-        String withLabels = BODY.replace(
-                "\"tags\": [{\"key\": \" Roman \", \"labels\": {\"en\": \"Roman\", \"de\": \"Römisch\"}}, {\"key\":"
-                        + " \"arena\"}]",
-                "\"tags\": [{\"key\": \"" + tag + "\", \"labels\": {\"en\": \"First\"}}]");
-        String first = create(withLabels).get("id").asText();
-        String relabelled = withLabels.replace("\"en\": \"First\"", "\"de\": \"Zweite\"");
-        String second = create(relabelled).get("id").asText();
+        String body = BODY.replace("[\" Roman \", \"arena\"]", "[\"" + tag.toUpperCase() + "\"]");
+        String first = create(body).get("id").asText();
+        String second = create(body).get("id").asText();
 
-        // one tag row serves both locations, with the labels of the last write
         assertThat(jdbc.queryForObject("SELECT count(*) FROM avarc.tag WHERE key = ?", Integer.class, tag))
                 .isEqualTo(1);
+        mockMvc.perform(get("/api/tags").with(viewer()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.key=='" + tag + "')].locations").value(2));
+
         for (String id : new String[] {first, second}) {
-            mockMvc.perform(get("/api/locations/" + id).with(viewer()))
-                    .andExpect(jsonPath("$.tags[0].key").value(tag))
-                    .andExpect(jsonPath("$.tags[0].labels.de").value("Zweite"))
-                    .andExpect(jsonPath("$.tags[0].labels.en").doesNotExist());
+            mockMvc.perform(delete("/api/locations/" + id).with(editor()).with(csrf()))
+                    .andExpect(status().isNoContent());
         }
+        // unused, but kept: the tag stays listed with no locations
+        mockMvc.perform(get("/api/tags").with(viewer()))
+                .andExpect(jsonPath("$[?(@.key=='" + tag + "')].locations").value(0));
+    }
 
-        // deleting a location leaves the tag
-        mockMvc.perform(delete("/api/locations/" + first).with(editor()).with(csrf()))
-                .andExpect(status().isNoContent());
-        assertThat(jdbc.queryForObject("SELECT count(*) FROM avarc.tag WHERE key = ?", Integer.class, tag))
-                .isEqualTo(1);
+    @Test
+    void onlyAnAdminSetsLabelsAndTheyShowOnTheLocations() throws Exception {
+        String tag = "labelled-" + UUID.randomUUID().toString().substring(0, 8);
+        String id = create(BODY.replace("[\" Roman \", \"arena\"]", "[\"" + tag + "\"]"))
+                .get("id")
+                .asText();
+        String labels = "{\"labels\": {\"en\": \"Roman\", \"de\": \"Römisch\"}}";
+
+        send(put("/api/tags/" + tag), editor(), labels).andExpect(status().isForbidden());
+        send(put("/api/tags/" + tag), viewer(), labels).andExpect(status().isForbidden());
+        mockMvc.perform(put("/api/tags/" + tag)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(labels))
+                .andExpect(status().isUnauthorized());
+
+        send(put("/api/tags/" + tag), as("admin-sub", "viewer", "editor", "admin"), labels)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.key").value(tag))
+                .andExpect(jsonPath("$.labels.de").value("Römisch"))
+                .andExpect(jsonPath("$.locations").value(1));
+        mockMvc.perform(get("/api/locations/" + id).with(viewer()))
+                .andExpect(jsonPath("$.tags[0].labels.en").value("Roman"));
+
+        // an editor re-using the tag, or sending labels on a location, does not change them
+        send(put("/api/locations/" + id), editor(), BODY.replace("[\" Roman \", \"arena\"]", "[\"" + tag + "\"]"))
+                .andExpect(jsonPath("$.tags[0].labels.de").value("Römisch"));
+
+        // an empty map clears the labels
+        send(put("/api/tags/" + tag), as("admin-sub", "admin"), "{\"labels\": {}}")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.labels").isEmpty());
+    }
+
+    @Test
+    void anAdminMayCreateATagWithLabelsAndBadInputIsRejected() throws Exception {
+        OidcLoginRequestPostProcessor admin = as("admin-sub", "admin");
+        send(put("/api/tags/Fresh-Tag"), admin, "{\"labels\": {\"de\": \"Neu\"}}")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.key").value("fresh-tag"))
+                .andExpect(jsonPath("$.locations").value(0));
+        send(put("/api/tags/bad_key"), admin, "{\"labels\": {}}").andExpect(status().isBadRequest());
+        send(put("/api/tags/ok"), admin, "{\"labels\": {\"fr\": \"x\"}}").andExpect(status().isBadRequest());
+        send(put("/api/tags/ok"), admin, "{\"labels\": {\"en\": \" \"}}").andExpect(status().isBadRequest());
+        send(put("/api/tags/ok"), admin, "{}").andExpect(status().isBadRequest());
+        mockMvc.perform(get("/api/tags")).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -310,12 +351,6 @@ class LocationTests {
                 .andExpect(jsonPath("$.references[0].citations.en").value("C"))
                 .andExpect(jsonPath("$.references[1].citations.en").value("A"))
                 .andExpect(jsonPath("$.references[2].citations.en").value("B"));
-    }
-
-    @Test
-    void aTagLabelInAnUnsupportedLanguageIsRejected() throws Exception {
-        send(post("/api/locations"), editor(), BODY.replace("\"de\": \"Römisch\"", "\"fr\": \"Romain\""))
-                .andExpect(status().isBadRequest());
     }
 
     @Test
