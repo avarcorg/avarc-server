@@ -7,7 +7,7 @@ schema `avarc`, as the Flyway migrations in
 logical model is in [SPEC-locations.md](SPEC-locations.md) and
 [SPEC-users.md](SPEC-users.md). `GENERATED` marks a column the database
 computes; the application does not touch it. Current up to migration
-`V3__user_kc_columns.sql`.
+`V4__location_legacy.sql`.
 
 ```mermaid
 erDiagram
@@ -65,6 +65,12 @@ erDiagram
         text tag_key PK, FK
     }
 
+    location_legacy {
+        int legacy_id PK "id of the place in the legacy schema"
+        uuid location_id UK, FK
+    }
+
+    location ||--o| location_legacy : "imported from"
     location ||--|{ location_translation : "has"
     location ||--o{ location_reference : "cites"
     location ||--o{ location_tag : "carries"
