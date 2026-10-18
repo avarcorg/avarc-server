@@ -31,6 +31,16 @@ The tables are in the [data model diagram](datamodel-diagram.md).
 | `preferences` | JSON object | Owned by the application, see below. Defaults to `{}`. |
 | `created_at`, `last_login_at` | timestamp (UTC) | Set by the system. |
 
+**Avatar** (at most one per user, see "Avatar" below)
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `user_id` | UUID | The user, primary key. The row goes with the user. |
+| `source` | text | `upload` or `gravatar`. |
+| `content_type` | text | Always `image/png`. |
+| `data` | bytea | The image after processing, 256 x 256 pixels. |
+| `updated_at` | timestamp (UTC) | Set by the system at every change. |
+
 ## Decisions
 
 - **Column names:** the columns that hold what is fetched from Keycloak carry
@@ -67,6 +77,44 @@ The tables are in the [data model diagram](datamodel-diagram.md).
     CSRF token.
   - There is no endpoint by id and none that lists users. `GET /api/auth/me`
     keeps its meaning.
+- **Avatar:** a user has one image, shown instead of their initials. It is
+  set in one of two ways, both stored the same way, in the database next to
+  the user (a table of its own, so reading the user does not read the image;
+  the nightly dumps and the restore cover it):
+  - *Upload:* a PNG or JPEG of at most 2 MB and 4096 x 4096 pixels. The
+    backend decodes it itself and does not trust the declared type (SVG, GIF
+    and everything else are refused), cuts the largest centred square, scales
+    it to 256 x 256 and stores it as PNG, which drops metadata such as
+    location and camera data.
+  - *Gravatar:* on the user's request only, the backend fetches the Gravatar
+    of the user's email address once (`https://gravatar.com/avatar/<SHA-256 of
+    the trimmed, lower-case email>`, size 256, "no default image"; a fixed
+    host, a timeout of five seconds, at most 1 MB, redirects only within the
+    host) and stores it through the same processing as an upload, as a copy.
+    Browsers never contact Gravatar, and nothing is sent without that request.
+    The copy does not follow later changes at Gravatar until the user asks
+    again. An address without a Gravatar, or a user without an email, is
+    answered with an error that says so.
+  A new avatar replaces the old one; the user can remove theirs. Avatars are
+  personal data: they are part of the privacy statement
+  ([AVARC-9](../tasks/TASK-licensing-decision.md)), which names Gravatar as
+  the one third party contacted, and only on request.
+- **Avatar API:** under `/api/users/me/avatar`, in the OpenAPI document; the
+  writing calls require the CSRF token.
+  - `GET` answers the image (`image/png`, `X-Content-Type-Options: nosniff`,
+    an `ETag` and `Cache-Control: private`), or 404 without an avatar.
+  - `PUT` takes the file as `multipart/form-data` (part `file`) and answers
+    the record of the user; 400 for a file that is not an accepted image,
+    413 for one that is too large.
+  - `POST /gravatar` fetches the Gravatar as above and answers the record;
+    404 when the address has none, 409 for a user without an email, 502 when
+    Gravatar does not answer.
+  - `DELETE` removes the avatar.
+  - `GET /api/users/me` gains `avatar`: `null` or `{"source": ..., "updatedAt":
+    ...}`, so the frontend can build the address with `updatedAt` as the
+    cache-busting value. There is still no endpoint by id: an avatar is shown
+    to its own user only, until a feature shows other users (for example the
+    editor of a location), which then specifies who may see it.
 - **Deleted accounts:** an account deleted in Keycloak leaves its user
   record behind and nothing removes it. The `kc_subject` is never reused, so
   `created_by` and `updated_by` of locations
