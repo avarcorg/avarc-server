@@ -277,3 +277,13 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
 ## Open questions
 
 - Deployment target and environments beyond the developer deployment.
+- Whether Keycloak keeps its database inside the shared database server, as
+  now (the database `keycloak`, created next to the application's), or gets a
+  database server of its own ([AVARC-54](../tasks/TASK-social-login.md)).
+  For a server of its own: backup, restore and rebuild of the users
+  independent of the application data, no shared failure, and the major
+  versions of the two can be upgraded separately. Against: one more
+  container and its memory on a small host, and a second place to back up.
+  The backups, the user export and the read-only account's rule for
+  Keycloak's database work with either; decide before the first release that
+  has real users.

@@ -151,6 +151,60 @@ Apache-2.0 licensed.
   - Cookies are host-only and `Secure`; the redirect URIs of the client are
     limited to the application's own origin.
 
+## Social login
+
+Decided in [AVARC-54](../tasks/TASK-social-login.md); not yet implemented.
+
+- **Providers:** Google first; Apple later as a second identity provider of
+  the same kind (it needs a paid developer account and a signing key). Other
+  providers are added the same way.
+- **Keycloak is the broker.** Users choose the provider on the login page of
+  the `avarc` realm; the backend, which is the only OIDC client, and the
+  frontend do not change. The application database keeps referring to the
+  Keycloak user id (`kc_subject`), whatever the provider.
+- **Sign-up stays closed to roles.** A user who signs in with a provider for
+  the first time gets a Keycloak account without any role, so cannot do
+  anything until an admin grants one in the console, as for any new user.
+  Self-registration with a password stays disabled.
+- **Linking.** A provider identity is linked to an existing account by email
+  only if the provider reports the email as verified; otherwise the login is
+  refused and an admin links the accounts. The link is the provider's stable
+  account id, not the email address, so a later change of email does not
+  break it.
+- **Personal data.** Only name and email are taken from the provider, and
+  nothing else is requested (scopes `openid`, `email`, `profile`). What the
+  provider passes on is part of the privacy statement
+  ([AVARC-9](../tasks/TASK-licensing-decision.md)).
+- **Configuration.** The OAuth client is registered with the provider per
+  environment; its id and secret come from the environment's secrets file and
+  never from the repository. The identity provider is configured in the realm
+  by a script in `deploy/` that is safe to repeat, because a change of
+  `avarc-realm.json` does not reach an existing realm.
+
+### Surviving a rebuild of Keycloak's data
+
+The provider links (provider account id, Keycloak user id) and the roles live
+only in Keycloak's database, and the application's users refer to the user
+id. If that database is lost without a restore, every user logs in as a new
+person: new id, no roles, no preferences, no tie to earlier contributions.
+
+- The primary protection is the backup of the databases
+  ([SPEC-deployment.md](SPEC-deployment.md)); a restore of the dump brings
+  everything back, local passwords included.
+- A second protection works without a dump. A script exports the users of the
+  realm through the Keycloak Admin API: id, username, email, names, enabled
+  flag, attributes, the provider links and the realm roles. The file is
+  written next to the database backups, is gitignored, has mode 0600 and is
+  produced by the same nightly timer. It holds personal data.
+- A restore script reads that file and recreates the users through the
+  `partialImport` endpoint, with their original ids, links and roles, and
+  skips what exists, so running it twice changes nothing. The realm and its
+  identity providers must exist first.
+- Local passwords are not available through the API: a restored local user
+  gets a new one-time password, as with `deploy/create-user.sh`. Users of a
+  provider have no local password and lose nothing.
+- Direct changes to Keycloak's tables are not a restore method.
+
 ## Public read-only map server (post-MVP)
 
 Anonymous viewing is served by a separate, read-only map server added after
@@ -169,3 +223,5 @@ component is expected. The details are specified when it is taken up.
 
 - Which locations are public for the read-only map server.
 - The capacity of the production host for Keycloak.
+- Whether Keycloak keeps its database inside the shared database server or
+  gets a server of its own (see [SPEC-deployment.md](SPEC-deployment.md)).
