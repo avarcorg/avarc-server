@@ -8,6 +8,7 @@ services:
     ports:
       - "${INGRESS_PORT}:8080"
     labels:
+      - "dd.watch=false"
       - "docktail.service.enable=true"
       - "docktail.service.name=${NAME}"
       - "docktail.service.port=8080"
@@ -21,6 +22,8 @@ services:
 
   backend:
     image: ${IMAGE_NAMESPACE}/avarc-backend:${BACKEND_VERSION}
+    labels:
+      - "dd.watch=false"
     environment:
       - SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
       - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
@@ -35,6 +38,8 @@ services:
 
   frontend:
     image: ${IMAGE_NAMESPACE}/avarc-frontend:${FRONTEND_VERSION}
+    labels:
+      - "dd.watch=false"
     environment:
       - BACKEND_URL=http://backend:8080
       - FOOTER_API_DOCS=${FOOTER_API_DOCS}
@@ -69,6 +74,7 @@ services:
       - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
       - ADMIN_ORIGIN=${KEYCLOAK_ADMIN_ORIGIN}
     labels:
+      - "dd.watch=false"
       - "docktail.service.enable=true"
       - "docktail.service.name=${NAME}-kc"
       - "docktail.service.port=8080"
