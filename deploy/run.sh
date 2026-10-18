@@ -89,6 +89,9 @@ host_setting () {
 }
 # Keep the *_VERSION defaults equal to the version in pom.xml.
 host_setting IMAGE_NAMESPACE avarcorg
+# Registry (or pull-through cache) of the upstream images, the database and
+# the database tool.
+host_setting UPSTREAM_REGISTRY docker.io
 host_setting BACKEND_VERSION 0.1.0-SNAPSHOT
 host_setting FRONTEND_VERSION 0.1.0-SNAPSHOT
 host_setting INGRESS_VERSION 0.1.0-SNAPSHOT

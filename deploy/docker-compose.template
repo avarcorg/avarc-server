@@ -49,7 +49,7 @@ services:
 
   # Creates Keycloak's own database in the database server, once.
   keycloak-init:
-    image: postgis/postgis:17-3.5
+    image: ${UPSTREAM_REGISTRY}/postgis/postgis:17-3.5
     entrypoint: ["sh", "-c"]
     command:
       - |
@@ -99,7 +99,7 @@ services:
     restart: unless-stopped
 
   db:
-    image: postgis/postgis:17-3.5
+    image: ${UPSTREAM_REGISTRY}/postgis/postgis:17-3.5
     environment:
       - POSTGRES_USER=avarc
       - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD

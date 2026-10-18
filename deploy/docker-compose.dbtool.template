@@ -9,7 +9,7 @@ services:
   # over the workspace read-only. The container runs as the user that started
   # the project, like keycloak.
   dbtool:
-    image: dbeaver/cloudbeaver:26.2.2
+    image: ${UPSTREAM_REGISTRY}/dbeaver/cloudbeaver:26.2.2
     user: "${RUN_UID}:0"
     environment:
       - CLOUDBEAVER_APP_ANONYMOUS_ACCESS_ENABLED=false

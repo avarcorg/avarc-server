@@ -11,7 +11,7 @@ created, and no secrets file is read.
 Run this from the repo root:
 
 ```sh
-export NAME=validate ENVIRONMENT=dev IMAGE_NAMESPACE=validate.example \
+export NAME=validate ENVIRONMENT=dev IMAGE_NAMESPACE=validate.example UPSTREAM_REGISTRY=docker.io \
     BACKEND_VERSION=0 FRONTEND_VERSION=0 INGRESS_VERSION=0 KEYCLOAK_VERSION=0 \
     P=/nonexistent/validate \
     SECRETS_RUN_DIR=/nonexistent/validate/secrets \
