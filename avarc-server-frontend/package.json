@@ -18,7 +18,7 @@
     "@types/react-dom": "19.3.0",
     "leaflet": "1.9.4",
     "next-intl": "4.14.9",
-    "postcss": "8.5.30",
+    "postcss": "8.5.31",
     "react-leaflet": "5.0.0",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2"
