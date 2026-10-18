@@ -13,8 +13,9 @@ workflows up to date through automated pull requests from Renovate.
   Dependabot version updates are disabled.
 - Renovate is the hosted Renovate app, enabled for this repository; nobody
   operates it. It is configured by a `renovate.json` in the repository root,
-  based on `config:recommended`, with the Compose template
-  `deploy/docker-compose.template` added to the files it scans.
+  based on `config:recommended`, with the Compose templates
+  `deploy/docker-compose.template` and `deploy/docker-compose.<feature>.template`
+  added to the files it scans.
 - The Node version, which no standard manager recognises, is tracked by a
   custom manager in `node.version` of the frontend POM and `NODE_VERSION` of
   the CI workflow, and updated in one grouped pull request so the CI check

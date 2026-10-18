@@ -20,17 +20,30 @@ developers; other environments are specified when needed.
 Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
 
 - **Files:** everything lives in `deploy/`: `docker-compose.template`,
-  `run.sh` and the systemd units `systemd/avarc-stage.service`
+  the feature templates `docker-compose.<feature>.template`, `run.sh` and the systemd units `systemd/avarc-stage.service`
   and `systemd/avarc-prod.service`, each running as its own user and group from that
   user's home directory (`/home/avarc-<environment>`). On the host,
   `deploy/deploy.sh stage|prod` (root only) installs them from a checkout:
   it copies the unit to `/etc/systemd/system` and `run.sh`, the account scripts and
-  the template together into the home directory, then reloads systemd. It never starts
+  the templates together into the home directory, then reloads systemd. It never starts
   the service and never touches data or secrets. It records the version of
   the checkout (`git describe --tags`) in `VERSION` next to the files and
   prints it; for prod it refuses a checkout that is not exactly a release tag
-  (see [SPEC-releases.md](SPEC-releases.md)) or has uncommitted changes. `run.sh` renders the template with `envsubst` into `docker-compose.yml`
+  (see [SPEC-releases.md](SPEC-releases.md)) or has uncommitted changes. `run.sh` renders the templates with `envsubst` into `docker-compose.yml`
   (gitignored, mode 0600) at every start; `$$` is a literal dollar.
+- **Feature templates:** `docker-compose.template` holds what always runs.
+  An optional part of the deployment is a file of its own,
+  `docker-compose.<feature>.template`, that only adds services, labels and
+  other keys and overrides nothing of the core. `run.sh` renders every
+  template with `envsubst`, merges the core and the features whose flag is on
+  with `docker compose config` (which also validates the result), and writes
+  the one `docker-compose.yml` that every command uses; a feature whose flag
+  is off is not in it, so `up --remove-orphans` removes its containers. Today
+  the features are `db-tailnet`, the labels that serve the database on the
+  tailnet, and `dbtool`, the database tool; both are merged under the same
+  flag (see "Database on the tailnet"). The merged file
+  is generated for Compose, not for reading; the comments stay in the
+  templates.
 - **Environments:** `dev`, `stage` and `prod`. `run.sh --stage` selects
   stage (the systemd unit on the staging host passes it); without it the
   environment is dev. `SECRETS=dev|stage|prod` overrides this and is how
@@ -161,8 +174,8 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   map. It is served on the tailnet by docktail labels as
   `avarc-<environment>-dbadmin` (HTTPS on 443, docktail terminates TLS), has
   no published host port and is not routed by the ingress. Without the
-  variable, and on prod always, the service is not started (a Compose
-  profile that `run.sh` enables only then). It is written for "the database",
+  variable, and on prod always, the service is not started (it is in the
+  feature template `dbtool`, which `run.sh` merges only then). It is written for "the database",
   not for one engine: a connection is listed per database of the
   environment, so an engine change or an internal SQLite database adds or
   replaces a connection, not the tool. A SQLite file would be read from a
