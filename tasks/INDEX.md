@@ -56,11 +56,12 @@ files. Do not edit by hand. See
 | AVARC-48 | [Back up the database](finished/TASK-database-backup.md) | task | finished | normal | project | AVARC-18 |
 | AVARC-49 | [Browser tests in a container](TASK-browser-tests.md) | task | open | normal | frontend | AVARC-30, AVARC-31 |
 | AVARC-50 | [Import the legacy places as locations](TASK-legacy-import.md) | task | open | normal | backend | AVARC-10 |
-| AVARC-51 | [Home location preference](TASK-home-location.md) | task | open | low | frontend | AVARC-12, AVARC-42 |
+| AVARC-51 | [Home location preference](TASK-home-location.md) | task | open | low | frontend | AVARC-12, AVARC-42, AVARC-59 |
 | AVARC-52 | [Build and publish per module](finished/TASK-per-module-builds.md) | task | finished | normal | project | AVARC-31 |
 | AVARC-53 | [Lint the workflows with actionlint](finished/TASK-actionlint.md) | task | finished | normal | project |  |
 | AVARC-54 | [Social login with Google (Apple later)](TASK-social-login.md) | task | in-progress | low | auth | AVARC-20 |
 | AVARC-55 | [Link provider accounts automatically by verified email](TASK-automatic-linking.md) | task | open | low | auth | AVARC-54 |
 | AVARC-56 | [Avatar of a user: backend](TASK-avatar-backend.md) | task | open | low | backend | AVARC-42 |
-| AVARC-57 | [Avatar of a user: pages](TASK-avatar-frontend.md) | task | open | low | frontend | AVARC-56 |
+| AVARC-57 | [Avatar of a user: pages](TASK-avatar-frontend.md) | task | open | low | frontend | AVARC-56, AVARC-59 |
 | AVARC-58 | [Application index at /.well-known/applications](finished/TASK-application-index.md) | task | finished | low | frontend | AVARC-45 |
+| AVARC-59 | [User profile page](TASK-profile-page.md) | task | open | low | frontend | AVARC-42 |

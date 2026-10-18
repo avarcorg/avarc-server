@@ -4,7 +4,7 @@ type: task
 status: open
 priority: low
 area: frontend
-depends-on: [AVARC-12, AVARC-42]
+depends-on: [AVARC-12, AVARC-42, AVARC-59]
 created: 2026-10-16
 ---
 
@@ -22,7 +22,8 @@ so it follows the person to every browser.
 
 Meant to be worked on together with the avatar
 ([AVARC-56](TASK-avatar-backend.md), [AVARC-57](TASK-avatar-frontend.md)): both
-add to the user's profile and preferences, so the page for them is built once.
+add to the user's profile and preferences, so the page for them is built once,
+as [AVARC-59](TASK-profile-page.md), which this item depends on.
 
 ## Approach
 

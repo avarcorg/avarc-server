@@ -4,7 +4,7 @@ type: task
 status: open
 priority: low
 area: frontend
-depends-on: [AVARC-56]
+depends-on: [AVARC-56, AVARC-59]
 created: 2026-10-18
 ---
 
@@ -16,7 +16,7 @@ Spec: [SPEC-users.md](../spec/SPEC-users.md) ("Avatar"),
 The pages for the avatar of [AVARC-56](TASK-avatar-backend.md): the avatar in
 the header and a place to change it. Low priority; meant to be worked on
 together with [AVARC-51](TASK-home-location.md) and AVARC-56, in one place for
-the user's profile and preferences.
+the user's profile and preferences: the page of [AVARC-59](TASK-profile-page.md).
 
 ## To do
 
