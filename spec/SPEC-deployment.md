@@ -337,17 +337,22 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   start script and the realm import are in the image.
 - **Database image:** PostGIS, as chosen in
   [SPEC-backend.md](SPEC-backend.md).
+- **Keycloak's database:** decided in
+  [AVARC-54](../tasks/TASK-social-login.md): Keycloak keeps its database
+  (`keycloak`, created by `keycloak-init`) in the same database server as the
+  application's, with no server of its own. For: no further container and
+  memory on a small host, one place to back up and one major version to
+  upgrade, and everything around it already works with it (dumps, restore,
+  the user export of [SPEC-auth.md](SPEC-auth.md), the rule of the read-only
+  account). Against: a failure or upgrade of the server hits both, and both
+  connect as the same role. The users do not depend on the dump alone: the
+  user export is a second protection. The decision can be reversed: moving
+  the database to a server of its own is a dump, a restore and a changed
+  connection address. Next steps, if needed: a role of its own for Keycloak
+  with its own password (separates the credentials at little cost), and
+  after that a server of its own (independent failure, upgrade and restore,
+  at the price of one more container and a second backup path).
 
 ## Open questions
 
 - Deployment target and environments beyond the developer deployment.
-- Whether Keycloak keeps its database inside the shared database server, as
-  now (the database `keycloak`, created next to the application's), or gets a
-  database server of its own ([AVARC-54](../tasks/TASK-social-login.md)).
-  For a server of its own: backup, restore and rebuild of the users
-  independent of the application data, no shared failure, and the major
-  versions of the two can be upgraded separately. Against: one more
-  container and its memory on a small host, and a second place to back up.
-  The backups, the user export and the read-only account's rule for
-  Keycloak's database work with either; decide before the first release that
-  has real users.

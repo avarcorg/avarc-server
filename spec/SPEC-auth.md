@@ -95,7 +95,8 @@ Apache-2.0 licensed.
 - **Hosting:** Keycloak runs as the service `keycloak` in the Docker Compose
   project (see [SPEC-deployment.md](SPEC-deployment.md)). Its storage is a
   database of its own (`keycloak`) in the application's database server,
-  created on demand at startup. Production mode is used in every
+  created on demand at startup (decided, see
+  [SPEC-deployment.md](SPEC-deployment.md), "Keycloak's database"). Production mode is used in every
   environment; the developer deployment differs only in its plain-http
   origin.
 - **Image:** introduced in [AVARC-32](../tasks/finished/TASK-keycloak-image.md).
@@ -242,5 +243,3 @@ component is expected. The details are specified when it is taken up.
 
 - Which locations are public for the read-only map server.
 - The capacity of the production host for Keycloak.
-- Whether Keycloak keeps its database inside the shared database server or
-  gets a server of its own (see [SPEC-deployment.md](SPEC-deployment.md)).
