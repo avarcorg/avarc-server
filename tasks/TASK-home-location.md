@@ -20,6 +20,10 @@ works in one region. The setting is a preference of the user
 ([AVARC-42](finished/TASK-user-entities.md)), stored with the user's record,
 so it follows the person to every browser.
 
+Meant to be worked on together with the avatar
+([AVARC-56](TASK-avatar-backend.md), [AVARC-57](TASK-avatar-frontend.md)): both
+add to the user's profile and preferences, so the page for them is built once.
+
 ## Approach
 
 - **The preference:** a new key `homeLocation` in the preferences of the user

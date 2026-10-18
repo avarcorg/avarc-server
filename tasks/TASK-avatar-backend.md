@@ -14,7 +14,9 @@ Spec: [SPEC-users.md](../spec/SPEC-users.md) ("Avatar", "Avatar API")
 
 A user can upload a picture or fetch their Gravatar once, and the application
 keeps it in the database. This item is the backend: migration, processing and
-the API; the pages are [AVARC-57](TASK-avatar-frontend.md).
+the API; the pages are [AVARC-57](TASK-avatar-frontend.md). Low priority; meant to be
+worked on together with [AVARC-51](TASK-home-location.md) and AVARC-57, as they
+all add to the user's profile and preferences.
 
 ## To do
 

@@ -14,7 +14,9 @@ Spec: [SPEC-users.md](../spec/SPEC-users.md) ("Avatar"),
 [SPEC-frontend.md](../spec/SPEC-frontend.md)
 
 The pages for the avatar of [AVARC-56](TASK-avatar-backend.md): the avatar in
-the header and a place to change it.
+the header and a place to change it. Low priority; meant to be worked on
+together with [AVARC-51](TASK-home-location.md) and AVARC-56, in one place for
+the user's profile and preferences.
 
 ## To do
 
