@@ -56,7 +56,7 @@ so it follows the person to every browser.
 - Build the controls and the use of the preference on the locations page.
 - A home location is personal data of the user (where the person works). It
   stays in the record, which is already in the database backups
-  ([AVARC-48](TASK-database-backup.md)); check that nothing exposes it to
+  ([AVARC-48](finished/TASK-database-backup.md)); check that nothing exposes it to
   others (there is no call by user id) and mention it in the spec.
 - Check it once in a browser by hand, and add it to the browser tests
   ([AVARC-49](TASK-browser-tests.md)) when those exist.

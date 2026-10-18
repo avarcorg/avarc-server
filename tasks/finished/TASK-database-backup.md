@@ -1,7 +1,7 @@
 ---
 id: AVARC-48
 type: task
-status: in-progress
+status: finished
 priority: normal
 area: project
 depends-on: [AVARC-18]
@@ -10,7 +10,7 @@ created: 2026-10-16
 
 # TASK: Back up the database
 
-Spec: [SPEC-deployment.md](../spec/SPEC-deployment.md)
+Spec: [SPEC-deployment.md](../../spec/SPEC-deployment.md)
 
 The PostgreSQL database holds the locations, the user records and, for
 Keycloak, the accounts and credential hashes. Nothing backs it up today, so a
@@ -49,7 +49,7 @@ prod; dev may run it by hand), and a restore procedure that has been tried.
 
 ## Done
 
-- Specified in [SPEC-deployment.md](../spec/SPEC-deployment.md): what is
+- Specified in [SPEC-deployment.md](../../spec/SPEC-deployment.md): what is
   dumped, when, where, the retention window and the file modes.
 - `deploy/backup-db.sh`, the service and timer per environment, installed by
   `deploy/deploy.sh` (the timer is not enabled by it). Decided: 03:00 every
@@ -58,16 +58,21 @@ prod; dev may run it by hand), and a restore procedure that has been tried.
   into a new cluster and over an existing database, with data in the schema
   `avarc`, a role and a second database.
 
-## Remaining
+- Run on stage: installed by `deploy/deploy.sh stage` with the timer
+  enabled, the units fire at 03:00 and write `avarc-`, `keycloak-` and
+  `globals-` files of mode 0600 in a directory of mode 0700 (checked on
+  2026-10-18 after the nights of the 17th and 18th).
 
-- Run it on stage: install with `deploy/deploy.sh stage`, enable the timer,
-  check the first night's files and their modes, restore a real dump of
-  stage into a scratch container and check the Flyway history and a row
-  count.
-- Do the same on prod once a release carries the script.
-- Decide whether the long-term copy of the dumps, which holds personal data
-  and credential hashes, needs to be encrypted, and whether a failed backup
-  must alert someone (see [AVARC-21](TASK-observability-system.md)).
+## Not done here
+
+- A restore of a real stage dump into a scratch container, with a check of
+  the Flyway history and a row count (the dumps are readable by the service
+  user and root only), to be done by hand on the host with the procedure in
+  the spec.
+- Prod, once a release carries the script and prod exists.
+- Whether the long-term copy, which holds personal data and credential
+  hashes, must be encrypted, and whether a failed backup must alert someone
+  (see [AVARC-21](../TASK-observability-system.md)).
 
 ## Verification
 

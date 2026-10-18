@@ -100,7 +100,7 @@ export:
   stay out of the application; the mapping above is the only place that
   connects a contributor to a user. Decide whether the schema `legacy` is
   dropped after the import, and when (it is included in the database backups,
-  [AVARC-48](TASK-database-backup.md)).
+  [AVARC-48](finished/TASK-database-backup.md)).
 
 ## Keeping the import current
 
