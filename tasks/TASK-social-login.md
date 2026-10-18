@@ -8,7 +8,7 @@ created: 2026-10-18
 depends-on: [AVARC-20]
 ---
 
-# TASK: Social login with Google (Apple later)
+# TASK: Social login with Google
 
 Spec: [SPEC-auth.md](../spec/SPEC-auth.md) ("Social login"),
 [SPEC-deployment.md](../spec/SPEC-deployment.md) (open question about
@@ -16,9 +16,9 @@ Keycloak's database)
 
 Users sign in at Keycloak with a Google account, as an addition to the local
 accounts. Keycloak is the broker, so the backend and the frontend do not
-change: the login page of the realm shows the button. Apple follows later
-(a paid developer account and a signing key are needed), as a second identity
-provider of the same kind.
+change: the login page of the realm shows the button. Apple is rejected (a
+paid yearly membership and a client secret that expires every six months; see
+[SPEC-auth.md](../spec/SPEC-auth.md), "Social login").
 
 ## To do
 
