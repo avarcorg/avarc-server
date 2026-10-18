@@ -32,6 +32,7 @@ secrets*.sh
 *.key
 
 # Local Claude Code state
+.claude/settings.json
 .claude/settings.local.json
 
 # Local scratch task files at the root (committed tasks live in tasks/)
