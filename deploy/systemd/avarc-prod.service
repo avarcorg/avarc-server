@@ -10,6 +10,8 @@ User=avarc-prod
 Group=avarc-prod
 Environment=SECRETS=prod
 WorkingDirectory=/home/avarc-prod
+RuntimeDirectory=avarc-prod
+RuntimeDirectoryMode=0700
 ExecStart=/home/avarc-prod/run.sh up
 ExecStop=/home/avarc-prod/run.sh down
 RestartSec=20

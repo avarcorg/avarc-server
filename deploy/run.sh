@@ -25,7 +25,7 @@
 # secrets.stage.sh (stage) or secrets.sh (prod), all exporting one variable
 # per secret (it may also set IMAGE_NAMESPACE and the *_VERSION variables
 # when the environment does not). Containers get one read-only file per secret from a directory
-# in memory (/dev/shm), never an environment variable. The compose file is
+# in memory (/run/avarc-<environment>), never an environment variable. The compose file is
 # rendered with envsubst from docker-compose.template. See
 # spec/SPEC-deployment.md.
 set -e
@@ -148,11 +148,16 @@ fi
 export FOOTER_API_DOCS FOOTER_DBTOOL_URL FOOTER_KEYCLOAK_URL
 RUN_UID=$(id -u)
 export RUN_UID
-export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-/dev/shm/${NAME}-secrets}
+# The run directory, in memory: the one the systemd unit creates for its user
+# (RuntimeDirectory=), else, without a unit (dev), one in the user's runtime
+# directory.
+RUN_DIR=/run/${NAME}
+[ -w "${RUN_DIR}" ] || RUN_DIR=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/${NAME}
+export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-${RUN_DIR}/secrets}
 # The configuration of the web database tool, rendered at each start; a
 # directory of its own, because the one above is mounted into several
 # containers.
-export DBTOOL_RUN_DIR=${DBTOOL_RUN_DIR:-/dev/shm/${NAME}-dbtool}
+export DBTOOL_RUN_DIR=${DBTOOL_RUN_DIR:-${RUN_DIR}/dbtool}
 
 # Commands on the running containers need no rendered file and no secrets:
 # compose finds the containers by the project name, so a user who may use
@@ -411,6 +416,10 @@ then
     exit 0
 fi
 
+( umask 077; mkdir -p "${RUN_DIR}" ) 2> /dev/null || {
+    echo "run.sh: cannot create ${RUN_DIR}; start the project through its systemd unit (RuntimeDirectory=)" >&2
+    exit 1
+}
 create_dev_secrets
 [ -f "${SECRETS_FILE}" ] && chmod 0600 "${SECRETS_FILE}"
 build_secrets_dir
