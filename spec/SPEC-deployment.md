@@ -105,24 +105,42 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   the host. The service does not start the project: with the `db` service down
   the run fails with a message in the journal. Copying the dumps off the host
   is outside this repository; the backups directory is the interface.
-  - **Restore:** stop what uses the database (`run.sh [--stage] stop backend
-    keycloak`, and `dbtool` if it runs), then, from the backups directory,
-    restore the roles only on a new cluster (errors for roles that exist are
-    harmless): `docker compose -p avarc-<environment> exec -T db psql -U avarc
-    -d postgres < globals-<stamp>.sql`; then each database with `docker compose
-    -p avarc-<environment> exec -T db pg_restore -U avarc -d postgres --clean
-    --if-exists --create < <database>-<stamp>.dump`, which drops and recreates
-    the database from the dump. Start the services again and check the
-    migration history (`avarc.flyway_schema_history`) and a row count. A
-    restore into a scratch PostgreSQL/PostGIS container is the way to try a
-    dump first. Verified with a dump of a database holding data in the
-    schema `avarc`, a role and a second database: the restore into a new
-    cluster, and over an existing database, both succeed and the data and the
-    roles are back. A dump taken by the stage timer
-    (2026-10-18) was restored into a scratch container: the migration
-    history, the locations with their positions, the users and Keycloak's
-    realms and accounts equal those of the running database, and both roles
-    are back.
+  - **Restore:** `deploy/restore-db.sh [--stage] [--scratch] [--globals]
+    [--database NAME]... [--no-backup] [--yes] [STAMP]` restores the files of
+    one backup run
+    (`STAMP` like `20261018-030010`, default the newest) from the backups
+    directory (`BACKUP_DIR` overrides it). The steps are the manual ones, in
+    this order, all inside the `db` container as the database's own account:
+    the roles (`globals-<stamp>.sql`, only with `--globals`, for a new
+    cluster; errors for roles that exist are harmless), then each database
+    with `pg_restore --clean --if-exists --create`, which drops and recreates
+    it from the dump. Without `--database` that is every database that has a
+    dump in the run; `--database avarc` or `--database keycloak` (repeatable)
+    restores only those, and leaves the other database as it is.
+    - **Into the environment** (the default) replaces the data, so the script
+      refuses to run while `backend`, `keycloak` or `dbtool` are up (stop them
+      with `run.sh [--stage] stop backend keycloak`, and `dbtool`), takes a
+      fresh backup first unless `--no-backup` says the database is beyond
+      that, and asks to type the environment's name unless `--yes` is given.
+      Start the services again afterwards.
+    - **`--scratch`** is the way to try a dump: it restores into a throwaway
+      container of the same image as the `db` service, without volume or
+      published port, restores the roles too (a new cluster has none),
+      compares it with the running database when there is
+      one, and removes the container; the environment is not touched and
+      nothing needs to be stopped.
+    - Either way it ends with a check of the migration history
+      (`avarc.flyway_schema_history`: latest version and number of entries),
+      the number of locations and users of the application and of Keycloak's
+      accounts and realms; a scratch run shows the live value next to each
+      one, where small differences are expected because the backup is older.
+    - Verified with a dump of a database holding data in the schema `avarc`,
+      a role and a second database: the restore into a new cluster, and over
+      an existing database, both succeed and the data and the roles are back.
+      A dump taken by the stage timer (2026-10-18) was restored into a
+      scratch container: the migration history, the locations with their
+      positions, the users and Keycloak's realms and accounts equal those of
+      the running database, and both roles are back.
 - **Database tool (optional):** introduced with
   [AVARC-38](../tasks/TASK-database-tailnet.md). With `DB_TAILNET=true`, the
   `dbtool` service is started as well: CloudBeaver (Community edition, image
