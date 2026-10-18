@@ -42,6 +42,13 @@ provider of the same kind.
   never links automatically; a clash with an existing email is denied and the
   user links the provider themselves (see SPEC-auth.md). Linking
   automatically by verified email is [AVARC-55](TASK-automatic-linking.md).
+  Done in `deploy/create-google-idp.sh` (the flow `avarc-first-broker-login`);
+  tested against a throwaway Keycloak with a second realm as a stand-in
+  provider: a new user is created without a role and a second login reuses
+  it, an email clash is denied with the message, and after the user links the
+  provider in the account console a login with it reaches the existing
+  account. Left: run the script on stage again (it creates the flow and
+  switches the provider to it) and try it there.
 - Survive a rebuild of Keycloak's data. The links (Google `sub`, user id,
   roles) live only in Keycloak's database, and `app_user.kc_subject` refers to
   the user id, so a lost database makes every user a new person. Two scripts
