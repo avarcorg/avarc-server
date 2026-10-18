@@ -147,6 +147,12 @@ on the host of the environment; `--dry-run` rolls back.
 not enable (spec, with the restore: `spec/SPEC-deployment.md`). The files hold
 personal data; they are gitignored and mode 0600.
 
+`deploy/restore-db.sh [--stage] [--scratch] [--database NAME]... [STAMP]`
+restores a backup run, all its databases or only the ones named. `--scratch`
+tries it in a throwaway container and compares it with the running database,
+without touching anything; without it the databases are replaced, which needs
+the backend, keycloak and dbtool stopped (spec: `spec/SPEC-deployment.md`).
+
 ## Authentication
 
 Keycloak runs as the `keycloak` service of the Compose project (spec:
