@@ -13,8 +13,8 @@ created: 2026-10-15
 Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
 [SPEC-deployment.md](../spec/SPEC-deployment.md)
 
-Today stage is updated by hand ([AVARC-27](TASK-stage-deployment.md)); since
-stage pulls the published images ([AVARC-37](TASK-registry-pull.md)), an
+Today stage is updated by hand ([AVARC-27](finished/TASK-stage-deployment.md)); since
+stage pulls the published images ([AVARC-37](finished/TASK-registry-pull.md)), an
 update needs only a pull, restart and check. After a successful module build of
 `main`, the workflow posts the commit to a chat channel, and the deployment
 side, which listens there, updates stage. This repository holds only the
@@ -52,7 +52,7 @@ Left to do (private side, outside this repository):
   only when all four changed, then runs the checks of the deployment spec and
   rolls back to the earlier `sha-<commit>` on failure. A slow poll of the
   same digests covers a missed message.
-- The update procedure of [AVARC-27](TASK-stage-deployment.md) points to this
+- The update procedure of [AVARC-27](finished/TASK-stage-deployment.md) points to this
   task; add a line there when it is done. Updates of the root-owned parts
   stay manual (`deploy/deploy.sh`) unless that changes.
 

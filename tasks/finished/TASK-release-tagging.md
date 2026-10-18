@@ -22,7 +22,7 @@ out.
   history since the previous tag).
 - Decide how a tag selects what a host runs: the checkout `deploy.sh` is run
   from, and the image versions of the Compose project. Stage follows tags
-  too ([AVARC-27](../TASK-stage-deployment.md)).
+  too ([AVARC-27](TASK-stage-deployment.md)).
 - Provide a small script in `tools/` that creates a release (checks the
   working tree and branch, creates the tag, optionally pushes it), and
   document the procedure in the specification.

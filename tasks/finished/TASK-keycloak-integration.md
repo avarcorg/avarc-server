@@ -81,5 +81,5 @@ The realm roles are mapped to `ROLE_` authorities and reported by
 Closed. The remaining items moved on: role-based permissions per API
 endpoint (401/403) to [AVARC-10](TASK-locations-crud-api.md), the editing
 controls shown by role to [AVARC-12](TASK-locations-ui.md), and exercising
-stage and prod to [AVARC-27](../TASK-stage-deployment.md). Validating bearer
+stage and prod to [AVARC-27](TASK-stage-deployment.md). Validating bearer
 tokens of clients without a browser is left to the task that needs it.

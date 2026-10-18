@@ -1,7 +1,7 @@
 ---
 id: AVARC-37
 type: task
-status: open
+status: finished
 priority: low
 area: project
 depends-on: [AVARC-31, AVARC-32, AVARC-33]
@@ -10,15 +10,15 @@ created: 2026-10-15
 
 # TASK: Run the published images on stage
 
-Spec: [SPEC-releases.md](../spec/SPEC-releases.md),
-[SPEC-deployment.md](../spec/SPEC-deployment.md)
+Spec: [SPEC-releases.md](../../spec/SPEC-releases.md),
+[SPEC-deployment.md](../../spec/SPEC-deployment.md)
 
 The module builds publish the backend, frontend, ingress and Keycloak images to
-the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
-[AVARC-32](finished/TASK-keycloak-image.md),
-[AVARC-33](finished/TASK-ingress-image.md)). Stage runs them since
+the GitHub Container Registry ([AVARC-31](TASK-image-builds.md),
+[AVARC-32](TASK-keycloak-image.md),
+[AVARC-33](TASK-ingress-image.md)). Stage runs them since
 2026-10-15; the tasks that wait for the rest of this work point here
-([AVARC-36](TASK-deploy-notification.md)).
+([AVARC-36](../TASK-deploy-notification.md)).
 
 ## Done
 
@@ -33,7 +33,7 @@ the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
   maintainer for now; a pinned `sha-<commit>` remains the way to roll back,
   see the deployment spec). The first run found
   that the ingress image failed without a `PORT` variable; its configuration
-  now has the port written in ([AVARC-33](finished/TASK-ingress-image.md)).
+  now has the port written in ([AVARC-33](TASK-ingress-image.md)).
   After a restart through the deploy job the smoke checks answer as before
   (health 200, API 401 without a login, realm endpoint 200, origin 307), and
   the login and logout work in a browser.
@@ -46,6 +46,13 @@ the GitHub Container Registry ([AVARC-31](finished/TASK-image-builds.md),
   the new `snapshot`, and a rollback to `sha-<commit>` of an earlier build
   and back to `snapshot` works.
 - Check that a missing tag fails with the clear message after the retries.
+
+## Closed
+
+2026-10-18, by the maintainer. A restart through the deploy job pulls the new
+`snapshot` and the stack comes up on it (checked after the changes of the same
+day). Not tested: the rollback to a `sha-<commit>` and back, and the message
+for a missing tag.
 
 ## Verification
 

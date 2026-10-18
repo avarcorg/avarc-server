@@ -81,7 +81,7 @@ for the admin console, the `master` realm and traversal attempts under
 [AVARC-29](TASK-backend-login.md) work through the new ingress, and
 the forwarded scheme reaches Keycloak. Then the image runs on stage, first built
 on its host and since 2026-10-15 the published one
-([AVARC-37](../TASK-registry-pull.md)).
+([AVARC-37](TASK-registry-pull.md)).
 
 ## Progress
 

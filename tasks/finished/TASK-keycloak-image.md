@@ -65,7 +65,7 @@ Keycloak starts from the image alone, the realm is imported, the accounts
 script creates the admin, and the login and logout of
 [AVARC-29](TASK-backend-login.md) work. Then the image runs on
 stage. Stage ran the image built on its host first, and has run the published
-one since 2026-10-15 ([AVARC-37](../TASK-registry-pull.md)).
+one since 2026-10-15 ([AVARC-37](TASK-registry-pull.md)).
 
 ## Progress
 

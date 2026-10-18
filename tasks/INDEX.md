@@ -32,7 +32,7 @@ files. Do not edit by hand. See
 | AVARC-24 | [Ingress and database observability](TASK-observability-ingress-database.md) | task | open | normal | ingress | AVARC-21 |
 | AVARC-25 | [Identity provider observability](TASK-observability-identity.md) | task | open | normal | auth | AVARC-21, AVARC-20 |
 | AVARC-26 | [Release tagging](finished/TASK-release-tagging.md) | task | finished | normal | project |  |
-| AVARC-27 | [Stage deployment](TASK-stage-deployment.md) | task | open | normal | project | AVARC-18, AVARC-20, AVARC-26 |
+| AVARC-27 | [Stage deployment](finished/TASK-stage-deployment.md) | task | finished | normal | project | AVARC-18, AVARC-20, AVARC-26 |
 | AVARC-28 | [Simplify the architecture documentation for handover](TASK-handover-docs.md) | task | open | low | project |  |
 | AVARC-29 | [Backend login and logout](finished/TASK-backend-login.md) | task | finished | high | auth | AVARC-20, AVARC-3 |
 | AVARC-30 | [Frontend login and logout pages](finished/TASK-frontend-login.md) | task | finished | high | frontend | AVARC-29, AVARC-6 |
@@ -42,7 +42,7 @@ files. Do not edit by hand. See
 | AVARC-34 | [Expose the API description and Swagger UI on dev and stage](finished/TASK-api-docs.md) | task | finished | normal | backend | AVARC-3, AVARC-33 |
 | AVARC-35 | [Verify the module boundaries with Spring Modulith](finished/TASK-modulith-verification.md) | task | finished | normal | backend | AVARC-3 |
 | AVARC-36 | [Notify the deployment system after a successful build](TASK-deploy-notification.md) | task | open | low | project | AVARC-27, AVARC-31, AVARC-37 |
-| AVARC-37 | [Run the published images on stage](TASK-registry-pull.md) | task | open | low | project | AVARC-31, AVARC-32, AVARC-33 |
+| AVARC-37 | [Run the published images on stage](finished/TASK-registry-pull.md) | task | finished | low | project | AVARC-31, AVARC-32, AVARC-33 |
 | AVARC-38 | [Optionally expose the database on the tailnet (dev and stage)](finished/TASK-database-tailnet.md) | task | finished | low | project | AVARC-18 |
 | AVARC-39 | [Clean old workflow runs](finished/TASK-clean-action-runs.md) | task | finished | low | project |  |
 | AVARC-40 | [Clean old container images](finished/TASK-clean-images.md) | task | finished | low | project | AVARC-31 |
