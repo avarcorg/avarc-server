@@ -70,9 +70,9 @@ provider of the same kind.
   one-time password. Left: the first nightly run of the backup, which now
   includes the export.
 - Decide whether Keycloak keeps its database in the shared server or gets its
-  own (open question in both specs, with the arguments); then record the
-  decision there and, if it moves, change the Compose template, the backups
-  and `deploy/create-db-user.sh`.
+  own. Decided (2026-10-18): the shared server stays; the arguments and the
+  next steps are in `SPEC-deployment.md` ("Keycloak's database"). No change of
+  the Compose templates, the backups or `deploy/create-db-user.sh`.
 - Document the steps in `AGENTS.md` ("Authentication").
 
 ## Verification
