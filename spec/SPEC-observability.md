@@ -86,10 +86,12 @@ most moving parts, justified only once traces are needed).
   `X-Request-Id`, replacing any value from outside unless the hop is trusted
   (as for the forwarded headers, see [SPEC-ingress.md](SPEC-ingress.md)). The
   frontend passes it on to the backend, and all services log it.
-- **Health:** every service has a liveness and a readiness endpoint, not
-  routed by the ingress. Readiness includes the dependencies a service cannot
-  work without (the backend: the database). The Compose health checks use
-  readiness, and only readiness of services of the application project.
+- **Health:** every service has a health endpoint for the Compose health
+  check, which answers with the status only (no data). Where a service
+  distinguishes liveness and readiness, the check uses readiness, and
+  readiness includes the dependencies a service cannot work without (the
+  backend: the database). The health checks of the application project never
+  depend on the monitoring stack.
 - **Audit events** (who changed which location, when) are written separately
   from the technical logs; where they are stored is decided in AVARC-22.
 - **Retention:** short for logs and metrics, decided with the volume size; the

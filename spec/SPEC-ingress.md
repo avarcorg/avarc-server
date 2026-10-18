@@ -38,7 +38,8 @@ Decided in [AVARC-8](../tasks/finished/TASK-ingress-decision.md).
   - `/auth/` routes to the public endpoints of Keycloak (login, logout,
     token and account pages), without prefix stripping; which of its paths
     are routed is defined in [SPEC-auth.md](SPEC-auth.md).
-  - everything else routes to the frontend.
+  - everything else routes to the frontend, including its `/health` (status
+    only, as `/actuator/health` of the backend).
   - The prefixes are reserved and are not used by frontend pages. A
     post-MVP MCP server gets its own prefix when it is taken up.
 - **Authentication:** the ingress only routes and forwards requests,

@@ -53,6 +53,10 @@ Define the web user interface for browsing and managing locations.
   texts that name a product take it as a `{product}` placeholder. Dates, numbers and the wording of data (locations, tags)
   are not fixed texts: data comes from the backend in its own languages.
 
+- **Health:** `GET /health` answers `{"status":"UP"}` while the server runs,
+  for the container health check ([AVARC-23](../tasks/TASK-observability-frontend.md)).
+  It is outside the language prefix, so the proxy leaves it alone.
+
 ## Build
 
 Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).

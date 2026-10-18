@@ -369,11 +369,16 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   [SPEC-observability.md](SPEC-observability.md)):
   - Every service logs through Docker's `json-file` driver with rotation
     (10 MB, 5 files), which the log collector of the monitoring stack reads.
-  - The ingress, the frontend, Keycloak and the database have a container
-    health check. The ingress asks its metrics listener, the frontend accepts
-    any HTTP answer until it has a health endpoint (AVARC-23), Keycloak and the
-    database use their readiness. The backend image has no shell, so its
-    check needs a health-check binary in the image and is still to be done.
+  - Every service has a container health check. The backend, the frontend
+    and the ingress run the Tiny Health Checker of the Paketo health-checker
+    buildpack (`/layers/paketo-buildpacks_health-checker/thc/bin/thc`, set by
+    `THC_PORT` and `THC_PATH`), because the backend image has no shell: the
+    backend asks `/actuator/health`, the frontend `/health` and the ingress
+    its metrics listener. Keycloak and the database use their readiness. The
+    modules name the buildpack in `image.buildpack` of their POM and the
+    parent POM adds the health checker to every `pack` build. The frontend
+    listens on all addresses (`HOSTNAME`) so that the check reaches it on
+    localhost.
   - The network `<project>-metrics` carries only metrics endpoints: the
     ingress and the database are attached to it, and the monitoring stack
     joins it as an external network. Nothing on it is published.
