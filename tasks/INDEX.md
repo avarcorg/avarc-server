@@ -61,3 +61,5 @@ files. Do not edit by hand. See
 | AVARC-53 | [Lint the workflows with actionlint](finished/TASK-actionlint.md) | task | finished | normal | project |  |
 | AVARC-54 | [Social login with Google (Apple later)](TASK-social-login.md) | task | in-progress | low | auth | AVARC-20 |
 | AVARC-55 | [Link provider accounts automatically by verified email](TASK-automatic-linking.md) | task | open | low | auth | AVARC-54 |
+| AVARC-56 | [Avatar of a user: backend](TASK-avatar-backend.md) | task | open | low | backend | AVARC-42 |
+| AVARC-57 | [Avatar of a user: pages](TASK-avatar-frontend.md) | task | open | low | frontend | AVARC-56 |
