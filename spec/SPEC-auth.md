@@ -154,7 +154,7 @@ Apache-2.0 licensed.
 
 ## Social login
 
-Decided in [AVARC-54](../tasks/TASK-social-login.md); not yet implemented.
+Decided in [AVARC-54](../tasks/TASK-social-login.md). Google is implemented and runs on stage; Apple, and Google on dev and prod, follow when needed.
 
 - **Providers:** Google first; Apple later as a second identity provider of
   the same kind (it needs a paid developer account and a signing key). Other
