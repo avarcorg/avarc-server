@@ -118,7 +118,11 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
     dump first. Verified with a dump of a database holding data in the
     schema `avarc`, a role and a second database: the restore into a new
     cluster, and over an existing database, both succeed and the data and the
-    roles are back.
+    roles are back. A dump taken by the stage timer
+    (2026-10-18) was restored into a scratch container: the migration
+    history, the locations with their positions, the users and Keycloak's
+    realms and accounts equal those of the running database, and both roles
+    are back.
 - **Database tool (optional):** introduced with
   [AVARC-38](../tasks/TASK-database-tailnet.md). With `DB_TAILNET=true`, the
   `dbtool` service is started as well: CloudBeaver (Community edition, image
