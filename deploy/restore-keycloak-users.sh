@@ -5,7 +5,7 @@
 # are skipped, so running it again changes nothing. See spec/SPEC-auth.md,
 # "Surviving a rebuild of Keycloak's data".
 #
-#   deploy/restore-keycloak-users.sh [--stage] [FILE]  (SECRETS=dev|stage|prod as for run.sh)
+#   deploy/restore-keycloak-users.sh [--dev|--stage|--prod] [FILE]  (environment: see environment-lib.sh)
 #
 # FILE defaults to the newest keycloak-users-*.json in the backups directory
 # of the environment (data/<environment>/backups next to this script,
@@ -19,18 +19,21 @@
 set -e
 
 PROG=restore-keycloak-users.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 FILE=
 for arg in "$@"
 do
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         -*) echo "${PROG}: unknown argument '${arg}'" >&2; exit 1 ;;
         *) FILE=${arg} ;;
     esac
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 P=$(dirname "$(realpath "$0")")
 BACKUP_DIR=${BACKUP_DIR:-${P}/data/${ENVIRONMENT}/backups}
 if [ -z "${FILE}" ]

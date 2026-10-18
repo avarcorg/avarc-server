@@ -2,7 +2,7 @@
 # Creates the initial accounts in the running Keycloak of an environment. Safe
 # to run repeatedly: accounts that already exist are left alone.
 #
-#   deploy/create-admin-user.sh [--stage]     (SECRETS=dev|stage|prod as for run.sh)
+#   deploy/create-admin-user.sh [--dev|--stage|--prod]     (environment: see environment-lib.sh)
 #
 # The credentials come from the environment's secrets file (see run.sh):
 # ADMIN_EMAIL and ADMIN_PASSWORD, and optionally EDITOR_EMAIL /
@@ -16,16 +16,19 @@
 set -e
 
 PROG=create-admin-user.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 for arg in "$@"
 do
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         *) echo "${PROG}: unknown argument '${arg}'" >&2; exit 1 ;;
     esac
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 P=$(dirname "$(realpath "$0")")
 . "${P}/keycloak-lib.sh"
 keycloak_setup

@@ -4,8 +4,8 @@
 # prints a report of the places it could not import. Safe to repeat: a rerun on
 # unchanged legacy data writes nothing. One transaction.
 #
-#   deploy/import-legacy.sh [--stage] [--dry-run]
-#                                           (SECRETS=dev|stage as for run.sh)
+#   deploy/import-legacy.sh [--dev|--stage] [--dry-run]
+#                                           (environment: see environment-lib.sh)
 #
 # --dry-run does everything and rolls back, so the report and the counts show
 # what a real run would do. Run it on the host of the environment, like
@@ -15,23 +15,26 @@
 set -e
 
 PROG=import-legacy.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 DRY=off
 while [ $# -gt 0 ]
 do
     case "$1" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         --dry-run) DRY=on ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         *) echo "${PROG}: unknown argument '$1'" >&2; exit 1 ;;
     esac
     shift
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 case "${ENVIRONMENT}" in
     dev|stage) ;;
     prod) echo "${PROG}: not available for prod" >&2; exit 1 ;;
-    *) echo "${PROG}: SECRETS must be dev or stage, not '${ENVIRONMENT}'" >&2; exit 1 ;;
+    *) echo "${PROG}: the environment must be dev or stage, not '${ENVIRONMENT}'" >&2; exit 1 ;;
 esac
 
 HERE=$(cd "$(dirname "$0")" && pwd)

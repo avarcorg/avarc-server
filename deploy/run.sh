@@ -2,20 +2,20 @@
 # Start, stop and reset the deployment. Without arguments, or with --help,
 # it prints the usage below and exits.
 #
-#   deploy/run.sh [--stage] up     pull the images (from a registry), then start in
+#   deploy/run.sh [--dev|--stage|--prod] up     pull the images (from a registry), then start in
 #                                  the foreground (systemd runs it so; add -d to
 #                                  detach)
-#   deploy/run.sh [--stage] down   stop, keep data
-#   deploy/run.sh [--stage] stop|start|restart|ps|logs|top|kill|pause|unpause|exec|port|events
+#   deploy/run.sh [--dev|--stage|--prod] down   stop, keep data
+#   deploy/run.sh [--dev|--stage|--prod] stop|start|restart|ps|logs|top|kill|pause|unpause|exec|port|events
 #                                  act on the running containers; they need
 #                                  no write access and no secrets file
 #   deploy/run.sh reset            dev only: stop, delete local data and secrets
-#   deploy/run.sh [--stage] <other>  passed to "docker compose" (pull, config, ...)
+#   deploy/run.sh [--dev|--stage|--prod] <other>  passed to "docker compose" (pull, config, ...)
 #   deploy/run.sh --help           this help
 #
-# Environment: "--stage" (used by the systemd unit on the staging host)
-# selects stage; without it the environment is dev. SECRETS=dev|stage|prod
-# overrides the environment, which is how prod is selected.
+# Environment: "--dev", "--stage" or "--prod" selects it; without one,
+# SECRETS=dev|stage|prod does, and without that the user running the script
+# (avarc-stage: stage; avarc-prod, avarc: prod; anyone else: dev).
 #
 # The database is served on the tailnet as avarc-<environment>-db when the
 # secrets file sets DB_TAILNET=true (dev and stage only; create-db-user.sh
@@ -34,13 +34,16 @@ usage () {
     sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'
 }
 
-ENVIRONMENT=dev
-# Drop "--stage" from the arguments; the rest is for docker compose.
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
+# Drop the environment options from the arguments; the rest is for docker compose.
 for arg in "$@"
 do
     shift
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         --help|-h) usage; exit 0 ;;
         *)       set -- "$@" "${arg}" ;;
     esac
@@ -51,10 +54,10 @@ then
     exit 0
 fi
 COMMAND=$1
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 case "${ENVIRONMENT}" in
     dev|stage|prod) ;;
-    *) echo "run.sh: SECRETS must be dev, stage or prod, not '${ENVIRONMENT}'" >&2; exit 1 ;;
+    *) echo "run.sh: the environment must be dev, stage or prod, not '${ENVIRONMENT}'" >&2; exit 1 ;;
 esac
 
 export ENVIRONMENT

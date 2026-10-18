@@ -4,7 +4,7 @@
 # Safe to run repeatedly: an existing provider is updated to the values described here,
 # which is also how a changed client secret is applied.
 #
-#   deploy/create-google-idp.sh [--stage]     (SECRETS=dev|stage|prod as for run.sh)
+#   deploy/create-google-idp.sh [--dev|--stage|--prod]     (environment: see environment-lib.sh)
 #
 # The OAuth client of the environment comes from its secrets file (see
 # run.sh): GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, plus the
@@ -24,16 +24,19 @@
 set -e
 
 PROG=create-google-idp.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 for arg in "$@"
 do
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         *) echo "${PROG}: unknown argument '${arg}'" >&2; exit 1 ;;
     esac
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 P=$(dirname "$(realpath "$0")")
 . "${P}/keycloak-lib.sh"
 keycloak_setup

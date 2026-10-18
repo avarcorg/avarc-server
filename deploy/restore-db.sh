@@ -3,7 +3,7 @@
 # deploy/backup-db.sh, or tries a backup in a throwaway container. See
 # spec/SPEC-deployment.md.
 #
-#   deploy/restore-db.sh [--stage] [--scratch] [--database NAME]... [--globals] [--no-backup] [--yes] [STAMP]
+#   deploy/restore-db.sh [--dev|--stage|--prod] [--scratch] [--database NAME]... [--globals] [--no-backup] [--yes] [STAMP]
 #
 #   STAMP        the run to restore, like 20261018-030010; default: the newest
 #   --scratch    restore into a throwaway container of the image of the db
@@ -29,7 +29,8 @@
 set -e
 
 PROG=restore-db.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 SCRATCH_MODE=0
 GLOBALS=0
 TAKE_BACKUP=1
@@ -41,7 +42,9 @@ do
     arg=$1
     shift
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         --scratch) SCRATCH_MODE=1 ;;
         --globals) GLOBALS=1 ;;
         --no-backup) TAKE_BACKUP=0 ;;
@@ -58,10 +61,10 @@ do
         *) STAMP=${arg} ;;
     esac
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 case "${ENVIRONMENT}" in
     dev|stage|prod) ;;
-    *) echo "${PROG}: SECRETS must be dev, stage or prod, not '${ENVIRONMENT}'" >&2; exit 1 ;;
+    *) echo "${PROG}: the environment must be dev, stage or prod, not '${ENVIRONMENT}'" >&2; exit 1 ;;
 esac
 
 P=$(dirname "$(realpath "$0")")

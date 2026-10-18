@@ -6,7 +6,7 @@
 # are removed. See spec/SPEC-deployment.md, which also
 # describes the restore.
 #
-#   deploy/backup-db.sh [--stage]           (SECRETS=dev|stage|prod as for run.sh)
+#   deploy/backup-db.sh [--dev|--stage|--prod]           (environment: see environment-lib.sh)
 #
 # The backups directory is data/<environment>/backups next to this script
 # (gitignored); files are named <database>-<yyyymmdd-hhmmss>.dump and
@@ -21,19 +21,22 @@
 set -e
 
 PROG=backup-db.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 for arg in "$@"
 do
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         *) echo "${PROG}: unknown argument '${arg}'" >&2; exit 1 ;;
     esac
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 case "${ENVIRONMENT}" in
     dev|stage|prod) ;;
-    *) echo "${PROG}: SECRETS must be dev, stage or prod, not '${ENVIRONMENT}'" >&2; exit 1 ;;
+    *) echo "${PROG}: the environment must be dev, stage or prod, not '${ENVIRONMENT}'" >&2; exit 1 ;;
 esac
 KEEP_DAYS=${BACKUP_KEEP_DAYS:-7}
 case "${KEEP_DAYS}" in

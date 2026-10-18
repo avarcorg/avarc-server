@@ -3,8 +3,8 @@
 # of dev or stage with a SQL client (see DB_TAILNET in run.sh). Safe to run
 # repeatedly.
 #
-#   deploy/create-db-user.sh [--stage] [--keycloak] [--legacy]
-#                                           (SECRETS=dev|stage as for run.sh)
+#   deploy/create-db-user.sh [--dev|--stage] [--keycloak] [--legacy]
+#                                           (environment: see environment-lib.sh)
 #
 # The account is called avarc_ro; it may read the tables of the avarc database,
 # in the schemas public and avarc (including tables created later) and nothing else, and its sessions are
@@ -24,25 +24,28 @@
 set -e
 
 PROG=create-db-user.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 KEYCLOAK=0
 LEGACY=0
 for arg in "$@"
 do
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         --keycloak) KEYCLOAK=1 ;;
         --legacy) LEGACY=1 ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         *) echo "${PROG}: unknown argument '${arg}'" >&2; exit 1 ;;
     esac
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 case "${ENVIRONMENT}" in
     dev)   SECRETS_FILE=secrets.dev.sh ;;
     stage) SECRETS_FILE=secrets.stage.sh ;;
     prod)  echo "${PROG}: the database is not exposed on prod" >&2; exit 1 ;;
-    *) echo "${PROG}: SECRETS must be dev or stage, not '${ENVIRONMENT}'" >&2; exit 1 ;;
+    *) echo "${PROG}: the environment must be dev or stage, not '${ENVIRONMENT}'" >&2; exit 1 ;;
 esac
 P=$(dirname "$(realpath "$0")")
 SECRETS_FILE=${P}/${SECRETS_FILE}

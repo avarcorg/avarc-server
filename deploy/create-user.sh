@@ -1,8 +1,8 @@
 #!/bin/sh
 # Creates one or more users in the running Keycloak of an environment.
 #
-#   deploy/create-user.sh [--stage] [--admin] [--permanent] EMAIL...
-#                                               (SECRETS=dev|stage|prod)
+#   deploy/create-user.sh [--dev|--stage|--prod] [--admin] [--permanent] EMAIL...
+#                                               (environment: see environment-lib.sh)
 #
 # Without --admin the users are editors (they may also read, like every
 # user); with --admin they are admins, who additionally manage users. Each
@@ -18,14 +18,17 @@
 set -e
 
 PROG=create-user.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 ROLE=editor
 PERMANENT=0
 EMAILS=
 for arg in "$@"
 do
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         --admin) ROLE="admin" ;;
         --permanent) PERMANENT=1 ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
@@ -39,7 +42,7 @@ then
     echo "${PROG}: give at least one email address (--help for usage)" >&2
     exit 1
 fi
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 P=$(dirname "$(realpath "$0")")
 . "${P}/keycloak-lib.sh"
 keycloak_setup

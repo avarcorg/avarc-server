@@ -63,6 +63,7 @@ copy ${P}/systemd/${NAME}.service /etc/systemd/system/${NAME}.service 0644
 copy ${P}/systemd/${NAME}-backup.service /etc/systemd/system/${NAME}-backup.service 0644
 copy ${P}/systemd/${NAME}-backup.timer /etc/systemd/system/${NAME}-backup.timer 0644
 copy ${P}/run.sh ${D}/run.sh 0755
+copy ${P}/environment-lib.sh ${D}/environment-lib.sh 0644
 copy ${P}/backup-db.sh ${D}/backup-db.sh 0755
 copy ${P}/keycloak-lib.sh ${D}/keycloak-lib.sh 0644
 copy ${P}/create-admin-user.sh ${D}/create-admin-user.sh 0755

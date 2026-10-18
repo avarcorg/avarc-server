@@ -3,7 +3,7 @@
 # environment into a JSON file, a second protection next to the database
 # dumps (see spec/SPEC-auth.md, "Surviving a rebuild of Keycloak's data").
 #
-#   deploy/export-keycloak-users.sh [--stage]          (SECRETS=dev|stage|prod as for run.sh)
+#   deploy/export-keycloak-users.sh [--dev|--stage|--prod]          (environment: see environment-lib.sh)
 #
 # Per user: id, username, email, emailVerified, names, enabled, attributes,
 # the links to identity providers (provider, provider's user id and name) and
@@ -18,16 +18,19 @@
 set -e
 
 PROG=export-keycloak-users.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 for arg in "$@"
 do
     case "${arg}" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         *) echo "${PROG}: unknown argument '${arg}'" >&2; exit 1 ;;
     esac
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 P=$(dirname "$(realpath "$0")")
 . "${P}/keycloak-lib.sh"
 keycloak_setup

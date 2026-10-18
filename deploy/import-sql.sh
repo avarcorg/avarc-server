@@ -3,8 +3,8 @@
 # database of dev or stage, into a schema of its own (default: legacy), so
 # that it does not mix with the tables of the application.
 #
-#   deploy/import-sql.sh [--stage] [--schema NAME] FILE.sql
-#                                           (SECRETS=dev|stage as for run.sh)
+#   deploy/import-sql.sh [--dev|--stage] [--schema NAME] FILE.sql
+#                                           (environment: see environment-lib.sh)
 #
 # The file is plain SQL for PostgreSQL. Statements without a schema create
 # their objects in the chosen schema, which is created if it is missing;
@@ -19,13 +19,16 @@
 set -e
 
 PROG=import-sql.sh
-ENVIRONMENT=dev
+. "$(dirname "$(realpath "$0")")/environment-lib.sh"
+ENVIRONMENT=
 SCHEMA=legacy
 FILE=
 while [ $# -gt 0 ]
 do
     case "$1" in
+        --dev) ENVIRONMENT=dev ;;
         --stage) ENVIRONMENT=stage ;;
+        --prod) ENVIRONMENT=prod ;;
         --schema) shift; SCHEMA=${1:-} ;;
         -h|--help) sed -n '2,/^set -e$/p' "$0" | sed -e '/^set -e$/d' -e 's/^# \{0,1\}//'; exit 0 ;;
         -*) echo "${PROG}: unknown argument '$1'" >&2; exit 1 ;;
@@ -33,15 +36,15 @@ do
     esac
     shift
 done
-ENVIRONMENT=${SECRETS:-${ENVIRONMENT}}
+ENVIRONMENT=${ENVIRONMENT:-${SECRETS:-$(default_environment)}}
 case "${ENVIRONMENT}" in
     dev|stage) ;;
     prod) echo "${PROG}: not available for prod" >&2; exit 1 ;;
-    *) echo "${PROG}: SECRETS must be dev or stage, not '${ENVIRONMENT}'" >&2; exit 1 ;;
+    *) echo "${PROG}: the environment must be dev or stage, not '${ENVIRONMENT}'" >&2; exit 1 ;;
 esac
 if [ -z "${FILE}" ] || [ ! -r "${FILE}" ]
 then
-    echo "usage: ${PROG} [--stage] [--schema NAME] FILE.sql (a readable file)" >&2
+    echo "usage: ${PROG} [--dev|--stage] [--schema NAME] FILE.sql (a readable file)" >&2
     exit 1
 fi
 # The name ends up in SQL, so only plain names are accepted, and not the
