@@ -154,11 +154,17 @@ Apache-2.0 licensed.
 
 ## Social login
 
-Decided in [AVARC-54](../tasks/TASK-social-login.md). Google is implemented and runs on stage; Apple, and Google on dev and prod, follow when needed.
+Decided in [AVARC-54](../tasks/TASK-social-login.md). Google is implemented and runs on stage; Google on dev and prod follows when needed.
 
-- **Providers:** Google first; Apple later as a second identity provider of
-  the same kind (it needs a paid developer account and a signing key). Other
-  providers are added the same way.
+- **Providers:** Google. Other providers are added the same way, one
+  identity provider of the realm each.
+- **Apple is rejected.** Sign in with Apple needs a paid developer
+  membership (yearly), which would have to stay active for the login to keep
+  working, and a client secret that expires after at most six months and must
+  be regenerated and rolled out before then, per environment. The cost and
+  the recurring upkeep are out of proportion for a low-traffic application
+  with a small user base, and a lapse would lock out the people who use it.
+  The decision is revisited if users ask for it.
 - **Keycloak is the broker.** Users choose the provider on the login page of
   the `avarc` realm; the backend, which is the only OIDC client, and the
   frontend do not change. The application database keeps referring to the
