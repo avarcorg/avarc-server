@@ -43,6 +43,18 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   keeping data, any other argument is passed to `docker compose`. `reset`
   (dev only) stops the project and deletes its local data and generated
   secrets. Without arguments, or with `--help`, it prints the usage.
+- **Operating without access to the deployment files:** the commands that act
+  on the running containers (`down`, `stop`, `start`, `restart`, `ps`, `logs`,
+  `top`, `kill`, `pause`, `unpause`, `exec`, `port`, `events`) neither read
+  the secrets file nor render or write any file: `run.sh` passes them to
+  `docker compose -p avarc-<environment>`, which finds the containers by their
+  project label. A user who may use Docker but owns none of the deployment
+  files can therefore stop, restart and inspect an environment; `down` then
+  leaves the in-memory directories of the secrets for the owner's next start
+  to replace. `restart` restarts the containers as they are and does not apply
+  a changed template, secrets file or image; that takes a start of the unit,
+  which is the job of the owner. The unit restarts a project that was stopped
+  this way, so a lasting stop is `systemctl stop`.
 - **One-shot services:** a service that only does a job at start (today
   `keycloak-init`, which creates Keycloak's database) leaves an exited
   container behind. `run.sh up` watches such a service in the background
