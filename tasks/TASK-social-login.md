@@ -1,7 +1,7 @@
 ---
 id: AVARC-54
 type: task
-status: open
+status: in-progress
 priority: low
 area: auth
 created: 2026-10-18
@@ -26,11 +26,17 @@ provider of the same kind.
   email, minimal scopes, the export and restore of users. Left to decide
   with AVARC-9: the wording of the privacy statement.
 - Register the OAuth client with Google per environment (redirect URI is the
-  broker endpoint of the realm on the public host).
+  broker endpoint of the realm on the public host). Done for stage
+  (2026-10-18; the project is under the organisation's Workspace account,
+  audience external, scopes `openid`, `email`, `profile`); dev and prod follow
+  when they need it.
 - Configure the identity provider in the realm: a script like
   `deploy/create-user.sh`, run per environment, since a change of
   `avarc-realm.json` does not reach an existing realm. The client id and
   secret come from the environment's secrets file, never from the repository.
+  Done: `deploy/create-google-idp.sh`, run on stage; a Google login there
+  creates a user without a role, and an admin's role grant reaches the
+  application.
 - The first-broker-login flow and the mapping of name and email onto the
   user record the backend creates at the first login.
 - Survive a rebuild of Keycloak's data. The links (Google `sub`, user id,
