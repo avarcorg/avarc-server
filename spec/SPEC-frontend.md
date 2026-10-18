@@ -217,6 +217,21 @@ no header or footer markup of their own.
   Keycloak admin console links. `run.sh` sets them
   ([SPEC-deployment.md](SPEC-deployment.md)); unset or empty means no link,
   so prod has none. The links open in a new browser tab. Nothing is baked into the page bundle.
+- **Application index:** introduced in [AVARC-58](../tasks/TASK-application-index.md).
+  A page "Application Index" lists the applications of the environment, each
+  with a link and a one-line description: the website itself (`/`), the tools
+  of the developer links above, and the actuator (`/actuator`) wherever the
+  JSON API links are shown (`FOOTER_API_DOCS=true`). It is announced at
+  `/.well-known/applications`, which redirects to the page in the language of
+  the browser (`/<language>/applications`), like any other page. The list is
+  built from the same runtime variables as the developer links, so nothing
+  new is configured, and the page shows nothing that the footer does not
+  show. It needs no login. An application that is not reachable by the
+  public, such as a tool on the private network, is therefore listed only
+  where its variable is set, which prod never does. On prod the page answers
+  404 as long as the website is the only entry; an application that is
+  public, such as a read-only map, adds its entry and the page then exists
+  there.
 - **Texts:** every text of the frame comes from the translations
   (Languages above), none is written into the component.
 - **Accessibility:** semantic landmarks (`header`, `nav`, `main`,
