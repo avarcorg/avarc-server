@@ -87,7 +87,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   it reads no password. Mapping the imported tables onto the application's
   tables is a separate step.
 - **Backups:** introduced with
-  [AVARC-48](../tasks/TASK-database-backup.md). `deploy/backup-db.sh
+  [AVARC-48](../tasks/finished/TASK-database-backup.md). `deploy/backup-db.sh
   [--stage]` takes a logical backup of the databases of an environment: a
   `pg_dump -Fc` of `avarc` (the schemas `avarc` and, when imported, `legacy`)
   and of `keycloak` when it exists, and `pg_dumpall --globals-only` for the
