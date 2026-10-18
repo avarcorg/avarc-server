@@ -365,6 +365,20 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   after that a server of its own (independent failure, upgrade and restore,
   at the price of one more container and a second backup path).
 
+- **Observability of the project** ([AVARC-24](../tasks/TASK-observability-ingress-database.md),
+  [SPEC-observability.md](SPEC-observability.md)):
+  - Every service logs through Docker's `json-file` driver with rotation
+    (10 MB, 5 files), which the log collector of the monitoring stack reads.
+  - The ingress, the frontend, Keycloak and the database have a container
+    health check. The ingress asks its metrics listener, the frontend accepts
+    any HTTP answer until it has a health endpoint (AVARC-23), Keycloak and the
+    database use their readiness. The backend image has no shell, so its
+    check needs a health-check binary in the image and is still to be done.
+  - The network `<project>-metrics` carries only metrics endpoints: the
+    ingress and the database are attached to it, and the monitoring stack
+    joins it as an external network. Nothing on it is published.
+  - The database logs statements slower than 500 ms.
+
 ## Open questions
 
 - Deployment target and environments beyond the developer deployment.
