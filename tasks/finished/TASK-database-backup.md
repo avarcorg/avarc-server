@@ -62,13 +62,14 @@ prod; dev may run it by hand), and a restore procedure that has been tried.
   enabled, the units fire at 03:00 and write `avarc-`, `keycloak-` and
   `globals-` files of mode 0600 in a directory of mode 0700 (checked on
   2026-10-18 after the nights of the 17th and 18th).
+- Restore of a real stage dump (the one of 2026-10-18) into a scratch
+  container on the host: the Flyway history (version 4, five entries), the
+  users, the 3,511 locations and their translations and positions, the 55
+  tables of the schemas `avarc` and `legacy`, Keycloak's accounts and realms
+  and the roles equal the running database.
 
 ## Not done here
 
-- A restore of a real stage dump into a scratch container, with a check of
-  the Flyway history and a row count (the dumps are readable by the service
-  user and root only), to be done by hand on the host with the procedure in
-  the spec.
 - Prod, once a release carries the script and prod exists.
 - Whether the long-term copy, which holds personal data and credential
   hashes, must be encrypted, and whether a failed backup must alert someone
