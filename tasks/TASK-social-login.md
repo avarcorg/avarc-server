@@ -10,7 +10,9 @@ depends_on: [AVARC-20]
 
 # TASK: Social login with Google (Apple later)
 
-Spec: [SPEC-auth.md](../spec/SPEC-auth.md)
+Spec: [SPEC-auth.md](../spec/SPEC-auth.md) ("Social login"),
+[SPEC-deployment.md](../spec/SPEC-deployment.md) (open question about
+Keycloak's database)
 
 Users sign in at Keycloak with a Google account, as an addition to the local
 accounts. Keycloak is the broker, so the backend and the frontend do not
@@ -20,11 +22,9 @@ provider of the same kind.
 
 ## To do
 
-- Decide, and write into `SPEC-auth.md`: sign-up stays closed (a new social
-  user has no role until an admin grants one); an account is linked to an
-  existing one by email only when the provider reports the email as verified;
-  what personal data the provider passes on (see
-  [AVARC-9](TASK-licensing-decision.md) for the privacy side).
+- Specified (done): sign-up closed to roles, linking only by verified
+  email, minimal scopes, the export and restore of users. Left to decide
+  with AVARC-9: the wording of the privacy statement.
 - Register the OAuth client with Google per environment (redirect URI is the
   broker endpoint of the realm on the public host).
 - Configure the identity provider in the realm: a script like
@@ -44,13 +44,10 @@ provider of the same kind.
   passwords cannot be exported this way: restored local users get a new
   one-time password, as with `deploy/create-user.sh`. Test `partialImport`
   with fixed ids and links against a throwaway Keycloak first.
-- Decide, and write into `SPEC-auth.md` and `SPEC-deployment.md`, whether
-  Keycloak keeps its own database inside the shared PostgreSQL server (as
-  now: the database `keycloak`, created by `keycloak-init`) or gets its own
-  database server. Weigh: independent backup, restore and rebuild of users
-  and application data, no shared failure or major-version upgrade, and the
-  read-only account's access rule, against one more container and its
-  memory on a small host.
+- Decide whether Keycloak keeps its database in the shared server or gets its
+  own (open question in both specs, with the arguments); then record the
+  decision there and, if it moves, change the Compose template, the backups
+  and `deploy/create-db-user.sh`.
 - Document the steps in `AGENTS.md` ("Authentication").
 
 ## Verification
