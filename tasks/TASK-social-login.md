@@ -49,7 +49,12 @@ provider of the same kind.
   and `ifResourceExists` set to `SKIP`, so it is safe to repeat. Local
   passwords cannot be exported this way: restored local users get a new
   one-time password, as with `deploy/create-user.sh`. Test `partialImport`
-  with fixed ids and links against a throwaway Keycloak first.
+  with fixed ids and links against a throwaway Keycloak first. Done:
+  `deploy/export-keycloak-users.sh` (also run by `backup-db.sh`) and
+  `deploy/restore-keycloak-users.sh`; tested against a throwaway Keycloak: users
+  deleted and restored are identical (ids, links, roles, attributes), a
+  second restore changes nothing. Left: the first nightly run on stage and a
+  restore test there.
 - Decide whether Keycloak keeps its database in the shared server or gets its
   own (open question in both specs, with the arguments); then record the
   decision there and, if it moves, change the Compose template, the backups
