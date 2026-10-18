@@ -59,4 +59,5 @@ files. Do not edit by hand. See
 | AVARC-51 | [Home location preference](TASK-home-location.md) | task | open | low | frontend | AVARC-12, AVARC-42 |
 | AVARC-52 | [Build and publish per module](finished/TASK-per-module-builds.md) | task | finished | normal | project | AVARC-31 |
 | AVARC-53 | [Lint the workflows with actionlint](finished/TASK-actionlint.md) | task | finished | normal | project |  |
-| AVARC-54 | [Social login with Google (Apple later)](TASK-social-login.md) | task | in-progress | low | auth |  |
+| AVARC-54 | [Social login with Google (Apple later)](TASK-social-login.md) | task | in-progress | low | auth | AVARC-20 |
+| AVARC-55 | [Link provider accounts automatically by verified email](TASK-automatic-linking.md) | task | open | low | auth | AVARC-54 |

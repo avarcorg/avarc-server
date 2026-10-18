@@ -5,7 +5,7 @@ status: in-progress
 priority: low
 area: auth
 created: 2026-10-18
-depends_on: [AVARC-20]
+depends-on: [AVARC-20]
 ---
 
 # TASK: Social login with Google (Apple later)
@@ -38,7 +38,10 @@ provider of the same kind.
   creates a user without a role, and an admin's role grant reaches the
   application.
 - The first-broker-login flow and the mapping of name and email onto the
-  user record the backend creates at the first login.
+  user record the backend creates at the first login. The flow is strict: it
+  never links automatically; a clash with an existing email is denied and the
+  user links the provider themselves (see SPEC-auth.md). Linking
+  automatically by verified email is [AVARC-55](TASK-automatic-linking.md).
 - Survive a rebuild of Keycloak's data. The links (Google `sub`, user id,
   roles) live only in Keycloak's database, and `app_user.kc_subject` refers to
   the user id, so a lost database makes every user a new person. Two scripts
