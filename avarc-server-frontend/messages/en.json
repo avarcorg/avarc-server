@@ -19,6 +19,19 @@
     "locations": "Locations",
     "tags": "Tags"
   },
+  "Applications": {
+    "title": "Application Index",
+    "intro": "The applications of this environment.",
+    "actuator": "Actuator",
+    "description": {
+      "site": "The website.",
+      "database": "Browse the tables and run read-only queries.",
+      "keycloak": "Manage users, roles and passwords.",
+      "swagger": "Try out the API in the browser.",
+      "openapi": "The description of the API as JSON.",
+      "actuator": "Health and operating data of the backend."
+    }
+  },
   "Home": {
     "title": "Hello, avarc",
     "signedInAs": "Signed in as"

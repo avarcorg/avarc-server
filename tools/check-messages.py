@@ -22,7 +22,7 @@ SRC = FRONTEND / "src"
 
 # Keys that the code builds at run time: namespace -> prefixes. Every key
 # under such a prefix counts as used, and the prefix must exist.
-DYNAMIC = {"Form": ["error."]}
+DYNAMIC = {"Form": ["error."], "Applications": ["description."]}
 
 BINDING = re.compile(
     r"\b(?:const|let)\s+(\w+)\s*=\s*(?:await\s+)?(?:useTranslations|getTranslations)\(\s*"
