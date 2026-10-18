@@ -166,11 +166,21 @@ Decided in [AVARC-54](../tasks/TASK-social-login.md); not yet implemented.
   the first time gets a Keycloak account without any role, so cannot do
   anything until an admin grants one in the console, as for any new user.
   Self-registration with a password stays disabled.
-- **Linking.** A provider identity is linked to an existing account by email
-  only if the provider reports the email as verified; otherwise the login is
-  refused and an admin links the accounts. The link is the provider's stable
-  account id, not the email address, so a later change of email does not
-  break it.
+- **Linking.** A provider identity is never linked to an existing account
+  automatically. The first-login flow of the realm (`avarc first broker
+  login`, created by `deploy/create-google-idp.sh`) creates a new user from
+  the provider's name and email, without a role and without a profile
+  review, when no account has that email. When one has, the login is denied
+  with a message telling the user to sign in with the password and link the
+  provider under Account, Linked accounts: the user proves control of both.
+  Keycloak's own flow would verify an existing account by an email that this
+  installation cannot send, and trusting the provider's email blindly would
+  link accounts whose email the provider has not verified. Linking
+  automatically when the provider reports the email as verified is a later
+  improvement ([AVARC-55](../tasks/TASK-automatic-linking.md)). The link is
+  the provider's stable account id, not the email address, so a later change
+  of email does not break it. The email of the provider is not trusted as
+  verified by Keycloak, and no tokens are stored.
 - **Personal data.** Only name and email are taken from the provider, and
   nothing else is requested (scopes `openid`, `email`, `profile`). What the
   provider passes on is part of the privacy statement
