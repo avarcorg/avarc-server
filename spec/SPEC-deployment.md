@@ -128,7 +128,11 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `Persistent=true`) run it; `deploy.sh` installs both but does not enable the
   timer: `systemctl enable --now avarc-<environment>-backup.timer` is a step on
   the host. The service does not start the project: with the `db` service down
-  the run fails with a message in the journal. Copying the dumps off the host
+  the run fails with a message in the journal. The run also exports the users
+  of the realm into the same directory when Keycloak is running
+  (`keycloak-users-<yyyymmdd-hhmmss>.json`, see
+  [SPEC-auth.md](SPEC-auth.md), "Surviving a rebuild of Keycloak's data").
+  Copying the dumps off the host
   is outside this repository; the backups directory is the interface.
   - **Restore:** `deploy/restore-db.sh [--stage] [--scratch] [--globals]
     [--database NAME]... [--no-backup] [--yes] [STAMP]` restores the files of

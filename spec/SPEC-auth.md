@@ -193,16 +193,25 @@ person: new id, no roles, no preferences, no tie to earlier contributions.
   everything back, local passwords included.
 - A second protection works without a dump. A script exports the users of the
   realm through the Keycloak Admin API: id, username, email, names, enabled
-  flag, attributes, the provider links and the realm roles. The file is
-  written next to the database backups, is gitignored, has mode 0600 and is
-  produced by the same nightly timer. It holds personal data.
-- A restore script reads that file and recreates the users through the
+  flag, attributes, the provider links and the realm roles. The script is
+  `deploy/export-keycloak-users.sh [--stage]`; it writes
+  `keycloak-users-<yyyymmdd-hhmmss>.json` (the realm, the time and the list of
+  users) into the backups directory of the environment, next to the dumps, and
+  the file appears under its final name only when complete. It is gitignored,
+  has mode 0600 and is produced by the same nightly run as the dumps
+  (`deploy/backup-db.sh`), under the same retention; a failed export makes
+  that run fail, after the dumps are taken. It holds personal data. The
+  default role of the realm is not exported, because every user has it.
+- A restore script, `deploy/restore-keycloak-users.sh [--stage] [FILE]` (default the
+  newest export), reads that file and recreates the users through the
   `partialImport` endpoint, with their original ids, links and roles, and
   skips what exists, so running it twice changes nothing. The realm and its
-  identity providers must exist first.
+  identity providers must exist first; the script stops with a message when a
+  provider of a link is missing.
 - Local passwords are not available through the API: a restored local user
-  gets a new one-time password, as with `deploy/create-user.sh`. Users of a
-  provider have no local password and lose nothing.
+  gets a new one-time password, as with `deploy/create-user.sh`, printed once
+  as "EMAIL PASSWORD" on the standard output, for the users it created
+  only. Users of a provider have no local password and lose nothing.
 - Direct changes to Keycloak's tables are not a restore method.
 
 ## Public read-only map server (post-MVP)
