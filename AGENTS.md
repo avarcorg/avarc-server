@@ -186,7 +186,10 @@ Google sign-in: register an OAuth client with Google per environment and put
 file, then run `deploy/create-google-idp.sh [--stage]` (safe to repeat; it
 also applies a changed secret); the redirect URI of the client is
 `<origin>/auth/realms/avarc/broker/google/endpoint`. A Google user starts
-without a role. The nightly backup also exports the users of the realm, with
+without a role. A provider is never linked to an existing account
+automatically: a login whose email already has an account is denied, and the
+user signs in with the password and links the provider under Account, Linked
+accounts (automatic linking is AVARC-55). The nightly backup also exports the users of the realm, with
 their provider links and roles, as `keycloak-users-<stamp>.json` next to the
 dumps (`deploy/export-keycloak-users.sh [--stage]` does it by hand), and
 `deploy/restore-keycloak-users.sh [--stage] [FILE]` recreates the users that are
