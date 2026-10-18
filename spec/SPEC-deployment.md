@@ -274,6 +274,13 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `run.sh`. This lets a host name its own registry or mirror in a file that
   is never committed, with no change to the systemd unit or this
   repository.
+- **Upstream registry:** the upstream images (the database, `keycloak-init`
+  and the database tool) are named `${UPSTREAM_REGISTRY}/<image>`; the host
+  setting `UPSTREAM_REGISTRY` defaults to `docker.io` and names a registry
+  cache instead, set like `IMAGE_NAMESPACE`. It may include a path, as a cache
+  that serves several upstream registries keeps Docker Hub under a prefix of
+  its own. It is independent of `IMAGE_NAMESPACE`, which names the project's
+  images, a different upstream.
 - **Image pull:** `run.sh up` first pulls the images when `IMAGE_NAMESPACE`
   names a registry (it contains a `/`, like `ghcr.io/avarcorg`); with the
   default namespace the images are the ones built on the host and nothing is
