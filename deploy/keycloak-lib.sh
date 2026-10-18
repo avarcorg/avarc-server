@@ -1,4 +1,4 @@
-# Shared by create-admin-user.sh, create-user.sh and create-google-idp.sh; sourced, not run. The
+# Shared by the create-*.sh scripts, export-keycloak-users.sh and restore-keycloak-users.sh; sourced, not run. The
 # caller sets PROG (its name, for messages), ENVIRONMENT (dev, stage or prod)
 # and P (this directory), then calls keycloak_setup. Needs curl and jq.
 # The request headers sit in a file only the owner can read, and the
@@ -14,11 +14,17 @@ keycloak_setup () {
         *) echo "${PROG}: SECRETS must be dev, stage or prod, not '${ENVIRONMENT}'" >&2; exit 1 ;;
     esac
     SECRETS_FILE=${P}/${SECRETS_FILE}
-    _container=$(docker compose -p "avarc-${ENVIRONMENT}" ps -q keycloak)
-    if [ -z "${_container}" ]
+    # KEYCLOAK_BASE (the address of the /auth path, for example
+    # http://127.0.0.1:18080/auth) points the scripts at another Keycloak than
+    # the one of the running project, such as a throwaway one for tests.
+    if [ -z "${KEYCLOAK_BASE:-}" ]
     then
-        echo "${PROG}: the keycloak service of avarc-${ENVIRONMENT} is not running" >&2
-        exit 1
+        _container=$(docker compose -p "avarc-${ENVIRONMENT}" ps -q keycloak)
+        if [ -z "${_container}" ]
+        then
+            echo "${PROG}: the keycloak service of avarc-${ENVIRONMENT} is not running" >&2
+            exit 1
+        fi
     fi
 
     case "$-" in
@@ -32,8 +38,13 @@ keycloak_setup () {
     REALM=avarc
 
     # Keycloak's port, published on the loopback interface only.
-    _port=$(docker compose -p "avarc-${ENVIRONMENT}" port keycloak 8080 | sed 's/.*://')
-    BASE=http://127.0.0.1:${_port}/auth
+    if [ -n "${KEYCLOAK_BASE:-}" ]
+    then
+        BASE=${KEYCLOAK_BASE}
+    else
+        _port=$(docker compose -p "avarc-${ENVIRONMENT}" port keycloak 8080 | sed 's/.*://')
+        BASE=http://127.0.0.1:${_port}/auth
+    fi
 
     if [ -z "${KEYCLOAK_ADMIN_PASSWORD}" ]
     then

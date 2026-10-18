@@ -1,8 +1,9 @@
 #!/bin/sh
 # Takes a logical backup of the databases of dev, stage or prod: one dump of
 # each database (avarc, and keycloak when it exists) in the custom format of
-# pg_dump, and the roles as SQL, into the backups directory. Dumps older than
-# the retention window are removed. See spec/SPEC-deployment.md, which also
+# pg_dump, and the roles as SQL, into the backups directory, and the users of
+# Keycloak as JSON (export-keycloak-users.sh). Backups older than the retention window
+# are removed. See spec/SPEC-deployment.md, which also
 # describes the restore.
 #
 #   deploy/backup-db.sh [--stage]           (SECRETS=dev|stage|prod as for run.sh)
@@ -80,5 +81,16 @@ do
 done
 save "${BACKUP_DIR}/globals-${TIMESTAMP}.sql" _compose exec -T db pg_dumpall -U avarc --globals-only
 
-find "${BACKUP_DIR}" -maxdepth 1 -type f \( -name '*.dump' -o -name 'globals-*.sql' -o -name '*.part' \) -mtime "+${KEEP_DAYS}" -delete
+# The users of Keycloak, a second protection next to the dump of its database.
+# A failure is reported after the rest is done.
+USERS_FAILED=0
+if [ -n "$(_compose ps -q keycloak)" ]
+then
+    SECRETS=${ENVIRONMENT} BACKUP_DIR=${BACKUP_DIR} "${P}/export-keycloak-users.sh" || USERS_FAILED=1
+else
+    echo "${PROG}: keycloak is not running, its users are not exported" >&2
+fi
+
+find "${BACKUP_DIR}" -maxdepth 1 -type f \( -name '*.dump' -o -name 'globals-*.sql' -o -name 'keycloak-users-*.json' -o -name '*.part' \) -mtime "+${KEEP_DAYS}" -delete
 echo "${PROG}: backed up ${DATABASES} of avarc-${ENVIRONMENT} into ${BACKUP_DIR}" >&2
+[ "${USERS_FAILED}" -eq 0 ] || { echo "${PROG}: the export of the users failed" >&2; exit 1; }

@@ -68,6 +68,8 @@ copy ${P}/keycloak-lib.sh ${D}/keycloak-lib.sh 0644
 copy ${P}/create-admin-user.sh ${D}/create-admin-user.sh 0755
 copy ${P}/create-user.sh ${D}/create-user.sh 0755
 copy ${P}/create-google-idp.sh ${D}/create-google-idp.sh 0755
+copy ${P}/export-keycloak-users.sh ${D}/export-keycloak-users.sh 0755
+copy ${P}/restore-keycloak-users.sh ${D}/restore-keycloak-users.sh 0755
 for template in ${P}/docker-compose*.template
 do
     copy ${template} "${D}/$(basename "${template}")" 0644
