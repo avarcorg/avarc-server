@@ -167,8 +167,8 @@ Decided in [AVARC-54](../tasks/TASK-social-login.md); not yet implemented.
   anything until an admin grants one in the console, as for any new user.
   Self-registration with a password stays disabled.
 - **Linking.** A provider identity is never linked to an existing account
-  automatically. The first-login flow of the realm (`avarc first broker
-  login`, created by `deploy/create-google-idp.sh`) creates a new user from
+  automatically. The first-login flow of the realm (`avarc-first-broker-login`,
+  created by `deploy/create-google-idp.sh`) creates a new user from
   the provider's name and email, without a role and without a profile
   review, when no account has that email. When one has, the login is denied
   with a message telling the user to sign in with the password and link the
