@@ -57,7 +57,9 @@ prod; dev may run it by hand), and a restore procedure that has been tried.
 - The restore is written into the spec and was tried on scratch containers:
   into a new cluster and over an existing database, with data in the schema
   `avarc`, a role and a second database.
-
+- `deploy/restore-db.sh`: the restore as a script, into the environment or,
+  with `--scratch`, into a throwaway container with a comparison against the
+  running database (specified in `SPEC-deployment.md`).
 - Run on stage: installed by `deploy/deploy.sh stage` with the timer
   enabled, the units fire at 03:00 and write `avarc-`, `keycloak-` and
   `globals-` files of mode 0600 in a directory of mode 0700 (checked on
