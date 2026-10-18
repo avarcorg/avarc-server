@@ -1,7 +1,7 @@
 ---
 id: AVARC-21
 type: decision
-status: open
+status: in-progress
 priority: normal
 area: project
 depends-on: [AVARC-18]
