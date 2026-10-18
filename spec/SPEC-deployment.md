@@ -299,7 +299,8 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   (the latest build of `main`). An update is a restart of the service: the
   stack stops, `run.sh up` pulls the new images and starts them, and the
   checks are `/actuator/health` (200), `/api/hello` (401 without a login),
-  the realm endpoint (200) and the origin (307). A rollback sets the four
+  `/auth/realms/avarc/.well-known/openid-configuration` (200; the bare realm
+  path answers 404 at the ingress) and the origin (307). A rollback sets the four
   `*_VERSION` variables of the host to `sha-<commit>` of the earlier build
   and restarts; going back to `snapshot` removes them again. A successful
   build of `main` prompts the update (see [SPEC-releases.md](SPEC-releases.md)).
