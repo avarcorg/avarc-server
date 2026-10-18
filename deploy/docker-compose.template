@@ -2,6 +2,19 @@
 # $$ for a literal dollar. See spec/SPEC-deployment.md.
 name: ${NAME}
 
+# Container logs: kept by Docker with rotation, read from the files by the
+# collector of the monitoring stack. See spec/SPEC-observability.md.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+# Carries only the metrics endpoints; the monitoring stack joins it.
+networks:
+  metrics:
+    name: ${NAME}-metrics
+
 services:
   ingress:
     image: ${IMAGE_NAMESPACE}/avarc-ingress:${INGRESS_VERSION}
@@ -18,6 +31,20 @@ services:
       - frontend
       - db
       - keycloak
+    networks:
+      - default
+      - metrics
+    healthcheck:
+      test:
+        - "CMD"
+        - "/bin/bash"
+        - "-c"
+        - "exec 3<>/dev/tcp/127.0.0.1/8081 && printf 'GET /stub_status HTTP/1.0\\r\\n\\r\\n' >&3 && [[ \"$$(head -n 1 <&3)\" == HTTP/*' 200 '* ]]"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging: *logging
     restart: unless-stopped
 
   backend:
@@ -34,6 +61,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    logging: *logging
     restart: unless-stopped
 
   frontend:
@@ -45,6 +73,19 @@ services:
       - FOOTER_API_DOCS=${FOOTER_API_DOCS}
       - FOOTER_DBTOOL_URL=${FOOTER_DBTOOL_URL}
       - FOOTER_KEYCLOAK_URL=${FOOTER_KEYCLOAK_URL}
+    # Any HTTP answer counts, until the frontend has a health endpoint
+    # (AVARC-23).
+    healthcheck:
+      test:
+        - "CMD"
+        - "/bin/bash"
+        - "-c"
+        - "exec 3<>/dev/tcp/$$(hostname)/3000 && printf 'GET / HTTP/1.0\\r\\n\\r\\n' >&3 && [[ \"$$(head -n 1 <&3)\" == HTTP/* ]]"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging: *logging
     restart: unless-stopped
 
   # Creates Keycloak's own database in the database server, once.
@@ -60,6 +101,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    logging: *logging
     restart: "no"
 
   # The ingress routes only the avarc realm and its resources (see the
@@ -96,10 +138,13 @@ services:
       timeout: 5s
       retries: 60
       start_period: 30s
+    logging: *logging
     restart: unless-stopped
 
   db:
     image: ${UPSTREAM_REGISTRY}/postgis/postgis:17-3.5
+    # Statements slower than half a second are logged.
+    command: ["postgres", "-c", "log_min_duration_statement=500"]
     environment:
       - POSTGRES_USER=avarc
       - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
@@ -112,4 +157,8 @@ services:
       interval: 2s
       timeout: 3s
       retries: 30
+    networks:
+      - default
+      - metrics
+    logging: *logging
     restart: unless-stopped
