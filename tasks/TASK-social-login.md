@@ -47,8 +47,9 @@ provider of the same kind.
   provider: a new user is created without a role and a second login reuses
   it, an email clash is denied with the message, and after the user links the
   provider in the account console a login with it reaches the existing
-  account. Left: run the script on stage again (it creates the flow and
-  switches the provider to it) and try it there.
+  account. Verified on stage with Google (2026-10-18): a clash is denied with
+  the message, and after linking Google under Account, Linked accounts a
+  login with Google reaches the existing account.
 - Survive a rebuild of Keycloak's data. The links (Google `sub`, user id,
   roles) live only in Keycloak's database, and `app_user.kc_subject` refers to
   the user id, so a lost database makes every user a new person. Two scripts
