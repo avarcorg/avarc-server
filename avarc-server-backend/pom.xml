@@ -182,6 +182,7 @@
         <profile>
             <id>with-docker</id>
             <properties>
+                <image.buildpack>paketo-buildpacks/java</image.buildpack>
                 <image.builder>paketobuildpacks/builder-noble-java-tiny</image.builder>
                 <image.path>${project.build.directory}/${project.build.finalName}.jar</image.path>
                 <image.env>BP_JVM_VERSION=${java.version}</image.env>

@@ -34,12 +34,11 @@ services:
     networks:
       - default
       - metrics
+    environment:
+      - THC_PORT=8081
+      - THC_PATH=/stub_status
     healthcheck:
-      test:
-        - "CMD"
-        - "/bin/bash"
-        - "-c"
-        - "exec 3<>/dev/tcp/127.0.0.1/8081 && printf 'GET /stub_status HTTP/1.0\\r\\n\\r\\n' >&3 && [[ \"$$(head -n 1 <&3)\" == HTTP/*' 200 '* ]]"
+      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -54,6 +53,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
       - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
+      - THC_PATH=/actuator/health
     # Only the client secret and the database password, not the other secrets.
     volumes:
       - ${SECRETS_RUN_DIR}/KEYCLOAK_CLIENT_SECRET:/run/secrets/KEYCLOAK_CLIENT_SECRET:ro
@@ -61,6 +61,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     logging: *logging
     restart: unless-stopped
 
@@ -73,14 +79,13 @@ services:
       - FOOTER_API_DOCS=${FOOTER_API_DOCS}
       - FOOTER_DBTOOL_URL=${FOOTER_DBTOOL_URL}
       - FOOTER_KEYCLOAK_URL=${FOOTER_KEYCLOAK_URL}
-    # Any HTTP answer counts, until the frontend has a health endpoint
-    # (AVARC-23).
+      # Listen on all addresses, so that the health check reaches the server
+      # on localhost; the default is the address of the container.
+      - HOSTNAME=0.0.0.0
+      - THC_PORT=3000
+      - THC_PATH=/health
     healthcheck:
-      test:
-        - "CMD"
-        - "/bin/bash"
-        - "-c"
-        - "exec 3<>/dev/tcp/$$(hostname)/3000 && printf 'GET / HTTP/1.0\\r\\n\\r\\n' >&3 && [[ \"$$(head -n 1 <&3)\" == HTTP/* ]]"
+      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc"]
       interval: 10s
       timeout: 5s
       retries: 3

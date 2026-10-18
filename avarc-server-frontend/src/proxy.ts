@@ -9,7 +9,8 @@ const intl = createMiddleware(routing);
 const APPLICATIONS = "/.well-known/applications";
 
 // Sends a path without a language to the language of the browser. The API
-// (served by the backend), Next's own files and files with an extension are
+// (served by the backend), the health check, Next's own files and files with an
+// extension are
 // left alone.
 export default function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === APPLICATIONS) {
@@ -21,5 +22,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/.well-known/applications", "/((?!api|_next|.*\\..*).*)"],
+  matcher: ["/.well-known/applications", "/((?!api|_next|health$|.*\\..*).*)"],
 };

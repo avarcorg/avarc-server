@@ -43,7 +43,12 @@
              the pack CLI after packaging: ./mvnw -Pwith-docker package. A
              module that has an image declares exec-maven-plugin in its own
              with-docker profile and sets image.path, image.builder,
-             image.env and image.env.extra (the values of a pack env option). -->
+             image.env and image.env.extra (the values of a pack env option) and
+             image.buildpack (the module's own buildpack, which pack needs
+             when it is given another one). Every image also gets the Paketo
+             health checker, whose program
+             /layers/paketo-buildpacks_health-checker/thc/bin/thc the Compose
+             health checks run, because the backend image has no shell. -->
         <profile>
             <id>with-docker</id>
             <build>
@@ -75,6 +80,12 @@
                                             <argument>${image.env.extra}</argument>
                                             <argument>--env</argument>
                                             <argument>BP_OCI_SOURCE=${image.source}</argument>
+                                            <argument>--env</argument>
+                                            <argument>BP_HEALTH_CHECKER_ENABLED=true</argument>
+                                            <argument>--buildpack</argument>
+                                            <argument>${image.buildpack}</argument>
+                                            <argument>--buildpack</argument>
+                                            <argument>paketo-buildpacks/health-checker</argument>
                                             <argument>--tag</argument>
                                             <argument>${image.name}:latest</argument>
                                         </arguments>
