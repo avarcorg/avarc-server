@@ -64,8 +64,11 @@ provider of the same kind.
   `deploy/export-keycloak-users.sh` (also run by `backup-db.sh`) and
   `deploy/restore-keycloak-users.sh`; tested against a throwaway Keycloak: users
   deleted and restored are identical (ids, links, roles, attributes), a
-  second restore changes nothing. Left: the first nightly run on stage and a
-  restore test there.
+  second restore changes nothing. Verified on stage (2026-10-18): an export
+  holds the five users with roles and Google links; a test user, created,
+  exported, deleted in the admin console and restored, came back with a new
+  one-time password. Left: the first nightly run of the backup, which now
+  includes the export.
 - Decide whether Keycloak keeps its database in the shared server or gets its
   own (open question in both specs, with the arguments); then record the
   decision there and, if it moves, change the Compose template, the backups
