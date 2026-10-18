@@ -33,3 +33,9 @@ Database and deployment:
   AVARC-21 (own template, user and data directory), optional for the
   developer deployment, and the network on which the application project
   exposes its metrics endpoints.
+
+Done so far: request ID, JSON access log and the metrics listener of the
+ingress; log rotation, health checks (all but the backend, which has no shell
+in its image), the metrics network and slow-statement logging in the Compose
+project. Still open: the metrics exporters and the monitoring project, the
+backend health check, database metrics, container resource metrics.
