@@ -131,6 +131,14 @@ from its `nginx.conf` by `-Pwith-docker` and tagged `avarc-ingress`. The
 routing is in that file; a change of it needs a new image. The container
 listens on port 8080.
 
+## Environments of the scripts
+
+The scripts in `deploy/` that work on an environment take `--dev`, `--stage`
+or `--prod`. Without an option, `SECRETS=dev|stage|prod` decides, and without
+that the user running the script: `avarc-stage` is stage, `avarc-prod` and
+`avarc` are prod, anyone else is dev (spec: `spec/SPEC-deployment.md`). The
+`[--stage]` in the commands below is therefore needed only to override that.
+
 ## Legacy import
 
 `deploy/import-legacy.sh [--stage] [--dry-run]` synchronises the locations
@@ -162,10 +170,10 @@ import and the start script. Create
 the accounts of an environment, the initial admin included, after the project
 is up; it is safe to repeat (needs `curl` and `jq`):
 
-    deploy/create-admin-user.sh [--stage]      # SECRETS=prod for prod
+    deploy/create-admin-user.sh [--stage]
 
 Further users are created with `deploy/create-user.sh [--stage] [--admin]
-EMAIL...` (same `SECRETS`): editors, or admins with `--admin`. It prints a
+EMAIL...`: editors, or admins with `--admin`. It prints a
 random one-time password per new user, to be changed at the first login;
 with `--permanent` it reads a password per user instead (hidden prompt, or
 one line per user on stdin), which stays valid.
