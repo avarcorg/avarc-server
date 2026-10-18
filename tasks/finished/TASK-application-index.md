@@ -1,7 +1,7 @@
 ---
 id: AVARC-58
 type: task
-status: open
+status: finished
 priority: low
 area: frontend
 depends-on: [AVARC-45]
@@ -10,12 +10,12 @@ created: 2026-10-18
 
 # TASK: Application index at /.well-known/applications
 
-Spec: [SPEC-frontend.md](../spec/SPEC-frontend.md) ("Application index")
+Spec: [SPEC-frontend.md](../../spec/SPEC-frontend.md) ("Application index")
 
 A page "Application Index" that lists the applications of an environment with
 a link and a short description each, so nobody has to know the addresses. It
 is announced at `/.well-known/applications`. It uses the same runtime
-variables as the developer links of [AVARC-45](finished/TASK-footer-dev-links.md),
+variables as the developer links of [AVARC-45](TASK-footer-dev-links.md),
 so prod, which has none, shows nothing private: there the page answers 404
 while the website is the only entry.
 

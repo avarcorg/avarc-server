@@ -63,4 +63,4 @@ files. Do not edit by hand. See
 | AVARC-55 | [Link provider accounts automatically by verified email](TASK-automatic-linking.md) | task | open | low | auth | AVARC-54 |
 | AVARC-56 | [Avatar of a user: backend](TASK-avatar-backend.md) | task | open | low | backend | AVARC-42 |
 | AVARC-57 | [Avatar of a user: pages](TASK-avatar-frontend.md) | task | open | low | frontend | AVARC-56 |
-| AVARC-58 | [Application index at /.well-known/applications](TASK-application-index.md) | task | open | low | frontend | AVARC-45 |
+| AVARC-58 | [Application index at /.well-known/applications](finished/TASK-application-index.md) | task | finished | low | frontend | AVARC-45 |

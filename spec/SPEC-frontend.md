@@ -217,7 +217,7 @@ no header or footer markup of their own.
   Keycloak admin console links. `run.sh` sets them
   ([SPEC-deployment.md](SPEC-deployment.md)); unset or empty means no link,
   so prod has none. The links open in a new browser tab. Nothing is baked into the page bundle.
-- **Application index:** introduced in [AVARC-58](../tasks/TASK-application-index.md).
+- **Application index:** introduced in [AVARC-58](../tasks/finished/TASK-application-index.md).
   A page "Application Index" lists the applications of the environment, each
   with a link and a one-line description: the website itself (`/`), the tools
   of the developer links above, and the actuator (`/actuator`) wherever the
