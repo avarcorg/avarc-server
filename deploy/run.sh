@@ -6,8 +6,11 @@
 #                                  the foreground (systemd runs it so; add -d to
 #                                  detach)
 #   deploy/run.sh [--stage] down   stop, keep data
+#   deploy/run.sh [--stage] stop|start|restart|ps|logs|top|kill|pause|unpause|exec|port|events
+#                                  act on the running containers; they need
+#                                  no write access and no secrets file
 #   deploy/run.sh reset            dev only: stop, delete local data and secrets
-#   deploy/run.sh [--stage] <other>  passed to "docker compose" (logs, ps, ...)
+#   deploy/run.sh [--stage] <other>  passed to "docker compose" (pull, config, ...)
 #   deploy/run.sh --help           this help
 #
 # Environment: "--stage" (used by the systemd unit on the staging host)
@@ -150,6 +153,17 @@ export SECRETS_RUN_DIR=${SECRETS_RUN_DIR:-/dev/shm/${NAME}-secrets}
 # directory of its own, because the one above is mounted into several
 # containers.
 export DBTOOL_RUN_DIR=${DBTOOL_RUN_DIR:-/dev/shm/${NAME}-dbtool}
+
+# Commands on the running containers need no rendered file and no secrets:
+# compose finds the containers by the project name, so a user who may use
+# Docker but owns none of these files can run them. "down" also removes the
+# in-memory directories where it can, and leaves them to their owner otherwise.
+case "${COMMAND}" in
+    down|stop|start|restart|ps|logs|top|kill|pause|unpause|exec|port|events)
+        docker compose -p "${NAME}" "$@"
+        [ "${COMMAND}" != "down" ] || rm -rf "${SECRETS_RUN_DIR}" "${DBTOOL_RUN_DIR}" 2> /dev/null || true
+        exit 0 ;;
+esac
 
 # The secrets the deployment needs; one file each in ${SECRETS_RUN_DIR}.
 NEEDED_SECRETS="POSTGRES_PASSWORD KEYCLOAK_ADMIN_PASSWORD KEYCLOAK_CLIENT_SECRET"
@@ -381,14 +395,6 @@ pull_images () {
         sleep "${PULL_RETRY_DELAY:-15}"
     done
 }
-
-if [ "${COMMAND}" = "down" ]
-then
-    render_compose
-    ${COMPOSE} down
-    rm -rf "${SECRETS_RUN_DIR}" "${DBTOOL_RUN_DIR}"
-    exit 0
-fi
 
 if [ "${COMMAND}" = "reset" ]
 then
