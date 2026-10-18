@@ -35,7 +35,7 @@ Database and deployment:
   exposes its metrics endpoints.
 
 Done so far: request ID, JSON access log and the metrics listener of the
-ingress; log rotation, health checks (all but the backend, which has no shell
-in its image), the metrics network and slow-statement logging in the Compose
-project. Still open: the metrics exporters and the monitoring project, the
-backend health check, database metrics, container resource metrics.
+ingress; log rotation, health checks of all services, the metrics network and
+slow-statement logging in the Compose project. Still open: the metrics
+exporters and the monitoring project, database metrics, container resource
+metrics.
