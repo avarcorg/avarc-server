@@ -78,6 +78,8 @@ most moving parts, justified only once traces are needed).
 - **Log format:** one JSON object per line on standard output, with the fields
   `timestamp` (UTC, ISO 8601), `level`, `service`, `request_id`, `user_id`
   (when known) and `message`. Further fields are free.
+- **Exception:** a component whose own error log cannot be JSON (nginx)
+  writes it as plain text to standard error; the collector keeps the lines.
 - **Levels:** `ERROR`, `WARN`, `INFO`, `DEBUG`. `INFO` in stage and prod,
   `DEBUG` allowed in dev.
 - **Request ID:** the ingress creates it for every request in the header
