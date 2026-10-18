@@ -181,6 +181,18 @@ own account. The ingress does not route the console. A change of `avarc-server-k
 not reach an existing realm (Keycloak imports only when the realm is absent);
 apply it in the console, or on dev with `deploy/run.sh reset`.
 
+Google sign-in: register an OAuth client with Google per environment and put
+`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` into the environment's secrets
+file, then run `deploy/create-google-idp.sh [--stage]` (safe to repeat; it
+also applies a changed secret); the redirect URI of the client is
+`<origin>/auth/realms/avarc/broker/google/endpoint`. A Google user starts
+without a role. The nightly backup also exports the users of the realm, with
+their provider links and roles, as `keycloak-users-<stamp>.json` next to the
+dumps (`deploy/export-keycloak-users.sh [--stage]` does it by hand), and
+`deploy/restore-keycloak-users.sh [--stage] [FILE]` recreates the users that are
+missing, with their original ids; users without a provider link get a new
+one-time password, printed once (spec: `spec/SPEC-auth.md`).
+
 Users log in and out through the backend, which is the OIDC client of
 Keycloak and keeps the session in a cookie: the frontend pages `/login` and
 `/logged-out` link to `/api/auth/login/keycloak` and post to
