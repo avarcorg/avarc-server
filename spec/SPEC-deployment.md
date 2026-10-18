@@ -44,10 +44,14 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   flag (see "Database on the tailnet"). The merged file
   is generated for Compose, not for reading; the comments stay in the
   templates.
-- **Environments:** `dev`, `stage` and `prod`. `run.sh --stage` selects
-  stage (the systemd unit on the staging host passes it); without it the
-  environment is dev. `SECRETS=dev|stage|prod` overrides this and is how
-  prod is selected (the prod unit sets `SECRETS=prod`). The environment
+- **Environments:** `dev`, `stage` and `prod`. Every script of `deploy/` that
+  works on an environment takes `--dev`, `--stage` or `--prod`, and finds the
+  environment without one: the command line wins, then `SECRETS=dev|stage|prod`
+  in the environment, then the user running the script (`avarc-stage`: stage;
+  `avarc-prod` and `avarc`: prod; any other user: dev). The systemd units
+  therefore need no option, though they may still pass one. The scripts that
+  need a database that prod never exposes (`create-db-user.sh`, `import-sql.sh`,
+  `import-legacy.sh`) refuse prod. The environment
   names the Compose project (`avarc-<environment>`), the data directory and
   the default ingress port (8080 dev, 8081 stage, 8082 prod; `INGRESS_PORT`
   overrides), so environments can run side by side.
