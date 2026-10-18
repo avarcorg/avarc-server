@@ -242,6 +242,13 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   (4 attempts, 15 seconds; `PULL_ATTEMPTS` and `PULL_RETRY_DELAY` change
   that). When the last attempt fails, `run.sh` stops with a message before
   anything is started, and the service manager's own restart tries again later.
+- **No image monitoring:** the services that run the project's own images
+  (`avarc-ingress`, `avarc-backend`, `avarc-frontend`, `avarc-keycloak`) carry
+  the label `dd.watch=false`, so that Drydock neither monitors nor scans their
+  containers; Drydock has no narrower switch. The services that run upstream
+  images (the database, the database tool and the one-shot `keycloak-init`)
+  stay watched. A new service gets the label if it runs one of our images. It
+  takes effect when `deploy/run.sh up` recreates the containers.
 - **Updating stage:** stage runs the moving tag `snapshot` of the four images
   (the latest build of `main`). An update is a restart of the service: the
   stack stops, `run.sh up` pulls the new images and starts them, and the
