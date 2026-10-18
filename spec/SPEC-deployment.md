@@ -221,8 +221,14 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   `deploy/secrets.sh` (prod), all gitignored and exporting one variable per
   secret. `run.sh` reads each needed secret from that file in an isolated
   shell, writes one file per secret into a directory in memory
-  (`/dev/shm/avarc-<environment>-secrets`, mode 0700), and mounts it
-  read-only at `/run/secrets` in the containers that need it. Secrets are
+  (`secrets` below the run directory, mode 0700), and mounts it
+  read-only at `/run/secrets` in the containers that need it. The run
+  directory is `/run/avarc-<environment>`, which the systemd unit creates
+  for its user (`RuntimeDirectory=`, mode 0700) and systemd removes when the
+  unit stops, so the secrets do not outlive the service; without that
+  directory (dev, no unit) it is `avarc-<environment>` in the user's runtime
+  directory (`$XDG_RUNTIME_DIR`). The configuration of the database tool is
+  rendered into `dbtool` below it. Secrets are
   not passed as environment variables; a start with a missing value fails
   naming it. `run.sh` keeps shell tracing off while it handles values.
 - **Accounts:** the secrets file also holds the credentials of the initial
