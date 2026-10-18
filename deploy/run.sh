@@ -97,20 +97,21 @@ host_setting DB_TAILNET false
 # Keycloak's database as a second connection of the database tool; the access
 # itself is granted by create-db-user.sh.
 host_setting DB_KEYCLOAK false
-DB_DOCKTAIL_ENABLE=false
+DBTOOL_ENABLE=false
 if [ "${DB_TAILNET}" = "true" ]
 then
     if [ "${ENVIRONMENT}" = "prod" ]
     then
         echo "run.sh: DB_TAILNET is ignored on prod, the database is not exposed" >&2
     else
-        DB_DOCKTAIL_ENABLE=true
+        DBTOOL_ENABLE=true
     fi
 fi
-export DB_DOCKTAIL_ENABLE
-# The web database tool goes with the exposed database: it is the Compose
-# profile "dbtool", enabled under the same conditions.
-DBTOOL_ENABLE=${DB_DOCKTAIL_ENABLE}
+# The exposed database and the web database tool are the Compose features
+# "db-tailnet" and "dbtool" (docker-compose.<feature>.template), merged under
+# the same conditions.
+FEATURES=
+[ "${DBTOOL_ENABLE}" = "true" ] && FEATURES="${FEATURES} db-tailnet dbtool"
 # The tailnet's domain, under which docktail serves the names with a
 # certificate; empty if it cannot be determined.
 TAILNET_DOMAIN=$(tailscale status --json 2>/dev/null | jq -r '.MagicDNSSuffix // empty' 2>/dev/null || true)
@@ -230,18 +231,23 @@ build_secrets_dir () {
     fi
 }
 
-# The profile of the database tool is part of every command while the tool is
-# enabled; "down" always includes it, so that it stops the tool as well.
-if [ "${DBTOOL_ENABLE}" = "true" ] || [ "${COMMAND}" = "down" ]
-then
-    export COMPOSE_PROFILES=dbtool
-fi
-
 COMPOSE="docker compose -f ${P}/docker-compose.yml"
 
+# Renders the core template and the templates of the enabled features with
+# envsubst and merges them, validated, into docker-compose.yml. The rendered
+# parts hold no secret values (only paths) and are removed again.
 render_compose () {
-    envsubst < "${P}/docker-compose.template" > "${P}/docker-compose.yml"
-    chmod 0600 "${P}/docker-compose.yml"
+    _tmp=$(mktemp -d)
+    _files="-f ${_tmp}/core.yml"
+    envsubst < "${P}/docker-compose.template" > "${_tmp}/core.yml"
+    for _feature in ${FEATURES}
+    do
+        envsubst < "${P}/docker-compose.${_feature}.template" > "${_tmp}/${_feature}.yml"
+        _files="${_files} -f ${_tmp}/${_feature}.yml"
+    done
+    # shellcheck disable=SC2086
+    ( umask 077; docker compose ${_files} config > "${P}/docker-compose.yml" ) || { rm -rf "${_tmp}"; return 1; }
+    rm -rf "${_tmp}"
 }
 
 # Escapes a value for a JSON string.
@@ -335,7 +341,7 @@ build_dbtool_dir () {
     if [ -d "${_workspace}/.data" ] && [ "$(cat "${_workspace}/.admin-fingerprint" 2>/dev/null || true)" != "${_fingerprint}" ]
     then
         echo "run.sh: the admin account of the database tool changed; its accounts are reset" >&2
-        ${COMPOSE} --profile dbtool rm -sf dbtool > /dev/null 2>&1 || true
+        ${COMPOSE} rm -sf dbtool > /dev/null 2>&1 || true
         rm -rf "${_workspace}/.data" "${_workspace}/.metadata"
     fi
     mkdir -p "${_workspace}"
@@ -430,8 +436,6 @@ then
     build_dbtool_dir
 else
     rm -rf "${DBTOOL_RUN_DIR}"
-    # A tool left running from a time when it was enabled is stopped and removed.
-    [ "${COMMAND}" != "up" ] || ${COMPOSE} --profile dbtool rm -sf dbtool > /dev/null 2>&1 || true
 fi
 
 # One-shot services exit right after their job, and compose has no
@@ -479,6 +483,6 @@ remove_when_done () {
 }
 
 case "${COMMAND}" in
-    up) pull_images; remove_when_done keycloak-init keycloak; shift; ${COMPOSE} up --pull missing "$@" ;;
+    up) pull_images; remove_when_done keycloak-init keycloak; shift; ${COMPOSE} up --pull missing --remove-orphans "$@" ;;
     *)  ${COMPOSE} "$@" ;;
 esac

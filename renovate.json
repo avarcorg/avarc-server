@@ -11,7 +11,7 @@
   "prConcurrentLimit": 0,
   "docker-compose": {
     "managerFilePatterns": [
-      "/^deploy/docker-compose\\.template$/"
+      "/^deploy/docker-compose(\\.[a-z-]+)?\\.template$/"
     ]
   },
   "packageRules": [
