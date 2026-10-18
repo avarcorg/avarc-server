@@ -59,6 +59,7 @@ components and their connections.
 - [Frontend](spec/SPEC-frontend.md): Next.js web application.
 - [Ingress](spec/SPEC-ingress.md): web server in front of the partial applications.
 - [Deployment](spec/SPEC-deployment.md): Docker Compose project, developer deployment.
+- [Observability](spec/SPEC-observability.md): logs, metrics, health and the monitoring stack.
 - [Dependency updates](spec/SPEC-dependency-updates.md): Renovate setup.
 - [Code scanning](spec/SPEC-code-scanning.md): CodeQL setup.
 - [Releases](spec/SPEC-releases.md): version tags and release notes.

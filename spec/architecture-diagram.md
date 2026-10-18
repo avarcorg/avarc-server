@@ -25,6 +25,13 @@ flowchart TB
         DBTool["Database tool<br/>(optional, dev and stage only)"]
     end
 
+    subgraph Monitoring["Monitoring stack (own Compose project, optional on dev)"]
+        Alloy["Alloy<br/>log collector"]
+        Loki["Loki"]
+        Prometheus["Prometheus"]
+        Grafana["Grafana"]
+    end
+
     Browser -- "HTTPS" --> Ingress
     Ingress -- "pages" --> Frontend
     Ingress -- "/api" --> Backend
@@ -33,6 +40,12 @@ flowchart TB
     Backend -- "JPA, Flyway" --> DB
     Keycloak --> DB
     DBTool -- "read-only" --> DB
+    Alloy -- "container log files" --> Loki
+    Prometheus -- "scrape metrics (management ports)" --> Backend
+    Prometheus -- "scrape metrics" --> Keycloak
+    Prometheus -- "scrape metrics" --> Ingress
+    Grafana --> Loki
+    Grafana --> Prometheus
     Anonymous["Anonymous public<br/>(post-MVP)"]
     Anonymous -. "HTTPS" .-> Ingress
     Ingress -. "map" .-> MapServer
