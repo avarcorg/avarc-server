@@ -1,4 +1,4 @@
-# Shared by create-admin-user.sh and create-user.sh; sourced, not run. The
+# Shared by create-admin-user.sh, create-user.sh and create-google-idp.sh; sourced, not run. The
 # caller sets PROG (its name, for messages), ENVIRONMENT (dev, stage or prod)
 # and P (this directory), then calls keycloak_setup. Needs curl and jq.
 # The request headers sit in a file only the owner can read, and the
@@ -86,6 +86,13 @@ api_get () {
 # api_post PATH: POST the JSON on the standard input; same error handling.
 api_post () {
     _out=$(curl -sS -w '\n%{http_code}' -K "${WORK}/auth" -H 'Content-Type: application/json' \
+        --data-binary @- "${BASE}/admin/realms/${REALM}$1") || return 1
+    api_result "$1"
+}
+
+# api_put PATH: PUT the JSON on the standard input; same error handling.
+api_put () {
+    _out=$(curl -sS -X PUT -w '\n%{http_code}' -K "${WORK}/auth" -H 'Content-Type: application/json' \
         --data-binary @- "${BASE}/admin/realms/${REALM}$1") || return 1
     api_result "$1"
 }
