@@ -88,9 +88,31 @@ Define the API service that stores and serves locations.
   unused imports (an import may be added before its use); the hook is
   personal configuration, not part of the repository, and `AGENTS.md` shows
   it. Edits through shell commands are caught by the pre-commit hook and CI.
-- **Actuator:** only `health` is exposed by default; the `dev` and `stage`
-  environments, through the Spring profile of the same name, expose all
-  actuator endpoints.
+- **Actuator:** served on a port of its own (`management.server.port`,
+  default 9091, `MANAGEMENT_PORT`), which only the metrics network of the Compose
+  project reaches and which the ingress routes only in development and stage
+  ([AVARC-22](../tasks/finished/TASK-observability-backend.md),
+  [SPEC-ingress.md](SPEC-ingress.md)); the application port answers 404 for
+  `/actuator/`. Only `health` (with the liveness and readiness
+  groups; readiness includes the database) and `prometheus` are exposed by
+  default; the `dev` and `stage` environments, through the Spring profile of
+  the same name, expose all actuator endpoints, on that port.
+- **Observability** (conventions in [SPEC-observability.md](SPEC-observability.md)):
+  - Logs are JSON lines on standard output with the shared fields
+    (`JsonLogFormatter`, selected by `logging.structured.format.console`),
+    plus the logger and any key-value fields of the log call. The user ID is
+    the Keycloak subject of the logged-in user, an opaque ID.
+  - `RequestIdFilter` takes `X-Request-Id` (8 to 64 characters of letters,
+    digits, `.`, `_`, `-`) or makes an ID, puts it into every log line of the
+    request and returns it in the response.
+  - Metrics are those of Micrometer (requests by route and status, the
+    connection pool, the JVM) in the Prometheus format at
+    `/actuator/prometheus` on the management port.
+  - Changes are audited by `AuditLog` (module `audit`): the creation, update
+    and deletion of a location and the labels of a tag each write one line
+    from the logger `audit` with `audit=true`, the action (such as
+    `location.created`), the type and the ID of the entity, and the user and
+    request of the log fields. Only IDs are recorded, no content.
 - **API:** REST + OpenAPI, generated from the code (springdoc). Other
   consumers, such as API keys or an MCP adapter, use the same API.
 - **API description and Swagger UI:** introduced in

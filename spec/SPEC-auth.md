@@ -69,9 +69,8 @@ Apache-2.0 licensed.
   - `GET /api/auth/me` answers `200` with `username`, `name`, `email`,
     `roles` and `csrfToken` of the logged-in user, or `401`.
   - Every other request without a session, `/api/` included, answers `401`;
-    only these login endpoints and the health endpoint are public. The
-    development and stage actuator endpoints stay as in
-    [SPEC-backend.md](SPEC-backend.md).
+    only these login endpoints are public. The actuator is on a port of its
+    own that the ingress does not route, see [SPEC-backend.md](SPEC-backend.md).
   - The backend reaches Keycloak by its internal address for the token and
     key requests, and sends the browser to the public one
     (`<public origin>/auth/realms/avarc`); the issuer of the tokens is the
@@ -115,6 +114,30 @@ Apache-2.0 licensed.
   needs the distribution downloaded into the build, a full run image for
   `bash`, and cannot run `kc.sh build`, which loses the optimized start; a
   Dockerfile of a few lines avoids all of it.
+- **Observability** ([AVARC-25](../tasks/finished/TASK-observability-identity.md),
+  conventions in [SPEC-observability.md](SPEC-observability.md)):
+  - Keycloak logs JSON to standard output (`--log-console-output=json`) with
+    its own field names (`timestamp`, `level`, `message`, `loggerName`, ...);
+    the log level is Keycloak's default (info). The collector adds the
+    service from the container. There is no request ID in these lines and no
+    Keycloak access log: the access log cannot leave out the query string,
+    which carries login session codes, and the ingress logs every request to
+    Keycloak with its request ID and no query string.
+  - The metrics (`--metrics-enabled`, including `keycloak_user_events_total`
+    by event, error and realm) and the health endpoints (readiness is the
+    Compose health check) are on the management port 9000, under `/auth`,
+    which the ingress never routes; the Compose service is on the metrics
+    network. Both are build-time options, set in the `Dockerfile`.
+  - Login and admin events (logins, failed logins, brute-force lockouts, user,
+    role and password changes, without the content of the change) are enabled
+    in the realm and kept for 30 days in its event store, which admins read in
+    the console under Events. They are not written to the logs: a failed
+    login names the login name, which is personal data. The counts are in the
+    metrics (a lockout is a login with the error `user_temporarily_disabled`).
+    The realm import file carries the settings; for a realm that exists,
+    `deploy/configure-keycloak-events.sh` applies them.
+  - No alert is raised for failed logins or lockouts in the first version;
+    the metrics make a dashboard or an alert possible later.
 - **Configuration as code:** the realm (roles, client, login and password
   settings, locales) is kept in the repository as a realm import file
   without secrets, inside the image; secrets such as the client secret come

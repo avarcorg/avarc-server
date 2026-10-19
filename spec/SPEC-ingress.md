@@ -33,12 +33,17 @@ Decided in [AVARC-8](../tasks/finished/TASK-ingress-decision.md).
 - **URL layout:** one host with path prefixes, so the browser sees a single
   origin (no CORS, simple cookie sessions):
   - `/api/` routes to the backend.
-  - `/actuator/` routes to the backend's actuator endpoints. This is for
-    development and stage and will be disabled in prod.
+  - `/actuator/` routes to the backend's actuator, which is on a port of its
+    own (see [SPEC-backend.md](SPEC-backend.md)), but only where the
+    variable `ACTUATOR_ENABLED` of the ingress is `true` (development and
+    stage, where `run.sh` sets it with the developer links); elsewhere the
+    ingress answers 404. The nginx configuration reads it when the container
+    starts, so the image is the same everywhere.
   - `/auth/` routes to the public endpoints of Keycloak (login, logout,
     token and account pages), without prefix stripping; which of its paths
     are routed is defined in [SPEC-auth.md](SPEC-auth.md).
-  - everything else routes to the frontend.
+  - everything else routes to the frontend, including its `/health` (status
+    only).
   - The prefixes are reserved and are not used by frontend pages. A
     post-MVP MCP server gets its own prefix when it is taken up.
 - **Authentication:** the ingress only routes and forwards requests,
@@ -53,6 +58,20 @@ Decided in [AVARC-8](../tasks/finished/TASK-ingress-decision.md).
   the upstreams see the original scheme and host, which Keycloak needs for
   secure cookies. For a hop that is not trusted, the headers are replaced by
   the values of the connection.
+
+- **Request ID and access log** ([AVARC-24](../tasks/TASK-observability-ingress-database.md),
+  conventions in [SPEC-observability.md](SPEC-observability.md)): every
+  request gets an ID, sent to the upstreams and back to the client in the
+  header `X-Request-Id`. A valid value (8 to 64 characters of letters,
+  digits, `.`, `_`, `-`) from a trusted hop is kept; from anywhere else it is
+  replaced. The access log is one JSON object per line on standard output
+  with the shared fields, the path without the query string (it can carry
+  login codes), the status, the sizes and the durations, and never cookies or
+  authorization headers. nginx's own error log stays plain text on standard
+  error.
+- **Metrics:** a second listener on port 8081 serves nginx's `stub_status`
+  to the metrics exporter of the Compose project. The port is not
+  published, and the public listener does not route to it.
 
 ## Open questions
 

@@ -298,7 +298,7 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
 - **Updating stage:** stage runs the moving tag `snapshot` of the four images
   (the latest build of `main`). An update is a restart of the service: the
   stack stops, `run.sh up` pulls the new images and starts them, and the
-  checks are `/actuator/health` (200), `/api/hello` (401 without a login),
+  checks are the frontend's `/health` (200), `/api/hello` (401 without a login),
   `/auth/realms/avarc/.well-known/openid-configuration` (200; the bare realm
   path answers 404 at the ingress) and the origin (307). A rollback sets the four
   `*_VERSION` variables of the host to `sha-<commit>` of the earlier build
@@ -364,6 +364,29 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   with its own password (separates the credentials at little cost), and
   after that a server of its own (independent failure, upgrade and restore,
   at the price of one more container and a second backup path).
+
+- **Observability of the project** ([AVARC-24](../tasks/TASK-observability-ingress-database.md),
+  [SPEC-observability.md](SPEC-observability.md)):
+  - Every service logs through Docker's `json-file` driver with rotation
+    (10 MB, 5 files), which the log collector of the monitoring stack reads.
+  - Every service has a container health check. The backend, the frontend
+    and the ingress run the Tiny Health Checker of the Paketo health-checker
+    buildpack (`/layers/paketo-buildpacks_health-checker/thc/bin/thc`, set by
+    `THC_PORT` and `THC_PATH`), because the backend image has no shell: the
+    backend asks `/actuator/health/readiness` on its management port (9091), the
+    frontend `/health` and the ingress
+    its metrics listener. Keycloak and the database use their readiness. The
+    modules name the buildpack in `image.buildpack` of their POM and the
+    parent POM adds the health checker to every `pack` build. The frontend
+    listens on all addresses (`HOSTNAME`) so that the check reaches it on
+    localhost.
+  - The ingress routes `/actuator/` to the backend only where `run.sh` sets
+    `FOOTER_API_DOCS=true` (dev and stage; passed on as `ACTUATOR_ENABLED`).
+  - The network `<project>-metrics` carries only metrics endpoints: the
+    ingress, the frontend, the backend (management port 9091), Keycloak
+    (management port 9000) and the database are attached to it, and the monitoring stack
+    joins it as an external network. Nothing on it is published.
+  - The database logs statements slower than 500 ms.
 
 ## Open questions
 

@@ -53,6 +53,33 @@ Define the web user interface for browsing and managing locations.
   texts that name a product take it as a `{product}` placeholder. Dates, numbers and the wording of data (locations, tags)
   are not fixed texts: data comes from the backend in its own languages.
 
+- **Health:** `GET /health` answers `{"status":"UP"}` while the server runs,
+  for the container health check ([AVARC-23](../tasks/finished/TASK-observability-frontend.md)).
+  It is outside the language prefix, so the proxy leaves it alone.
+
+- **Server-side observability** ([AVARC-23](../tasks/finished/TASK-observability-frontend.md),
+  conventions in [SPEC-observability.md](SPEC-observability.md)):
+  - Logs are JSON lines on standard output with the shared fields. The
+    frontend logs what it can tell that the ingress cannot: requests that
+    failed in the server (Next's `onRequestError`, with the route and the
+    error digest) and calls to the backend that failed or answered with a
+    server error. The access log of the ingress covers every request.
+  - The request ID of the ingress (`X-Request-Id`) is read from the request
+    and passed on to every call to the backend (`src/lib/backend.ts`, the one
+    place that calls it), and it is in every log line of that request.
+  - Metrics are served in the Prometheus text format at `/metrics` on the
+    port `METRICS_PORT` (set by the deployment; unset in development, then
+    nothing is served). The ingress does not route that port. They are the
+    calls to the backend (count by status, duration histogram), the failed
+    requests by kind, and a few process figures (CPU, memory, event loop
+    delay). Count and duration of the requests themselves come from the access
+    log of the ingress, not from the frontend. The counters are written by
+    hand, without a metrics library.
+  - Nothing is collected in the browser (errors, performance) in the first
+    version, so no third-party service is involved and no visitor data leaves
+    the application. If it is wanted later, it needs a collecting endpoint of
+    our own and a review against the rules for personal data.
+
 ## Build
 
 Introduced in [AVARC-6](../tasks/finished/TASK-frontend-skeleton.md).
