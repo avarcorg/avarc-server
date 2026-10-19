@@ -14,6 +14,11 @@
   "passwordPolicy": "length(12) and notUsername",
   "bruteForceProtected": true,
   "failureFactor": 5,
+  "eventsEnabled": true,
+  "eventsExpiration": 2592000,
+  "eventsListeners": [],
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": false,
   "internationalizationEnabled": true,
   "supportedLocales": [
     "en",

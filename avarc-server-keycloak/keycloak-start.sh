@@ -25,10 +25,16 @@ export AVARC_CLIENT_SECRET
 
 [ "${_xtrace}" = on ] && set -x
 
-# The build-time options (database vendor, health endpoints, relative path)
-# are part of the image.
+# The build-time options (database vendor, health endpoints, metrics,
+# relative path) are part of the image. Logs are JSON. There is no access
+# log of its own: it cannot leave out the query string, which carries login
+# session codes, and the ingress logs every request with the request ID.
+# Login and admin events are not logged either (a failed login names the
+# login name); they are kept in the event store of the realm and counted in
+# the metrics.
 exec /opt/keycloak/bin/kc.sh --config-file="${CONFIG}" start --optimized \
     --import-realm \
+    --log-console-output=json \
     --db-url=jdbc:postgresql://db:5432/keycloak \
     --db-username=avarc \
     --bootstrap-admin-username=keycloak-admin \

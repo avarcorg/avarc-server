@@ -6,6 +6,8 @@ FROM quay.io/keycloak/keycloak:26.8.1
 # Build-time options, applied once here so that the start is --optimized.
 ENV KC_DB=postgres \
     KC_HEALTH_ENABLED=true \
+    KC_METRICS_ENABLED=true \
+    KC_EVENT_METRICS_USER_ENABLED=true \
     KC_HTTP_RELATIVE_PATH=/auth
 RUN /opt/keycloak/bin/kc.sh build
 
