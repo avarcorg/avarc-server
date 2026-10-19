@@ -1,12 +1,12 @@
 import { cookies } from "next/headers";
 
+import { backendFetch } from "./backend";
 import type { Location, TagSummary } from "./locationModel";
 
 export * from "./locationModel";
 
 type Page = { items: Location[]; page: number; size: number; total: number };
 
-const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8080";
 const PAGE_SIZE = 100;
 
 export class NotLoggedIn extends Error {}
@@ -16,10 +16,7 @@ export class NotFound extends Error {}
 // request is forwarded as it is.
 async function get<T>(path: string): Promise<T> {
   const cookie = (await cookies()).toString();
-  const response = await fetch(`${BACKEND_URL}${path}`, {
-    headers: { cookie, accept: "application/json" },
-    cache: "no-store",
-  });
+  const response = await backendFetch(path, { headers: { cookie, accept: "application/json" } });
   if (response.status === 401) {
     throw new NotLoggedIn();
   }
