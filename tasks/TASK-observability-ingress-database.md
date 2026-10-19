@@ -29,5 +29,13 @@ Database and deployment:
 - Health checks for every service of the Compose project, and restart
   behaviour visible in the metrics.
 - Container-level resource metrics, and log rotation for the container logs.
-- Bring up the observability services chosen in AVARC-21 in the Compose
-  project, optional for the developer deployment.
+- Provide the separate Compose project of the monitoring stack chosen in
+  AVARC-21 (own template, user and data directory), optional for the
+  developer deployment, and the network on which the application project
+  exposes its metrics endpoints.
+
+Done so far: request ID, JSON access log and the metrics listener of the
+ingress; log rotation, health checks of all services, the metrics network and
+slow-statement logging in the Compose project. The monitoring project
+itself (exporters, database and container metrics, dashboards) is set up
+outside this repository; what the application provides is in the spec.

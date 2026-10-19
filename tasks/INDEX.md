@@ -26,11 +26,11 @@ files. Do not edit by hand. See
 | AVARC-18 | [Deployment setup](finished/TASK-deployment-setup.md) | task | finished | normal | project | AVARC-3, AVARC-6, AVARC-8 |
 | AVARC-19 | [Revisit the authentication provider and user administration](finished/TASK-auth-provider-revisit.md) | decision | finished | high | auth |  |
 | AVARC-20 | [Keycloak integration](finished/TASK-keycloak-integration.md) | task | finished | high | auth | AVARC-19, AVARC-8, AVARC-3, AVARC-6 |
-| AVARC-21 | [Observability of the overall system](TASK-observability-system.md) | decision | open | normal | project | AVARC-18 |
-| AVARC-22 | [Backend observability](TASK-observability-backend.md) | task | open | normal | backend | AVARC-21, AVARC-3 |
-| AVARC-23 | [Frontend observability](TASK-observability-frontend.md) | task | open | normal | frontend | AVARC-21, AVARC-6 |
+| AVARC-21 | [Observability of the overall system](TASK-observability-system.md) | decision | in-progress | normal | project | AVARC-18 |
+| AVARC-22 | [Backend observability](finished/TASK-observability-backend.md) | task | finished | normal | backend | AVARC-21, AVARC-3 |
+| AVARC-23 | [Frontend observability](finished/TASK-observability-frontend.md) | task | finished | normal | frontend | AVARC-21, AVARC-6 |
 | AVARC-24 | [Ingress and database observability](TASK-observability-ingress-database.md) | task | open | normal | ingress | AVARC-21 |
-| AVARC-25 | [Identity provider observability](TASK-observability-identity.md) | task | open | normal | auth | AVARC-21, AVARC-20 |
+| AVARC-25 | [Identity provider observability](finished/TASK-observability-identity.md) | task | finished | normal | auth | AVARC-21, AVARC-20 |
 | AVARC-26 | [Release tagging](finished/TASK-release-tagging.md) | task | finished | normal | project |  |
 | AVARC-27 | [Stage deployment](finished/TASK-stage-deployment.md) | task | finished | normal | project | AVARC-18, AVARC-20, AVARC-26 |
 | AVARC-28 | [Simplify the architecture documentation for handover](TASK-handover-docs.md) | task | open | low | project |  |

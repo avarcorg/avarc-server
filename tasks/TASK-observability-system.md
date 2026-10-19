@@ -1,7 +1,7 @@
 ---
 id: AVARC-21
 type: decision
-status: open
+status: in-progress
 priority: normal
 area: project
 depends-on: [AVARC-18]
@@ -14,10 +14,10 @@ Spec: `spec/SPEC-observability.md` (to be created, linked from
 [SPEC.md](../SPEC.md))
 
 Decide and specify how the system as a whole is observed, so that the
-per-component tasks ([AVARC-22](TASK-observability-backend.md),
-[AVARC-23](TASK-observability-frontend.md),
+per-component tasks ([AVARC-22](finished/TASK-observability-backend.md),
+[AVARC-23](finished/TASK-observability-frontend.md),
 [AVARC-24](TASK-observability-ingress-database.md),
-[AVARC-25](TASK-observability-identity.md)) implement one shared approach
+[AVARC-25](finished/TASK-observability-identity.md)) implement one shared approach
 instead of each inventing its own.
 
 - Decide the signals that are in scope (logs, metrics, traces, health) and
