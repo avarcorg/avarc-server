@@ -75,13 +75,17 @@ The backend code is split into application modules, direct sub-packages of
 of `./mvnw verify`, fails on a broken boundary and writes the module
 diagrams to `avarc-server-backend/target/spring-modulith-docs/`.
 
-The service answers `GET /actuator/health`; everything else, such as
-`GET /api/hello`, needs a login (see Authentication). Only in the
+Everything the backend serves on its application port, such as
+`GET /api/hello`, needs a login (see Authentication). The actuator
+(`/actuator/health`, `/actuator/prometheus`) is on the management port 9091,
+which the Compose project does not publish; the ingress routes it as
+`/actuator/` only where `ACTUATOR_ENABLED` is true (dev and stage, set by
+`run.sh` with the developer links; prod answers 404). Only in the
 dev and stage environments are all actuator endpoints exposed: the Spring
 profile named after the environment is activated with
 `SPRING_PROFILES_ACTIVE` (`application-dev.properties`,
 `application-stage.properties`; `spring-boot:run` uses `dev` by default).
-Prod has no profile file and exposes `health` only. The same two
+Prod has no profile file and exposes `health` and `prometheus` only. The same two
 environments serve the OpenAPI document at `/api/docs/openapi.json` and
 Swagger UI at `/api/docs`, readable without a login (spec:
 `spec/SPEC-backend.md`); prod serves neither. The Compose project runs
@@ -171,6 +175,10 @@ the accounts of an environment, the initial admin included, after the project
 is up; it is safe to repeat (needs `curl` and `jq`):
 
     deploy/create-admin-user.sh [--stage]
+
+Login and admin events are enabled in the realm and kept for 30 days (Events in the
+console); `deploy/configure-keycloak-events.sh [--stage]` applies the
+settings to a realm that already exists.
 
 Further users are created with `deploy/create-user.sh [--stage] [--admin]
 EMAIL...`: editors, or admins with `--admin`. It prints a
