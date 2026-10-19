@@ -29,6 +29,7 @@
         <profile>
             <id>with-docker</id>
             <properties>
+                <image.buildpack>paketo-buildpacks/nginx</image.buildpack>
                 <image.builder>paketobuildpacks/ubuntu-noble-builder</image.builder>
                 <image.path>${project.build.directory}/image</image.path>
                 <image.env>BP_NGINX_CONF_LOCATION=nginx.conf</image.env>

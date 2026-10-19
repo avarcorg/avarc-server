@@ -103,6 +103,7 @@
         <profile>
             <id>with-docker</id>
             <properties>
+                <image.buildpack>paketo-buildpacks/nodejs</image.buildpack>
                 <image.builder>paketobuildpacks/ubuntu-noble-builder</image.builder>
                 <image.path>${project.build.directory}/image</image.path>
                 <image.env>BP_NODE_VERSION=${node.version}</image.env>
