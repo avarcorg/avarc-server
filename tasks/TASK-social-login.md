@@ -67,8 +67,9 @@ paid yearly membership and a client secret that expires every six months; see
   second restore changes nothing. Verified on stage (2026-10-18): an export
   holds the five users with roles and Google links; a test user, created,
   exported, deleted in the admin console and restored, came back with a new
-  one-time password. Left: the first nightly run of the backup, which now
-  includes the export.
+  one-time password. The first nightly run of the backup with the export
+  (2026-10-19) is verified on stage: the file has mode 0600 and holds the five
+  users with their roles and Google links.
 - Decide whether Keycloak keeps its database in the shared server or gets its
   own. Decided (2026-10-18): the shared server stays; the arguments and the
   next steps are in `SPEC-deployment.md` ("Keycloak's database"). No change of
