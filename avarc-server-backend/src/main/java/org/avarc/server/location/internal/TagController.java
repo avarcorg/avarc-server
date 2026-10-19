@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;
+import org.avarc.server.audit.AuditLog;
 import org.avarc.server.location.InvalidLocationException;
 import org.avarc.server.location.TagService;
 import org.avarc.server.location.TagSummary;
@@ -25,9 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 class TagController {
 
     private final TagService tags;
+    private final AuditLog audit;
 
-    TagController(TagService tags) {
+    TagController(TagService tags, AuditLog audit) {
         this.tags = tags;
+        this.audit = audit;
     }
 
     @Operation(summary = "All tags, with the number of locations that carry each")
@@ -40,7 +43,9 @@ class TagController {
     @PreAuthorize("hasRole('admin')")
     @PutMapping("/{key}")
     TagSummary setLabels(@PathVariable String key, @RequestBody Labels body) {
-        return tags.setLabels(key, body.labels());
+        TagSummary saved = tags.setLabels(key, body.labels());
+        audit.record("tag.labels-set", "tag", saved.key());
+        return saved;
     }
 
     @ExceptionHandler(InvalidLocationException.class)

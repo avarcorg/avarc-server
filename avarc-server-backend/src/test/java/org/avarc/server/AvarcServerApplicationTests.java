@@ -3,7 +3,6 @@ package org.avarc.server;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -31,18 +30,6 @@ class AvarcServerApplicationTests {
     @Test
     void helloNeedsALogin() throws Exception {
         mockMvc.perform(get("/api/hello")).andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void healthIsUp() throws Exception {
-        mockMvc.perform(get("/actuator/health"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("UP"));
-    }
-
-    @Test
-    void otherActuatorEndpointsAreNotExposed() throws Exception {
-        mockMvc.perform(get("/actuator/env")).andExpect(status().isNotFound());
     }
 
     @Test

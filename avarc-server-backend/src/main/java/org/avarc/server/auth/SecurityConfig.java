@@ -124,7 +124,8 @@ class SecurityConfig {
         resolver.setAuthorizationRequestCustomizer(OAuth2AuthorizationRequestCustomizers.withPkce());
 
         http.authorizeHttpRequests(requests -> {
-                    // which actuator endpoints exist is decided by the profile
+                    // the actuator is on a port of its own, which the ingress does not route (this chain
+                    // applies there too); which endpoints exist is decided by the profile
                     requests.requestMatchers("/actuator/**").permitAll();
                     requests.requestMatchers("/api/auth/login/**", "/api/auth/callback")
                             .permitAll();

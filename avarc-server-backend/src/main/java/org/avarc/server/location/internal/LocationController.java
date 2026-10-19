@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.UUID;
+import org.avarc.server.audit.AuditLog;
 import org.avarc.server.location.InvalidLocationException;
 import org.avarc.server.location.Location;
 import org.avarc.server.location.LocationInput;
@@ -36,9 +37,11 @@ class LocationController {
     private static final String EDITOR = "hasAnyRole('editor', 'admin')";
 
     private final LocationService locations;
+    private final AuditLog audit;
 
-    LocationController(LocationService locations) {
+    LocationController(LocationService locations, AuditLog audit) {
         this.locations = locations;
+        this.audit = audit;
     }
 
     @Operation(summary = "A page of locations, newest first")
@@ -58,6 +61,7 @@ class LocationController {
     @PostMapping
     ResponseEntity<Location> create(@RequestBody LocationInput input, @AuthenticationPrincipal OidcUser principal) {
         Location created = locations.create(input, principal.getSubject());
+        audit.record("location.created", "location", created.id());
         return ResponseEntity.created(URI.create("/api/locations/" + created.id()))
                 .body(created);
     }
@@ -67,7 +71,9 @@ class LocationController {
     @PutMapping("/{id}")
     Location update(
             @PathVariable UUID id, @RequestBody LocationInput input, @AuthenticationPrincipal OidcUser principal) {
-        return locations.update(id, input, principal.getSubject());
+        Location updated = locations.update(id, input, principal.getSubject());
+        audit.record("location.updated", "location", id);
+        return updated;
     }
 
     @Operation(summary = "Deletes a location")
@@ -75,6 +81,7 @@ class LocationController {
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable UUID id) {
         locations.delete(id);
+        audit.record("location.deleted", "location", id);
         return ResponseEntity.noContent().build();
     }
 
