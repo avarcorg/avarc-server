@@ -182,7 +182,9 @@ the source of the keys and the place the application reads from.
   because a pull request opened with the workflow's own token does not start
   the other workflows. Untranslated
   strings are left out of the target files, never filled with the source
-  text.
+  text. The service may still send an untranslated string as an empty text,
+  so the job runs `tools/drop-empty-texts.py` on the downloaded files first,
+  which removes the empty texts from every target file (never from `en.json`).
 - **Completeness:** `tools/check-messages.py` keeps its rules for every
   language (no empty text, the same `{placeholders}` as the source, no key
   that the source lacks), but a target may lack keys that are not translated
