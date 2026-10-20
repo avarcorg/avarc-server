@@ -65,6 +65,12 @@ action does by default.
   `l10n/crowdin` that changed only `de.json`). The pull request needs the
   repository setting "Allow GitHub Actions to create and approve pull
   requests", which is on.
+- The first scheduled download after new keys without a German translation
+  (2026-10-19, the `Applications` keys of AVARC-58) failed: the service sent
+  the keys as empty texts, which `tools/check-messages.py` rejects. The
+  download now runs `tools/drop-empty-texts.py` first. To verify: run the
+  download workflow by hand; it must either open the pull request or report no
+  new translations, not fail.
 - The first release tag runs `--complete`; check that it passes.
 
 ## Acceptance
