@@ -19,6 +19,12 @@
     "locations": "Orte",
     "tags": "Schlagwörter"
   },
+  "Applications": {
+    "title": "Anwendungsübersicht",
+    "description": {
+      "swagger": "Teste die API im browser."
+    }
+  },
   "Home": {
     "title": "Hallo, avarc",
     "signedInAs": "Angemeldet als"
