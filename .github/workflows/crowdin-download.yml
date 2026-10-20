@@ -35,6 +35,10 @@ jobs:
         env:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+      - name: Leave out the empty texts
+        # An untranslated string must be left out of a target file; the
+        # service may send it as an empty text, which the check rejects.
+        run: tools/drop-empty-texts.py
       - name: Check the downloaded files
         run: |
           # Only target language files may have changed, never the source.
