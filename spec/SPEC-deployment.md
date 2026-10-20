@@ -385,7 +385,10 @@ Introduced in [AVARC-18](../tasks/finished/TASK-deployment-setup.md).
   - The network `<project>-metrics` carries only metrics endpoints: the
     ingress, the frontend, the backend (management port 9091), Keycloak
     (management port 9000) and the database are attached to it, and the monitoring stack
-    joins it as an external network. Nothing on it is published.
+    joins it as an external network. Nothing on it is published. The
+    network may exist before the project is started (the monitoring stack
+    creates it if missing): `up` uses it as it is, and `down` leaves it in
+    place while another container is attached.
   - The database logs statements slower than 500 ms.
 
 ## Open questions
