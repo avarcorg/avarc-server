@@ -17,7 +17,7 @@
     <properties>
         <spring-boot.run.profiles>dev</spring-boot.run.profiles>
         <image.basename>avarc-backend</image.basename>
-        <springdoc.version>3.1.1</springdoc.version>
+        <springdoc.version>3.2.0</springdoc.version>
         <spring-modulith.version>2.1.1</spring-modulith.version>
         <fmt-maven-plugin.version>2.27.0.1</fmt-maven-plugin.version>
         <open-java-format.version>2.98.0.6</open-java-format.version>
