@@ -16,7 +16,7 @@ on:
 env:
   # Must match java.version and node.version in the POMs (checked below).
   JAVA_VERSION: "25"
-  NODE_VERSION: "24"
+  NODE_VERSION: "26"
   REGISTRY: ghcr.io
   NAMESPACE: ghcr.io/avarcorg
   MODULE: ${{ inputs.module }}
