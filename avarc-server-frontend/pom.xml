@@ -17,7 +17,7 @@
 
     <properties>
         <!-- Node runs only in this container, never on the build host. -->
-        <node.version>24</node.version>
+        <node.version>26</node.version>
         <node.image>node:${node.version}-alpine</node.image>
         <!-- Host port of the dev server: ./mvnw -pl avarc-server-frontend exec:exec -->
         <node.dev.port>3000</node.dev.port>
